@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área de Membros - Código de Vendas Dev Ruby</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url("../imagens/Banner do YouTube Gamer Pixels Preto Roxo Neon.png") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: url(../imagens/Preparação\ e\ Lançamento\ de\ Produtoss.jpeg);
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Search and Filters */
+        .search-container {
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #b30000;
+            box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.2);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-button {
+            background: #1a1a1a;
+            color: #ccc;
+            border: 1px solid #333;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-button.active, .filter-button:hover {
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            color: white;
+            border-color: #b30000;
+        }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .module-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(179, 0, 0, 0.2);
+            border-color: #b30000;
+        }
+
+        .module-banner {
+            height: 150px;
+            background-color: #222;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .module-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .module-card p {
+            color: #aaa;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+        
+        .module-link {
+            display: block;
+            height: 100%;
+        }
+        
+        .fallback-text {
+            position: absolute;
+            color: #777;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Código de Vendas Dev Ruby</h1>
+            <p>Área de Membros</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Pesquisar módulos...">
+        </div>
+        
+        <div class="filter-buttons">
+            <button class="filter-button active" data-filter="all">Todos</button>
+            <button class="filter-button" data-filter="programacao">Programação</button>
+            <button class="filter-button" data-filter="marketing">Marketing</button>
+            <button class="filter-button" data-filter="negocios">Negócios</button>
+            <button class="filter-button" data-filter="ia">Inteligência Artificial</button>
+        </div>
+        
+        <div class="modules-grid" id="modules-grid">
+            <!-- Módulo 1 -->
+            <a href="../modulo html/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="programacao">
+                    <div class="module-banner">
+                        <img src="../imagens/html5.png" alt="Programação HTML">
+                      
+                    </div>
+                    <div class="module-content">
+                        <h3>HTML</h3>
+                        <p>Aprenda a estruturar páginas web, usar tags, links, formulários e imagens. Projeto: Landing Page funcional.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 2 -->
+            <a href="../modulo css/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="programacao">
+                    <div class="module-banner">
+                        <img src="../imagens/css3.png" alt="Programação CSS">
+                        
+                    </div>
+                    <div class="module-content">
+                        <h3>CSS</h3>
+                        <p>Estilizando páginas com cores, fontes, layouts e efeitos visuais. Projeto: Landing Page estilizada.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 3 -->
+            <a href="../modulo javascript/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="programacao">
+                    <div class="module-banner">
+                        <img src="../imagens/js.jpeg" alt="Programação JavaScript">
+                       
+                    </div>
+                    <div class="module-content">
+                        <h3>JavaScript</h3>
+                        <p>Interatividade, lógica, eventos e manipulação do DOM. Projeto: Dashboard interativo com hora atual, modo escuro e botão de copiar Pix.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 4 -->
+            <a href="../modulo logica/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="programacao">
+                    <div class="module-banner">
+                        <img src="../imagens/Fundamentos de Lógica e Algoritmoss.jpeg" alt="Fundamentos de Lógica e Algoritmos">
+               
+                    </div>
+                    <div class="module-content">
+                        <h3>Fundamentos de Lógica e Algoritmos</h3>
+                        <p>Conceitos básicos de programação e resolução de problemas.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 5 -->
+            <a href="../modulo sistemas/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="programacao">
+                    <div class="module-banner">
+                        <img src="../imagens/Desenvolvimento de Sistemass.jpeg" alt="Desenvolvimento de Sistemas">
+                      
+                    </div>
+                    <div class="module-content">
+                        <h3>Desenvolvimento de Sistemas</h3>
+                        <p>Planejamento, prototipagem, integração front-end e back-end. Projeto: Mini sistema funcional.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 6 -->
+            <a href="../modulo github/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="programacao">
+                    <div class="module-banner">
+                        <img src="../imagens/GitHubs.jpeg" alt="GitHub e Controle de Versão">
+                      
+                    </div>
+                    <div class="module-content">
+                        <h3>GitHub</h3>
+                        <p>Repositórios, commits, branch, pull requests. Projeto: Versionar projeto do curso.</p>
+                    </div>
+                </div>
+            </a>
+            
+         
+           
+            <!-- Módulo 8 -->
+            <a href="../modulo configuracao-produtos/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/Configuração de Produtoss.jpeg" alt="Kiwify: Configuração de Produtos">
+                       
+                    </div>
+                    <div class="module-content">
+                        <h3>Configuração de Produtos</h3>
+                        <p>Criação de conta, upload de cursos, checkout, upsell, order bump, automações. Projeto: Publicação do curso digital.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 9 -->
+            <a href="../modulo automacao/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/Automação e Entregas.jpeg" alt="Kiwify: Automação e Entrega">
+                       
+                    </div>
+                    <div class="module-content">
+                        <h3>Automação e Entrega</h3>
+                        <p>Entrega automática de produtos, webhooks, relatórios de vendas.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 10 -->
+            <a href="../modulo trafego-intro/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/Tráfego Pago Introduçãos.jpeg" alt="Tráfego Pago: Introdução">
+                        
+                    </div>
+                    <div class="module-content">
+                        <h3>Tráfego Pago Introdução</h3>
+                        <p>Meta Ads, Google Ads, TikTok Ads, conceitos de tráfego.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 11 -->
+            <a href="../modulo trafego-avancado/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/Tráfego Pago Estratégias Avançadass.jpeg" alt="Tráfego Pago: Estratégias Avançadas">
+                        
+                    </div>
+                    <div class="module-content">
+                        <h3>Tráfego Pago Estratégias Avançadas</h3>
+                        <p>Segmentação, pixel, remarketing, otimização de campanhas.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 12 -->
+            <a href="../modulo trafego-lancamentos/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/Tráfego Pago Escala e Lançamentoss.jpeg" alt="Tráfego Pago: Escala e Lançamentos">
+                       
+                    </div>
+                    <div class="module-content">
+                        <h3>Tráfego Pago Escala e Lançamentos</h3>
+                        <p>Lançamentos, métricas, organização de tráfego, erros comuns.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 13 -->
+            <a href="../modulo branding/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/Brandings.jpeg" alt="Branding">
+                       
+                    </div>
+                    <div class="module-content">
+                        <h3>Branding</h3>
+                        <p>Identidade da marca</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 14 -->
+            <a href="../modulo marketing-digital/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/Marketing Digitals.jpeg" alt="Marketing Digital">
+                       
+                    </div>
+                    <div class="module-content">
+                        <h3>Marketing Digital</h3>
+                        <p>Identidade visual, cores, logo, marketing de conteúdo.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 15 -->
+            <a href="../modulo marketing-conteudo/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/Marketing de Conteúdos.jpeg" alt="Marketing de Conteúdo">
+                      
+                    </div>
+                    <div class="module-content">
+                        <h3>Marketing de Conteúdo</h3>
+                        <p>TikTok, Instagram, YouTube, estratégias para gerar leads.</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 16 -->
+            <a href="../modulo redes-sociais/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/Redes Sociais.jpeg" alt="Redes Sociais">
+                      
+                    </div>
+                    <div class="module-content">
+                        <h3>Redes Sociais</h3>
+                        <p>TikTok, Instagram, YouTube, estratégias para gerar leads.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 17 -->
+            <a href="../modulo email-marketing/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/E-mail Marketing.jpeg" alt="E-mail Marketing">
+                      
+                    </div>
+                    <div class="module-content">
+                        <h3>E-mail Marketing</h3>
+                        <p>Automação de e-mails, autoresponders, segmentação de leads.</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 18 -->
+            <a href="../modulo funil-vendas/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/Funil de Vendasss.jpeg" alt="Funil de Vendas">
+                       
+                    </div>
+                    <div class="module-content">
+                        <h3>Funil de Vendas</h3>
+                        <p>Automação de e-mails, autoresponders, segmentação de leads.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 19 -->
+            <a href="../modulo dados-dashboards/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="negocios">
+                    <div class="module-banner">
+                        <img src="../imagens/Dados, Relatórios e Dashboardss.jpeg" alt="Dados, Relatórios e Dashboards">
+                        
+                    </div>
+                    <div class="module-content">
+                        <h3>Dados, Relatórios e Dashboards</h3>
+                        <p>Painéis automáticos, Google Analytics, análise de métricas.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 20 -->
+            <a href="../modulo ecommerce/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="negocios">
+                    <div class="module-banner">
+                        <img src="../imagens/Especialização em E-commercee.jpeg" alt="Especialização em E-commerce">
+                        
+                    </div>
+                    <div class="module-content">
+                        <h3>Especialização em E-commerce</h3>
+                        <p>Google Merchant, catálogo, integração Kiwify + loja online.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 21 -->
+            <a href="../modulo automacao-scripts/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="negocios">
+                    <div class="module-banner">
+                        <img src="../imagens/Automação com Scripts e Planilhass.jpeg" alt="Automação com Scripts e Planilhas">
+                      
+                    </div>
+                    <div class="module-content">
+                        <h3>Automação com Scripts e Planilhas</h3>
+                        <p>Envio de dados do site para planilhas, geração de relatórios.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 22 -->
+            <a href="../modulo ia-visao-geral/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="ia">
+                    <div class="module-banner">
+                        <img src="../imagens/Inteligência Artificial.jpeg" alt="Inteligência Artificial: Visão Geral">
+                        
+                    </div>
+                    <div class="module-content">
+                        <h3>Inteligência Artificial: Visão Geral</h3>
+                        <p>Introdução a IA, conceitos e aplicações práticas.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 23 -->
+            <a href="../modulo ia-tipos/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="ia">
+                    <div class="module-banner">
+                        <img src="../imagens/Inteligência Artificial 50 Tipos Diferentess.jpeg" alt="Inteligência Artificial: 50 Tipos Diferentes">
+               
+                    </div>
+                    <div class="module-content">
+                        <h3>Inteligência Artificial: 50 Tipos Diferentes</h3>
+                        <p>Cada aula apresenta uma IA diferente. Projeto: Explorar cada IA e criar pequenos protótipos ou outputs com elas.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 24 -->
+            <a href="../modulo projetos-prontos/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="programacao">
+                    <div class="module-banner">
+                        <img src="../imagens/Projetos Prontos de Programaçãos.jpeg" alt="Projetos Prontos de Programação">
+                       
+                    </div>
+                    <div class="module-content">
+                        <h3>Projetos Prontos de Programação</h3>
+                        <p>Mais de 300 projetos para estudo e adaptação.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 25 -->
+            <a href="../modulo ideias-sistemas/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="negocios">
+                    <div class="module-banner">
+                        <img src="../imagens/Ideias Criativas de Sistemass.jpeg" alt="Ideias Criativas de Sistemas">
+                      
+                    </div>
+                    <div class="module-content">
+                        <h3>Ideias Criativas de Sistemas</h3>
+                        <p>Mais de 500 ideias de sistemas lucrativos.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 26 -->
+            <a href="../modulo freelancers/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="negocios">
+                    <div class="module-banner">
+                        <img src="../imagens/Agência.jpeg" alt="Preparação para Freelancers / Agência">
+                       
+                    </div>
+                    <div class="module-content">
+                        <h3>Preparação para Freelancers / Agência</h3>
+                        <p>Venda de serviços, precificação, contratos, propostas comerciais.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 27 -->
+            <a href="../modulo consultoria/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="negocios">
+                    <div class="module-banner">
+                        <img src="../imagens/Consultoria e Mentorias.jpeg" alt="Consultoria e Mentoria">
+                        
+                    </div>
+                    <div class="module-content">
+                        <h3>Consultoria e Mentoria</h3>
+                        <p>Onboarding, reuniões, análise estratégica, simulação de clientes reais.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 28 -->
+            <a href="../modulo lancamento-produtos/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="negocios">
+                    <div class="module-banner">
+                        <img src="../imagens/Preparação e Lançamento de Produtoss.jpeg" alt="Preparação e Lançamento de Produtos">
+                        
+                    </div>
+                    <div class="module-content">
+                        <h3>Preparação e Lançamento de Produtos</h3>
+                        <p>Como lançar, gerar vendas e feedback.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 29 -->
+            <a href="../modulo seo/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/SEO e Otimização de Sites.jpeg" alt="SEO e Otimização de Sites">
+                        
+                    </div>
+                    <div class="module-content">
+                        <h3>SEO e Otimização de Sites</h3>
+                        <p>Técnicas para ranqueamento, tráfego orgânico e performance.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 30 -->
+            <a href="../modulo estrategias-avancadas/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="marketing">
+                    <div class="module-banner">
+                        <img src="../imagens/Estratégias Avançadas de Marketing Digital.jpeg" alt="Estratégias Avançadas de Marketing Digital">
+                      
+                    </div>
+                    <div class="module-content">
+                        <h3>Estratégias Avançadas de Marketing Digital</h3>
+                        <p>Funnels, remarketing, campanhas integradas e cross-media.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 31 -->
+            <a href="../modulo analise-resultados/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="negocios">
+                    <div class="module-banner">
+                        <img src="../imagens/Análise de Resultados e Métricas.jpeg" alt="Análise de Resultados e Métricas">
+                      
+                    </div>
+                    <div class="module-content">
+                        <h3>Análise de Resultados e Métricas</h3>
+                        <p>Avaliar ROI, CTR, leads, vendas, engajamento.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 32 -->
+            <a href="../modulo crescimento-sistemas/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="negocios">
+                    <div class="module-banner">
+                        <img src="../imagens/Crescimento e Escalabilidade de Sistemas.jpeg" alt="Crescimento e Escalabilidade de Sistemas">
+                       
+                    </div>
+                    <div class="module-content">
+                        <h3>Crescimento e Escalabilidade de Sistemas</h3>
+                        <p>Automatizações, indicadores de crescimento, melhorias contínuas.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 33 -->
+            <a href="../modulo conclusao/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="negocios">
+                    <div class="module-banner">
+                        <img src="../imagens/Conclusão e Próximos Passos.jpeg" alt="Conclusão e Próximos Passos">
+                        
+                    </div>
+                    <div class="module-content">
+                        <h3>Conclusão e Próximos Passos</h3>
+                        <p>Revisão de tudo, próximos passos, estratégia de longo prazo. Projeto final: Sistema completo + vendas + tráfego + automação + IA.</p>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Mensagem de nenhum resultado -->
+            <div class="no-results" id="no-results">
+                Nenhum módulo encontrado com os critérios de busca.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Filtros de categoria
+        document.querySelectorAll('.filter-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.filter-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                filterModules();
+            });
+        });
+
+        // Busca de módulos
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', filterModules);
+
+        // Função para filtrar módulos
+        function filterModules() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-button.active').getAttribute('data-filter');
+            const modules = document.querySelectorAll('.module-card');
+            const noResults = document.getElementById('no-results');
+            
+            let visibleCount = 0;
+            
+            modules.forEach(module => {
+                const title = module.querySelector('h3').textContent.toLowerCase();
+                const description = module.querySelector('p').textContent.toLowerCase();
+                const category = module.getAttribute('data-category');
+                
+                const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+                const matchesFilter = activeFilter === 'all' || category === activeFilter;
+                
+                if (matchesSearch && matchesFilter) {
+                    module.parentElement.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    module.parentElement.style.display = 'none';
+                }
+            });
+            
+            // Mostra ou esconde a mensagem de nenhum resultado
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
