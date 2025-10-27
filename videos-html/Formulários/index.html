@@ -1,174 +1,554 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player de Vídeo Moderno</title>
+    <title>Formulários HTML - Dev Ruby</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            background-color: #1a1a1a;
-            color: #ffffff;
-            padding: 1.5rem;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background: url("../../imagens/Banner\ do\ YouTube\ Gamer\ Pixels\ Preto\ Roxo\ Neon.png") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            line-height: 1.6;
         }
 
         .container {
-            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .titulo-aula {
+        /* Header */
+        .header {
+            background: url(../../imagens/Configuração\ de\ Produtoss.jpeg);
+            padding: 40px 0;
             text-align: center;
-            font-size: 2.2rem;
-            margin-bottom: 2rem;
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            padding: 0 1rem;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        .video-principal {
-            position: relative;
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Search and Filters */
+        .search-container {
+            margin-bottom: 30px;
+        }
+
+        .search-input {
             width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
+            padding: 14px 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
 
-        .thumbnail {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
-            cursor: pointer;
-            display: block;
+        .search-input:focus {
+            outline: none;
+            border-color: #b30000;
+            box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.2);
         }
 
-        .thumbnail:hover {
-            transform: scale(1.01);
+        .filter-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
-        .botao-play {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 70px;
-            height: 70px;
-            background: #ffffff;
-            border-radius: 50%;
-            border: none;
+        .filter-button {
+            background: #1a1a1a;
+            color: #ccc;
+            border: 1px solid #333;
+            padding: 10px 18px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-button.active, .filter-button:hover {
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            color: white;
+            border-color: #b30000;
+        }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .module-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(179, 0, 0, 0.2);
+            border-color: #b30000;
+        }
+
+        .module-banner {
+            height: 150px;
+            background-color: #222;
+            border-radius: 12px 12px 0 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+            color: #555;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
         }
 
-        .botao-play::before {
-            content: '▶';
-            font-size: 1.8rem;
-            color: #1a1a1a;
-            margin-left: 4px;
+        .module-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .botao-play:hover {
-            background: #ff0000;
-            transform: translate(-50%, -50%) scale(1.1);
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
+        .module-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
-        .info-video {
-            margin-top: 1.5rem;
-            padding: 0 1rem;
-            text-align: center;
+        .module-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+            line-height: 1.4;
         }
 
-        .info-video h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .info-video p {
-            color: #cccccc;
+        .module-card p {
+            color: #aaa;
+            font-size: 0.95rem;
             line-height: 1.5;
+            flex-grow: 1;
         }
 
-        /* Media Queries para responsividade */
-        @media (min-width: 768px) {
-            .container {
-                max-width: 90%;
-            }
-            
-            .titulo-aula {
-                font-size: 2.8rem;
-            }
-            
-            .botao-play {
-                width: 80px;
-                height: 80px;
-            }
-            
-            .botao-play::before {
-                font-size: 2rem;
-            }
-            
-            .info-video {
-                text-align: left;
-                padding: 0;
-            }
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+            display: none;
         }
 
-        @media (min-width: 1024px) {
-            .container {
-                max-width: 80%;
-            }
-            
-            .video-principal {
-                max-width: 800px;
-            }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 480px) {
-            body {
-                padding: 1rem;
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
             }
             
-            .titulo-aula {
-                font-size: 1.8rem;
+            .header p {
+                font-size: 1rem;
             }
             
-            .botao-play {
-                width: 60px;
-                height: 60px;
+            .modules-grid {
+                grid-template-columns: 1fr;
             }
             
-            .botao-play::before {
-                font-size: 1.5rem;
+            .filter-buttons {
+                justify-content: center;
             }
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+        
+        .module-link {
+            display: block;
+            height: 100%;
+        }
+        
+        .fallback-text {
+            position: absolute;
+            color: #777;
+            font-size: 1rem;
+        }
+        
+        .module-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .module-tag {
+            display: inline-block;
+            background: rgba(179, 0, 0, 0.2);
+            color: #ff6666;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <div class="container">
+            <h1>Formulários HTML</h1>
+            <p>Cada elemento de formulário em seu próprio módulo separado</p>
+        </div>
+    </div>
+    
     <div class="container">
-        <h1 class="titulo-aula">Introdução ao CSS Moderno</h1>
-        
-        <div class="video-principal">
-            <img src="../../imagens/Agência.jpeg" alt="Thumbnail do Vídeo" class="thumbnail">
-            <button class="botao-play"></button>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Pesquisar módulos de formulários...">
         </div>
         
-       
+        <div class="filter-buttons">
+            <button class="filter-button active" data-filter="all">Todos</button>
+            <button class="filter-button" data-filter="estrutura">Estrutura</button>
+            <button class="filter-button" data-filter="campos">Campos</button>
+            <button class="filter-button" data-filter="selecao">Seleção</button>
+            <button class="filter-button" data-filter="botoes">Botões</button>
+            <button class="filter-button" data-filter="upload">Upload</button>
+        </div>
+        
+        <div class="modules-grid" id="modules-grid">
+            <!-- Módulo 1 - Estrutura de formulário -->
+            <a href="../../videos-html/Formulários/estrutura de form/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="estrutura">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Estrutura de Formulário">
+                        <div class="fallback-text">Estrutura de Formulário</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">1</span> Estrutura de formulário</h3>
+                        <p>Aprenda a criar a estrutura básica de um formulário HTML usando a tag &lt;form&gt; e seus atributos principais.</p>
+                        <span class="module-tag">Estrutura</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 2 - Agrupando campos -->
+            <a href="../../videos-html/Formulários/agrupando campos/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="estrutura">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Agrupando Campos">
+                        <div class="fallback-text">Agrupando Campos</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">2</span> Agrupando campos</h3>
+                        <p>Domine o uso de fieldset e legend para agrupar campos relacionados em formulários complexos.</p>
+                        <span class="module-tag">Estrutura</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 3 - Campo de texto -->
+            <a href="../../videos-html/Formulários/campos de texto/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="campos">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Campo de Texto">
+                        <div class="fallback-text">Campo de Texto</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">3</span> Campo de texto</h3>
+                        <p>Aprenda a usar input type="text" para coletar informações textuais dos usuários em formulários.</p>
+                        <span class="module-tag">Campos</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 4 - Checkbox -->
+            <a href="../../videos-html/Formulários/checkbox/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="selecao">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Checkbox">
+                        <div class="fallback-text">Checkbox</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">4</span> Checkbox</h3>
+                        <p>Domine o uso de input type="checkbox" para permitir seleções múltiplas em formulários.</p>
+                        <span class="module-tag">Seleção</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 5 - E-mail -->
+            <a href="../../videos-html/Formulários/e-mail/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="campos">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Campo de E-mail">
+                        <div class="fallback-text">Campo de E-mail</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">5</span> E-mail</h3>
+                        <p>Aprenda a usar input type="email" para coletar endereços de e-mail com validação automática.</p>
+                        <span class="module-tag">Campos</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 6 - Número -->
+            <a href="../../videos-html/Formulários/numero/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="campos">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Campo de Número">
+                        <div class="fallback-text">Campo de Número</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">6</span> Número</h3>
+                        <p>Domine o uso de input type="number" para coletar valores numéricos com controles de incremento.</p>
+                        <span class="module-tag">Campos</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 7 - Radio -->
+            <a href="../../videos-html/Formulários/radio/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="selecao">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Botões Radio">
+                        <div class="fallback-text">Botões Radio</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">7</span> Radio</h3>
+                        <p>Aprenda a usar input type="radio" para permitir seleção única entre múltiplas opções.</p>
+                        <span class="module-tag">Seleção</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 8 - Select -->
+            <a href="../../videos-html/Formulários/select/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="selecao">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Elemento Select">
+                        <div class="fallback-text">Elemento Select</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">8</span> Select</h3>
+                        <p>Domine o uso do elemento select com option para criar menus suspensos em formulários.</p>
+                        <span class="module-tag">Seleção</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 9 - Telefone -->
+            <a href="../../videos-html/Formulários/telefone/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="campos">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Campo de Telefone">
+                        <div class="fallback-text">Campo de Telefone</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">9</span> Telefone</h3>
+                        <p>Aprenda a usar input type="tel" para coletar números de telefone com formatação adequada.</p>
+                        <span class="module-tag">Campos</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 10 - Upload de arquivos -->
+            <a href="../../videos-html/Formulários/upload de arquivos/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="upload">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Upload de Arquivos">
+                        <div class="fallback-text">Upload de Arquivos</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">10</span> Upload de arquivos</h3>
+                        <p>Domine o uso de input type="file" para permitir que usuários façam upload de arquivos.</p>
+                        <span class="module-tag">Upload</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 11 - Botões -->
+            <a href="../../videos-html/Formulários/botões/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="botoes">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Botões de Formulário">
+                        <div class="fallback-text">Botões de Formulário</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">11</span> Botões</h3>
+                        <p>Aprenda a usar button, input type="submit" e input type="reset" para ações em formulários.</p>
+                        <span class="module-tag">Botões</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 12 - Textarea -->
+            <a href="../../videos-html/Formulários/textarea/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="campos">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Área de Texto">
+                        <div class="fallback-text">Área de Texto</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">12</span> Textarea</h3>
+                        <p>Domine o uso do elemento textarea para coletar textos longos e múltiplas linhas.</p>
+                        <span class="module-tag">Campos</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 13 - Label -->
+            <a href="../../videos-html/Formulários/label/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="estrutura">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Elemento Label">
+                        <div class="fallback-text">Elemento Label</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">13</span> Label</h3>
+                        <p>Aprenda a usar o elemento label para associar textos descritivos aos campos de formulário.</p>
+                        <span class="module-tag">Estrutura</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 14 - Validação de formulários -->
+            <a href="../../videos-html/Formulários/validação de formularios/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="estrutura">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Validação de Formulários">
+                        <div class="fallback-text">Validação de Formulários</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">14</span> Validação de formulários</h3>
+                        <p>Domine técnicas de validação nativa de formulários HTML5 usando atributos como required e pattern.</p>
+                        <span class="module-tag">Estrutura</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 15 - Atributos de formulário -->
+            <a href="../../videos-html/Formulários/atributos de formularios/index.html" class="module-link">
+                <div class="module-card fade-in" data-category="estrutura">
+                    <div class="module-banner">
+                        <img src="../../imagens/html5.png" alt="Atributos de Formulário">
+                        <div class="fallback-text">Atributos de Formulário</div>
+                    </div>
+                    <div class="module-content">
+                        <h3><span class="module-number">15</span> Atributos de formulário</h3>
+                        <p>Aprenda a usar atributos como action, method, enctype, autocomplete e novalidate em formulários.</p>
+                        <span class="module-tag">Estrutura</span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Mensagem de nenhum resultado -->
+            <div class="no-results" id="no-results">
+                Nenhum módulo encontrado com os critérios de busca.
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Filtros de categoria
+        document.querySelectorAll('.filter-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.filter-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                filterModules();
+            });
+        });
+
+        // Busca de módulos
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', filterModules);
+
+        // Função para filtrar módulos
+        function filterModules() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-button.active').getAttribute('data-filter');
+            const modules = document.querySelectorAll('.module-card');
+            const noResults = document.getElementById('no-results');
+            
+            let visibleCount = 0;
+            
+            modules.forEach(module => {
+                const title = module.querySelector('h3').textContent.toLowerCase();
+                const description = module.querySelector('p').textContent.toLowerCase();
+                const category = module.getAttribute('data-category');
+                
+                const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+                const matchesFilter = activeFilter === 'all' || category.includes(activeFilter);
+                
+                if (matchesSearch && matchesFilter) {
+                    module.parentElement.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    module.parentElement.style.display = 'none';
+                }
+            });
+            
+            // Mostra ou esconde a mensagem de nenhum resultado
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>

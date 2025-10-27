@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reprodutor de Vídeo - Dev Ruby</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: #ff3333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(255, 51, 51, 0.3);
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff3333, #ff6666);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .player-container {
+            width: 100%;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        /* Estilo para computador - vídeo pequeno */
+        @media (min-width: 769px) {
+            .player-container {
+                max-width: 600px;
+                background: #252540;
+                border-radius: 15px;
+                overflow: hidden;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        /* Estilo para celular - vídeo grande */
+        @media (max-width: 768px) {
+            .player-container {
+                width: 100%;
+                height: 70vh;
+                max-height: 500px;
+            }
+            
+            /* Rotação automática para paisagem quando em celular */
+            .player-container.landscape {
+                transform: rotate(90deg);
+                transform-origin: center center;
+                width: 100vh;
+                height: 100vw;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(90deg);
+                z-index: 1000;
+                max-width: none;
+                max-height: none;
+            }
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* Proporção 16:9 */
+        }
+
+        @media (max-width: 768px) {
+            .video-wrapper {
+                height: 100%;
+                padding-bottom: 0;
+            }
+        }
+
+        .video-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            outline: none;
+        }
+
+        .video-controls {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #252540;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: #4a4a6a;
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #5a5a8a;
+        }
+
+        .control-btn.play-pause {
+            background: linear-gradient(135deg, #ff3333, #ff6666);
+        }
+
+        .progress-container {
+            flex: 1;
+            height: 8px;
+            background: #3a3a5a;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3333, #ff6666);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .time-display {
+            font-size: 0.9rem;
+            color: #ccc;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 5px;
+            background: #3a3a5a;
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #ff3333;
+            cursor: pointer;
+        }
+
+        .fullscreen-btn {
+            margin-left: auto;
+        }
+
+        .rotation-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .rotation-btn {
+            background: #4a4a6a;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rotation-btn:hover {
+            background: #5a5a8a;
+        }
+
+        .rotation-btn.active {
+            background: linear-gradient(135deg, #ff3333, #ff6666);
+        }
+
+        .video-info {
+            padding: 20px;
+            background: #252540;
+            border-top: 1px solid #3a3a5a;
+        }
+
+        .video-info h3 {
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+            color: #ff6666;
+        }
+
+        .video-info p {
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        .instructions {
+            background: #252540;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .instructions h3 {
+            margin-bottom: 15px;
+            color: #ff6666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instructions ul {
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .device-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .playback-speed {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        .speed-select {
+            background: #4a4a6a;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                margin-bottom: 20px;
+            }
+            
+            .logo {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            .logo-text {
+                font-size: 1.5rem;
+            }
+            
+            .device-indicator {
+                top: 10px;
+                right: 10px;
+                font-size: 0.8rem;
+            }
+            
+            .volume-control {
+                display: none;
+            }
+            
+            .playback-speed {
+                display: none;
+            }
+        }
+
+        /* Estilos para quando estiver em tela cheia */
+        .player-container.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: #000;
+            max-width: none;
+            border-radius: 0;
+        }
+
+        .player-container.fullscreen .video-wrapper {
+            height: 100%;
+            padding-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">R</div>
+            <div class="logo-text">Dev Ruby Video</div>
+        </div>
+        
+        <div class="player-container" id="playerContainer">
+            <div class="video-wrapper">
+                <video class="video-player" id="videoPlayer" poster="https://placehold.co/800x450/1a1a2e/ffffff?text=Dev+Ruby+Video">
+                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                    Seu navegador não suporta o elemento de vídeo.
+                </video>
+            </div>
+            
+            <div class="video-controls">
+                <button class="control-btn play-pause" id="playPauseBtn">
+                    <i class="fas fa-play"></i>
+                </button>
+                
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                
+                <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+                
+                <div class="volume-control">
+                    <button class="control-btn volume-btn" id="volumeBtn">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+                </div>
+                
+                <div class="playback-speed">
+                    <select class="speed-select" id="speedSelect">
+                        <option value="0.5">0.5x</option>
+                        <option value="0.75">0.75x</option>
+                        <option value="1" selected>1x</option>
+                        <option value="1.25">1.25x</option>
+                        <option value="1.5">1.5x</option>
+                        <option value="2">2x</option>
+                    </select>
+                </div>
+                
+                <button class="control-btn fullscreen-btn" id="fullscreenBtn">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+            
+            <div class="rotation-controls">
+                <button class="rotation-btn" id="portraitBtn">
+                    <i class="fas fa-mobile-alt"></i> Retrato
+                </button>
+                <button class="rotation-btn active" id="landscapeBtn">
+                    <i class="fas fa-undo"></i> Paisagem (Auto)
+                </button>
+            </div>
+            
+            <div class="video-info">
+              
+                
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-info-circle"></i> Instruções de Uso:</h3>
+            <ul>
+                <li><strong>Computador:</strong> O vídeo será exibido em tamanho reduzido. Use os controles para reproduzir/pausar.</li>
+                <li><strong>Celular:</strong> O vídeo ocupará a tela inteira e girará automaticamente para paisagem quando reproduzido.</li>
+                <li>Use o botão "Paisagem (Auto)" para ativar/desativar a rotação automática em dispositivos móveis.</li>
+                <li>Clique no botão de tela cheia para uma experiência imersiva.</li>
+                <li>Ajuste o volume e velocidade de reprodução conforme sua preferência.</li>
+            </ul>
+        </div>
+        
+        <div class="device-indicator" id="deviceIndicator">
+            <i class="fas fa-desktop"></i> Modo Computador
+        </div>
+    </div>
+
+    <script>
+        // Elementos do DOM
+        const videoPlayer = document.getElementById('videoPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const playerContainer = document.getElementById('playerContainer');
+        const portraitBtn = document.getElementById('portraitBtn');
+        const landscapeBtn = document.getElementById('landscapeBtn');
+        const deviceIndicator = document.getElementById('deviceIndicator');
+        const volumeBtn = document.getElementById('volumeBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const speedSelect = document.getElementById('speedSelect');
+
+        // Estado do player
+        let isPlaying = false;
+        let autoRotate = true;
+        let isMobile = window.innerWidth <= 768;
+        let isFullscreen = false;
+        let isMuted = false;
+        let lastVolume = 1;
+
+        // Atualizar indicador de dispositivo
+        function updateDeviceIndicator() {
+            isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                deviceIndicator.innerHTML = '<i class="fas fa-mobile-alt"></i> Modo Celular';
+                if (autoRotate && isPlaying) {
+                    playerContainer.classList.add('landscape');
+                } else {
+                    playerContainer.classList.remove('landscape');
+                }
+            } else {
+                deviceIndicator.innerHTML = '<i class="fas fa-desktop"></i> Modo Computador';
+                playerContainer.classList.remove('landscape');
+            }
+        }
+
+        // Atualizar tempo do vídeo
+        function updateTimeDisplay() {
+            const currentTime = formatTime(videoPlayer.currentTime);
+            const duration = formatTime(videoPlayer.duration);
+            timeDisplay.textContent = `${currentTime} / ${duration}`;
+            
+            // Atualizar barra de progresso
+            const progress = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Formatar tempo (segundos para MM:SS)
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "00:00";
+            
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Alternar reprodução/pausa
+        function togglePlayPause() {
+            if (isPlaying) {
+                videoPlayer.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                videoPlayer.play();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                
+                // Em dispositivos móveis, ativar rotação automática se estiver habilitada
+                if (isMobile && autoRotate) {
+                    playerContainer.classList.add('landscape');
+                }
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Definir posição do vídeo com base no clique na barra de progresso
+        function setProgress(e) {
+            const width = this.clientWidth;
+            const clickX = e.offsetX;
+            const duration = videoPlayer.duration;
+            videoPlayer.currentTime = (clickX / width) * duration;
+        }
+
+        // Alternar tela cheia
+        function toggleFullscreen() {
+            if (!isFullscreen) {
+                if (playerContainer.requestFullscreen) {
+                    playerContainer.requestFullscreen();
+                } else if (playerContainer.mozRequestFullScreen) {
+                    playerContainer.mozRequestFullScreen();
+                } else if (playerContainer.webkitRequestFullscreen) {
+                    playerContainer.webkitRequestFullscreen();
+                } else if (playerContainer.msRequestFullscreen) {
+                    playerContainer.msRequestFullscreen();
+                }
+                playerContainer.classList.add('fullscreen');
+                isFullscreen = true;
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                playerContainer.classList.remove('fullscreen');
+                isFullscreen = false;
+            }
+        }
+
+        // Alternar modo de rotação
+        function toggleRotationMode(mode) {
+            if (mode === 'landscape') {
+                autoRotate = true;
+                landscapeBtn.classList.add('active');
+                portraitBtn.classList.remove('active');
+                if (isMobile && isPlaying) {
+                    playerContainer.classList.add('landscape');
+                }
+            } else {
+                autoRotate = false;
+                portraitBtn.classList.add('active');
+                landscapeBtn.classList.remove('active');
+                playerContainer.classList.remove('landscape');
+            }
+        }
+
+        // Alternar mudo
+        function toggleMute() {
+            if (isMuted) {
+                videoPlayer.volume = lastVolume;
+                volumeSlider.value = lastVolume;
+                volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                isMuted = false;
+            } else {
+                lastVolume = videoPlayer.volume;
+                videoPlayer.volume = 0;
+                volumeSlider.value = 0;
+                volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                isMuted = true;
+            }
+        }
+
+        // Ajustar volume
+        function adjustVolume() {
+            videoPlayer.volume = volumeSlider.value;
+            if (videoPlayer.volume == 0) {
+                volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                isMuted = true;
+            } else {
+                volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                isMuted = false;
+                lastVolume = videoPlayer.volume;
+            }
+        }
+
+        // Ajustar velocidade
+        function adjustSpeed() {
+            videoPlayer.playbackRate = parseFloat(speedSelect.value);
+        }
+
+        // Event Listeners
+        videoPlayer.addEventListener('timeupdate', updateTimeDisplay);
+        videoPlayer.addEventListener('loadedmetadata', updateTimeDisplay);
+        videoPlayer.addEventListener('ended', () => {
+            isPlaying = false;
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            // Em dispositivos móveis, voltar ao modo retrato quando o vídeo terminar
+            if (isMobile) {
+                playerContainer.classList.remove('landscape');
+            }
+        });
+
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        progressContainer.addEventListener('click', setProgress);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        portraitBtn.addEventListener('click', () => toggleRotationMode('portrait'));
+        landscapeBtn.addEventListener('click', () => toggleRotationMode('landscape'));
+        volumeBtn.addEventListener('click', toggleMute);
+        volumeSlider.addEventListener('input', adjustVolume);
+        speedSelect.addEventListener('change', adjustSpeed);
+
+        // Atualizar indicador de dispositivo quando a janela for redimensionada
+        window.addEventListener('resize', updateDeviceIndicator);
+
+        // Detectar saída do modo tela cheia
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && 
+                !document.mozFullScreenElement && !document.msFullscreenElement) {
+                playerContainer.classList.remove('fullscreen');
+                isFullscreen = false;
+            }
+        }
+
+        // Inicializar
+        updateDeviceIndicator();
+        videoPlayer.volume = volumeSlider.value;
+    </script>
+</body>
+</html>
