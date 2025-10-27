@@ -1,174 +1,339 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player de Vídeo Moderno</title>
+    <title>Projeto Final HTML5 - Dev Ruby</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            background-color: #1a1a1a;
-            color: #ffffff;
-            padding: 1.5rem;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background: url("../../imagens/Banner\ do\ YouTube\ Gamer\ Pixels\ Preto\ Roxo\ Neon.png") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            line-height: 1.6;
         }
 
         .container {
-            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .titulo-aula {
+        /* Header */
+        .header {
+            background: url(../../imagens/Configuração\ de\ Produtoss.jpeg);
+            padding: 40px 0;
             text-align: center;
-            font-size: 2.2rem;
-            margin-bottom: 2rem;
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            padding: 0 1rem;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        .video-principal {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .thumbnail {
-            width: 100%;
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Project Hero */
+        .project-hero {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: rgba(26, 26, 26, 0.8);
             border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
-            cursor: pointer;
+            border: 1px solid #333;
+        }
+
+        .project-hero h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #ff6666;
+        }
+
+        .project-hero p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: #ccc;
+        }
+
+        .project-image {
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .project-image img {
+            width: 100%;
+            height: auto;
             display: block;
         }
 
-        .thumbnail:hover {
-            transform: scale(1.01);
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
         }
 
-        .botao-play {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 70px;
-            height: 70px;
-            background: #ffffff;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .module-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(179, 0, 0, 0.2);
+            border-color: #b30000;
+        }
+
+        .module-banner {
+            height: 150px;
+            background-color: #222;
+            border-radius: 12px 12px 0 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+            color: #555;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
         }
 
-        .botao-play::before {
-            content: '▶';
-            font-size: 1.8rem;
-            color: #1a1a1a;
-            margin-left: 4px;
+        .module-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .botao-play:hover {
-            background: #ff0000;
-            transform: translate(-50%, -50%) scale(1.1);
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
+        .module-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
-        .info-video {
-            margin-top: 1.5rem;
-            padding: 0 1rem;
-            text-align: center;
+        .module-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+            line-height: 1.4;
         }
 
-        .info-video h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .info-video p {
-            color: #cccccc;
+        .module-card p {
+            color: #aaa;
+            font-size: 0.95rem;
             line-height: 1.5;
+            flex-grow: 1;
         }
 
-        /* Media Queries para responsividade */
-        @media (min-width: 768px) {
-            .container {
-                max-width: 90%;
-            }
-            
-            .titulo-aula {
-                font-size: 2.8rem;
-            }
-            
-            .botao-play {
-                width: 80px;
-                height: 80px;
-            }
-            
-            .botao-play::before {
-                font-size: 2rem;
-            }
-            
-            .info-video {
-                text-align: left;
-                padding: 0;
-            }
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+            display: none;
         }
 
-        @media (min-width: 1024px) {
-            .container {
-                max-width: 80%;
-            }
-            
-            .video-principal {
-                max-width: 800px;
-            }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 480px) {
-            body {
-                padding: 1rem;
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
             }
             
-            .titulo-aula {
-                font-size: 1.8rem;
+            .header p {
+                font-size: 1rem;
             }
             
-            .botao-play {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .botao-play::before {
-                font-size: 1.5rem;
+            .modules-grid {
+                grid-template-columns: 1fr;
             }
         }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+        
+        .module-link {
+            display: block;
+            height: 100%;
+        }
+        
+        .fallback-text {
+            position: absolute;
+            color: #777;
+            font-size: 1rem;
+        }
+        
+        .module-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .module-tag {
+            display: inline-block;
+            background: rgba(179, 0, 0, 0.2);
+            color: #ff6666;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            margin-right: 5px;
+        }
+        
+        .project-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            background: rgba(26, 26, 26, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #b30000;
+        }
+        
+        .feature-card h4 {
+            color: #ff6666;
+            margin-bottom: 10px;
+        }
+        
+        .feature-card p {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin: 50px 0;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(179, 0, 0, 0.1), rgba(139, 0, 0, 0.1));
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(179, 0, 0, 0.3);
+        }
+        .final-btn {
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.final-btn:hover {
+  background-color: #ff1e27;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+}
+
     </style>
 </head>
 <body>
+    <div class="header">
+        <div class="container">
+            <h1>Projeto Final HTML5</h1>
+            <p>Aplicação prática de todos os conceitos aprendidos em um projeto completo</p>
+        </div>
+    </div>
+    
     <div class="container">
-        <h1 class="titulo-aula">Introdução ao CSS Moderno</h1>
-        
-        <div class="video-principal">
-            <img src="../../imagens/Agência.jpeg" alt="Thumbnail do Vídeo" class="thumbnail">
-            <button class="botao-play"></button>
+        <div class="project-hero">
+            <h2>Criando um Projeto Completo com HTML5</h2>
+            <p>Neste módulo especial, você vai aplicar tudo o que aprendeu sobre HTML5 em um projeto real: um portfólio pessoal responsivo e acessível. Vamos desde a estrutura básica até a implementação de recursos avançados.</p>
+            
+            <div class="project-image">
+                <a href="criando o projeto final apenas com html/index.html">
+  <button class="final-btn">AULA FINAL</button>
+</a>
+                
+            </div>
         </div>
         
+      
        
-    </div>
+          
+      
+
+    <script>
+        // Função simples para animação de entrada dos cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.module-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
 </body>
 </html>

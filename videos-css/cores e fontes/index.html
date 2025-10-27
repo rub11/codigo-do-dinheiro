@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cores e Fontes CSS - Dev Ruby</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url("../../imagens/Banner do YouTube Gamer Pixels Preto Roxo Neon.png") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: url(../../imagens/Tráfego\ Pago\ Introduçãos.jpeg);
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .module-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(179, 0, 0, 0.2);
+            border-color: #b30000;
+        }
+
+         .module-banner {
+            height: 150px;
+         
+          
+         
+            
+        }
+
+
+        .module-banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(179, 0, 0, 0.1), rgba(139, 0, 0, 0.2));
+        }
+
+        .module-content {
+            padding: 25px;
+        }
+
+        .module-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .module-card p {
+            color: #aaa;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .module-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .module-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .module-tag {
+            background: rgba(179, 0, 0, 0.2);
+            color: #ff6666;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        /* Demo Styles */
+        .demo-text {
+            font-size: 0.9rem;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 3px solid #b30000;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+
+        /* Simple animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Cores e Fontes CSS</h1>
+            <p>Domine a arte de colorir e tipografar suas páginas web</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="modules-grid">
+            <!-- Módulo 1 -->
+            <a href="../cores e fontes/cores de texto e fundo/index.html">
+                <div class="module-card fade-in">
+                     <div class="module-banner"><img width="100%" src="../../imagens/Agência.jpeg" >
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">1</span> 
+                            Cores de Texto e Fundo
+                        </h3>
+                        <p>Aprenda a mudar cores de texto e fundo usando diferentes formatos: nomes, hexadecimal, RGB, HSL. Controle de contraste e acessibilidade.</p>
+                        <div class="demo-text">
+                            color: #ff0000;<br>
+                            background-color: rgba(0, 0, 255, 0.5);
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Cores</span>
+                            <span class="module-tag">Background</span>
+                            <span class="module-tag">Texto</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 2 -->
+            <a href="../cores e fontes/formatação de fontes/index.html">
+                <div class="module-card fade-in">
+                    <div class="module-banner"><img width="100%" src="../../imagens/Agência.jpeg" >
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">2</span> 
+                            Formatação de Fontes
+                        </h3>
+                        <p>Domine a formatação de fontes: família (font-family), tamanho (font-size), peso (font-weight), estilo (font-style) e espaçamento (line-height).</p>
+                        <div class="demo-text">
+                            font-family: Arial, sans-serif;<br>
+                            font-size: 16px;<br>
+                            font-weight: bold;
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Fontes</span>
+                            <span class="module-tag">Tipografia</span>
+                            <span class="module-tag">Texto</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 3 -->
+            <a href="../cores e fontes/google fonts/index.html">
+                <div class="module-card fade-in">
+                     <div class="module-banner"><img width="100%" src="../../imagens/Agência.jpeg" >
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">3</span> 
+                            Google Fonts
+                        </h3>
+                        <p>Aprenda a usar fontes do Google Fonts em seus projetos. Importação via link e @import, combinações de fontes e otimização de performance.</p>
+                        <div class="demo-text">
+                            &lt;link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"&gt;<br>
+                            font-family: 'Roboto', sans-serif;
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Google Fonts</span>
+                            <span class="module-tag">Fontes Web</span>
+                            <span class="module-tag">Importação</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 4 -->
+            <a href="../cores e fontes/gradientes/index.html">
+                <div class="module-card fade-in">
+                    <div class="module-banner"><img width="100%" src="../../imagens/Agência.jpeg" >
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">4</span> 
+                            Gradientes de Cor
+                        </h3>
+                        <p>Crie gradientes lineares e radiais impressionantes. Controle de direção, cores, transparência e posicionamento para designs modernos.</p>
+                        <div class="demo-text">
+                            background: linear-gradient(45deg, #ff0000, #0000ff);<br>
+                            background: radial-gradient(circle, red, blue);
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Gradientes</span>
+                            <span class="module-tag">Background</span>
+                            <span class="module-tag">Design</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 5 -->
+            <a href="../cores e fontes/opacidade e transparencia/index.html">
+                <div class="module-card fade-in">
+                     <div class="module-banner"><img width="100%" src="../../imagens/Agência.jpeg" >
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">5</span> 
+                            Opacidade e Transparência
+                        </h3>
+                        <p>Controle a transparência de elementos com opacity, rgba(), hsla() e propriedade opacity. Efeitos de overlay e designs com camadas.</p>
+                        <div class="demo-text">
+                            opacity: 0.5;<br>
+                            background-color: rgba(255, 0, 0, 0.3);<br>
+                            color: hsla(120, 100%, 50%, 0.7);
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Transparência</span>
+                            <span class="module-tag">Opacity</span>
+                            <span class="module-tag">Efeitos</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 6 -->
+            <a href="../cores e fontes/projeto integrado/index.html">
+                <div class="module-card fade-in">
+                     <div class="module-banner"><img width="100%" src="../../imagens/Agência.jpeg" >
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">6</span> 
+                            Prática: Projeto Integrado
+                        </h3>
+                        <p>Aplicação prática de todos os conceitos em um projeto real: paleta de cores harmoniosa, tipografia consistente e efeitos visuais modernos.</p>
+                        <div class="demo-text">
+                            Combinação de cores<br>
+                            Hierarquia tipográfica<br>
+                            Gradientes e transparências
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Projeto</span>
+                            <span class="module-tag">Prática</span>
+                            <span class="module-tag">Integração</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Adiciona delay de animação para cada card
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.module-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+            
+            // Adiciona cores de fundo diferentes para cada banner
+            const banners = document.querySelectorAll('.module-banner');
+            const bannerColors = [
+                'linear-gradient(135deg, #ff6b6b, #ee5a24)',
+                'linear-gradient(135deg, #a29bfe, #6c5ce7)',
+                'linear-gradient(135deg, #fd79a8, #e84393)',
+                'linear-gradient(135deg, #ffeaa7, #fdcb6e)',
+                'linear-gradient(135deg, #55efc4, #00b894)',
+                'linear-gradient(135deg, #74b9ff, #0984e3)'
+            ];
+            
+            banners.forEach((banner, index) => {
+                banner.style.background = bannerColors[index];
+            });
+        });
+    </script>
+</body>
+</html>

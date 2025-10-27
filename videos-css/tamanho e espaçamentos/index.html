@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Box Model e Unidades CSS - Dev Ruby</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: url("../../imagens/Banner do YouTube Gamer Pixels Preto Roxo Neon.png") no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: url(../../imagens/Tráfego\ Pago\ Introduçãos.jpeg);
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .module-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(179, 0, 0, 0.2);
+            border-color: #b30000;
+        }
+
+        .module-banner {
+            height: 150px;
+            background: url(../../imagens/Agência.jpeg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(179, 0, 0, 0.1), rgba(139, 0, 0, 0.2));
+        }
+
+        .module-content {
+            padding: 25px;
+        }
+
+        .module-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .module-card p {
+            color: #aaa;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .module-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .module-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .module-tag {
+            background: rgba(179, 0, 0, 0.2);
+            color: #ff6666;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        /* Demo Styles */
+        .demo-text {
+            font-size: 0.9rem;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 3px solid #b30000;
+            font-family: 'Courier New', monospace;
+        }
+
+        .box-model-demo {
+            width: 100%;
+            height: 80px;
+            margin: 10px 0;
+            position: relative;
+            border: 2px dashed #666;
+        }
+
+        .box-content {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: rgba(179, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+
+        /* Simple animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Box Model e Unidades CSS</h1>
+            <p>Domine o controle de tamanhos, espaçamentos e layout</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="modules-grid">
+            <!-- Módulo 1 -->
+            <a href="../tamanho e espaçamentos/tamanhos margens/index.html">
+                <div class="module-card fade-in">
+                    <div class="module-banner"><img width="100%" src="../../imagens/Automação com Scripts e Planilhass.jpeg" alt="">
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">1</span> 
+                            Tamanhos, Margens e Espaçamento
+                        </h3>
+                        <p>Aprenda a ajustar tamanho, margem e espaçamento dos elementos. Controle de width, height, margin, padding e suas variações.</p>
+                        <div class="demo-text">
+                            width: 300px;<br>
+                            height: 200px;<br>
+                            margin: 20px;<br>
+                            padding: 15px;
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Tamanho</span>
+                            <span class="module-tag">Margem</span>
+                            <span class="module-tag">Espaçamento</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 2 -->
+            <a href="../tamanho e espaçamentos/unidades de medida/index.html">
+                <div class="module-card fade-in">
+                     <div class="module-banner"><img width="100%" src="../../imagens/Automação com Scripts e Planilhass.jpeg" >
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">2</span> 
+                            Unidades de Medida
+                        </h3>
+                        <p>Domine as principais unidades CSS: px (absoluta), em e rem (relativas), % (porcentagem), vw/vh (viewport) e quando usar cada uma.</p>
+                        <div class="demo-text">
+                            font-size: 16px;      /* Absoluto */<br>
+                            font-size: 1.5rem;    /* Relativo ao root */<br>
+                            width: 50%;           /* Porcentagem */<br>
+                            height: 100vh;        /* Viewport */
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Unidades</span>
+                            <span class="module-tag">PX</span>
+                            <span class="module-tag">REM/EM</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 3 -->
+            <a href="../tamanho e espaçamentos/box model/index.html">
+                <div class="module-card fade-in">
+                     <div class="module-banner"><img width="100%" src="../../imagens/Automação com Scripts e Planilhass.jpeg" >
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">3</span> 
+                            Box Model Completo
+                        </h3>
+                        <p>Entenda o Box Model CSS: content, padding, border e margin. Como cada camada afeta o layout e o tamanho total dos elementos.</p>
+                        <div class="box-model-demo">
+                            <div class="box-content">Content Area</div>
+                        </div>
+                        <div class="demo-text">
+                            /* Box Model */<br>
+                            content → padding → border → margin
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Box Model</span>
+                            <span class="module-tag">Layout</span>
+                            <span class="module-tag">Estrutura</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 4 -->
+            <a href="../tamanho e espaçamentos/marin padding e border/index.html">
+                <div class="module-card fade-in">
+                    <div class="module-banner"><img width="100%" src="../../imagens/Automação com Scripts e Planilhass.jpeg" >
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">4</span> 
+                            Margin, Padding e Border
+                        </h3>
+                        <p>Domine as propriedades de espaçamento: margin (externo), padding (interno) e border (borda). Shorthand properties e direções específicas.</p>
+                        <div class="demo-text">
+                            margin: 10px 20px;      /* top/bottom left/right */<br>
+                            padding: 15px 10px 5px; /* top left/right bottom */<br>
+                            border: 2px solid red;  /* width style color */
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Margin</span>
+                            <span class="module-tag">Padding</span>
+                            <span class="module-tag">Border</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 5 -->
+            <a href="../tamanho e espaçamentos/box sizing/index.html">
+                <div class="module-card fade-in">
+                     <div class="module-banner"><img width="100%" src="../../imagens/Automação com Scripts e Planilhass.jpeg" >
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">5</span> 
+                            Box-Sizing
+                        </h3>
+                        <p>Entenda a propriedade box-sizing: content-box vs border-box. Como controlar se padding e border são incluídos no width/height.</p>
+                        <div class="demo-text">
+                            box-sizing: content-box; /* padrão */<br>
+                            width: 300px + padding + border<br><br>
+                            box-sizing: border-box;  /* moderno */<br>
+                            width: 300px (inclui padding e border)
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Box-Sizing</span>
+                            <span class="module-tag">Layout</span>
+                            <span class="module-tag">Controle</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Módulo 6 -->
+            <a href="../tamanho e espaçamentos/pratica/index.html">
+                <div class="module-card fade-in">
+                    <div class="module-banner"><img width="100%" src="../../imagens/Automação com Scripts e Planilhass.jpeg" >
+                        <!-- Banner será preenchido via CSS -->
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">6</span> 
+                            Prática: Layout Responsivo
+                        </h3>
+                        <p>Aplicação prática de todos os conceitos em um layout responsivo usando Box Model, unidades relativas e box-sizing border-box.</p>
+                        <div class="demo-text">
+                            /* Reset moderno */<br>
+                            * { box-sizing: border-box; }<br><br>
+                            /* Layout responsivo */<br>
+                            .container {<br>
+                            &nbsp;&nbsp;max-width: 1200px;<br>
+                            &nbsp;&nbsp;margin: 0 auto;<br>
+                            &nbsp;&nbsp;padding: 2rem;<br>
+                            }
+                        </div>
+                        <div class="module-tags">
+                            <span class="module-tag">Projeto</span>
+                            <span class="module-tag">Prática</span>
+                            <span class="module-tag">Responsivo</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Adiciona delay de animação para cada card
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.module-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+            
+            // Adiciona cores de fundo diferentes para cada banner
+            const banners = document.querySelectorAll('.module-banner');
+            const bannerColors = [
+                'linear-gradient(135deg, #ff6b6b, #ee5a24)',
+                'linear-gradient(135deg, #a29bfe, #6c5ce7)',
+                'linear-gradient(135deg, #fd79a8, #e84393)',
+                'linear-gradient(135deg, #ffeaa7, #fdcb6e)',
+                'linear-gradient(135deg, #55efc4, #00b894)',
+                'linear-gradient(135deg, #74b9ff, #0984e3)'
+            ];
+            
+            banners.forEach((banner, index) => {
+                banner.style.background = bannerColors[index];
+            });
+
+            // Adiciona demonstração visual do box model
+            const boxDemo = document.querySelector('.box-model-demo');
+            if (boxDemo) {
+                boxDemo.style.padding = '20px';
+                boxDemo.style.border = '15px solid rgba(255, 255, 255, 0.2)';
+                boxDemo.style.margin = '10px';
+                boxDemo.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+    </script>
+</body>
+</html>
