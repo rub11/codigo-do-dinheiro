@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Hub - Tecnologia = Dinheiro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Fox Ruby - Tecnologia = Dinheiro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,34 +13,11 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        body, html {
-            height: 100%;
-            overflow: hidden;
+        body {
             background-color: #000;
-        }
-
-        .background-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><rect width="100%" height="100%" fill="%23000"/><text x="50%" y="45%" font-family="Arial" font-size="60" fill="%23b30000" text-anchor="middle">DEV HUB</text><text x="50%" y="55%" font-family="Arial" font-size="36" fill="%23b30000" text-anchor="middle">tecnologia = dinheiro</text></svg>') no-repeat center center;
-            background-size: cover;
-            background-attachment: fixed;
-            z-index: -2;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: -1;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .container {
@@ -48,33 +25,43 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             text-align: center;
             padding: 20px;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
-        .title {
-            font-size: 4rem;
+        .logo {
+            font-size: 5rem;
             font-weight: 700;
-            color: #fff;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(179, 0, 0, 0.7);
-            opacity: 0;
-            animation: fadeIn 1.5s ease-out 1s forwards;
+            background: linear-gradient(45deg, #ff3333, #b30000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 51, 51, 0.5);
+            animation: glow 3s ease-in-out infinite alternate;
         }
 
-        .subtitle {
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(255, 51, 51, 0.8), 0 0 40px rgba(255, 51, 51, 0.6);
+            }
+        }
+
+        .tagline {
             font-size: 1.5rem;
             color: #ccc;
             margin-bottom: 40px;
             max-width: 600px;
-            opacity: 0;
-            animation: fadeIn 1.5s ease-out 1.5s forwards;
+            line-height: 1.6;
         }
 
-        .start-button {
+        .cta-button {
             background: linear-gradient(135deg, #b30000, #ff3333);
             color: white;
             border: none;
@@ -85,13 +72,28 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(179, 0, 0, 0.4);
-            opacity: 0;
-            animation: fadeIn 1.5s ease-out 2s forwards;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
         }
 
-        .start-button:hover {
-            transform: scale(1.05);
+        .cta-button:hover {
+            transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(179, 0, 0, 0.6);
+        }
+
+        .cta-button:active {
+            transform: translateY(1px);
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a0000 0%, #000 70%);
+            z-index: -1;
         }
 
         .particles {
@@ -100,101 +102,124 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
             z-index: 0;
         }
 
         .particle {
             position: absolute;
-            background-color: rgba(179, 0, 0, 0.6);
+            background-color: rgba(179, 0, 0, 0.7);
             border-radius: 50%;
-            pointer-events: none;
-            animation: float 8s infinite ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            animation: float 15s infinite linear;
         }
 
         @keyframes float {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-100px) translateX(20px); opacity: 0; }
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
         }
 
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
+        .grid-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(179, 0, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(179, 0, 0, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            opacity: 0.3;
         }
 
-        .typing-effect {
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: 2px solid #b30000;
-            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
-            display: inline-block;
+        .pulse-circle {
+            position: fixed;
+            border-radius: 50%;
+            border: 2px solid rgba(179, 0, 0, 0.3);
+            animation: pulse 4s infinite;
+            z-index: 0;
         }
 
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: #b30000; }
+        @keyframes pulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.7;
+            }
         }
 
-        /* Responsividade */
         @media (max-width: 768px) {
-            .title {
-                font-size: 2.5rem;
+            .logo {
+                font-size: 3.5rem;
             }
             
-            .subtitle {
+            .tagline {
                 font-size: 1.2rem;
             }
             
-            .start-button {
+            .cta-button {
                 padding: 12px 30px;
                 font-size: 1rem;
             }
         }
 
         @media (max-width: 480px) {
-            .title {
-                font-size: 2rem;
+            .logo {
+                font-size: 2.5rem;
             }
             
-            .subtitle {
+            .tagline {
                 font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="background-container"></div>
-    <div class="overlay"></div>
+    <div class="background"></div>
+    <div class="grid-lines"></div>
     <div class="particles" id="particles"></div>
     
     <div class="container">
-        <h1 class="title">Bem-vindo à <span class="typing-effect">Dev Hub</span></h1>
-        <p class="subtitle" id="subtitle">O código do dinheiro começa aqui.</p>
-        <button class="start-button" onclick="window.location.href='modulos/index.html'">Começar Jornada</button>
+        <h1 class="logo">FOX RUBY</h1>
+        <p class="tagline" id="tagline"></p>
+        <a href="modulos/index.html"><button class="cta-button">Começar Jornada</button></a>
+        
     </div>
 
     <script>
-        // Array de subtítulos para escolha aleatória
-        const subtitles = [
-            "O código do dinheiro começa aqui.",
-            "Transforme tecnologia em lucro.",
-            "Sua jornada pelo código começa agora.",
-            "Do zero ao sistema que vende."
+        // Array de taglines para escolha aleatória
+        const taglines = [
+            "Tecnologia = Dinheiro. Transforme código em valor.",
+            "Do zero ao sistema que vende.",
+            "Sua jornada pelo código lucrativo começa aqui.",
+            "Transforme linhas de código em fluxo de caixa."
         ];
         
-        // Seleciona um subtítulo aleatório
-        document.getElementById('subtitle').textContent = subtitles[Math.floor(Math.random() * subtitles.length)];
+        // Seleciona uma tagline aleatória
+        document.getElementById('tagline').textContent = taglines[Math.floor(Math.random() * taglines.length)];
         
         // Cria partículas flutuantes
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
+            const particleCount = 40;
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -207,17 +232,46 @@
                 
                 // Posição inicial aleatória
                 particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
                 
                 // Atraso de animação aleatório
-                particle.style.animationDelay = `${Math.random() * 8}s`;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                
+                // Duração aleatória
+                particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
                 
                 particlesContainer.appendChild(particle);
             }
         }
         
-        // Inicializa as partículas quando a página carrega
-        window.onload = createParticles;
+        // Cria círculos pulsantes
+        function createPulseCircles() {
+            const circlesCount = 3;
+            
+            for (let i = 0; i < circlesCount; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('pulse-circle');
+                
+                // Tamanho aleatório
+                const size = Math.random() * 300 + 100;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                
+                // Posição aleatória
+                circle.style.left = `${Math.random() * 80 + 10}%`;
+                circle.style.top = `${Math.random() * 80 + 10}%`;
+                
+                // Atraso de animação aleatório
+                circle.style.animationDelay = `${Math.random() * 4}s`;
+                
+                document.body.appendChild(circle);
+            }
+        }
+        
+        // Inicializa os efeitos quando a página carrega
+        window.addEventListener('load', function() {
+            createParticles();
+            createPulseCircles();
+        });
     </script>
 </body>
 </html>
