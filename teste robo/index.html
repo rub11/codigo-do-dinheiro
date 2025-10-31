@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistente Fox Ruby</title>
+<style>
+    /* Reset básico */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #fff;
+    }
+
+    .container {
+        border: 1px solid red;
+        width: 70%;
+        height: 600px;
+        max-width: 90%;
+        background: #111;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    h1 {
+        text-align: center;
+        color: #ff3f3f;
+        margin-bottom: 15px;
+        text-shadow: 1px 1px 6px rgba(255,63,63,0.7);
+    }
+
+    .chat-box {
+        flex: 1;
+        background: #070707;
+        border-radius: 12px;
+        padding: 12px;
+        overflow-y: auto;
+        border: 1px solid #222;
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        scrollbar-width: thin;
+        scrollbar-color: #ff3f3f #111;
+    }
+
+    .chat-box::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .chat-box::-webkit-scrollbar-track {
+        background: #111;
+        border-radius: 8px;
+    }
+
+    .chat-box::-webkit-scrollbar-thumb {
+        background: #ff3f3f;
+        border-radius: 8px;
+    }
+
+    .msg {
+        padding: 8px 12px;
+        border-radius: 15px;
+        max-width: 75%;
+        word-wrap: break-word;
+        font-size: 0.95em;
+        line-height: 1.3em;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .msg-user {
+        background: #1a1a1a;
+        color: #fff;
+        align-self: flex-end;
+        border-bottom-right-radius: 0;
+    }
+
+    .msg-bot {
+        background: transparent;
+        color: #fff;
+        align-self: flex-start;
+        border-bottom-left-radius: 0;
+        border: 1px solid #333;
+    }
+
+    .typing-indicator {
+        display: inline-block;
+    }
+
+    .typing-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: #ff3f3f;
+        border-radius: 50%;
+        margin: 0 2px;
+        animation: typing 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes typing {
+        0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+        40% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-group {
+        display: flex;
+        gap: 6px;
+    }
+
+    input {
+        flex: 1;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        background: #0a0a0a;
+        color: #fff;
+        font-size: 0.95em;
+        border: 1px solid red;
+    }
+
+    input:focus {
+        outline: 2px solid #ff3f3f;
+        background: #0d0d0d;
+    }
+
+    button {
+        padding: 12px 15px;
+        border-radius: 10px;
+        border: none;
+        background: #ff3f3f;
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #ff5f5f;
+        transform: scale(1.03);
+    }
+
+    button:disabled {
+        background: #666;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .intro-msg {
+        background: #1a1a1a;
+        color: #ffcc00;
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-style: italic;
+        font-size: 0.95em;
+        margin-bottom: 10px;
+        text-align: center;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+    }
+
+    @media (max-width: 1024px) {
+        .container {
+            width: 85%;
+            height: 500px;
+            padding: 15px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            width: 90%;
+            height: auto;
+            padding: 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            width: 95%;
+            height: auto;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .container h1 {
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .input-group {
+            flex-direction: column;
+        }
+
+        #userInput {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #sendBtn {
+            width: 100%;
+        }
+    }
+</style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Olá, sou o Assistente da Fox Ruby, como posso ajudá-lo hoje? 🤖</h1>
+    <!-- Parágrafo informativo -->
+    <p class="intro-msg">⚡ Estou no início do meu aprendizado, mas já posso te ajudar com algumas coisas! 😊</p>
+    <p class="intro-msg">⚡ por favor seja paciente comigo. 😊</p>
+    <div id="chat" class="chat-box"></div>
+    <div class="input-group">
+        <input type="text" id="userInput" placeholder="Digite sua pergunta ou palavras-chave, ex: oi..." autocomplete="off">
+        <button id="sendBtn">Enviar</button>
+    </div>
+</div>
+
+<script>
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('userInput');
+    const button = document.getElementById('sendBtn');
+    let isTyping = false;
+
+    function addUserMessage(msg) {
+        const div = document.createElement('div');
+        div.className = 'msg msg-user';
+        div.textContent = msg;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'msg msg-bot';
+        typingDiv.id = 'typing-indicator';
+        
+        const typingText = document.createElement('span');
+        typingText.textContent = 'Digitando ';
+        typingDiv.appendChild(typingText);
+        
+        const dots = document.createElement('span');
+        dots.className = 'typing-indicator';
+        for (let i = 0; i < 3; i++) {
+            const dot = document.createElement('span');
+            dot.className = 'typing-dot';
+            dots.appendChild(dot);
+        }
+        typingDiv.appendChild(dots);
+        
+        chat.appendChild(typingDiv);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
+        }
+    }
+
+    function addBotMessage(msg, speed = 30) {
+        return new Promise((resolve) => {
+            removeTypingIndicator();
+            
+            const div = document.createElement('div');
+            div.className = 'msg msg-bot';
+            chat.appendChild(div);
+            
+            let i = 0;
+            function typeWriter() {
+                if (i < msg.length) {
+                    div.textContent += msg.charAt(i);
+                    i++;
+                    chat.scrollTop = chat.scrollHeight;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    resolve();
+                }
+            }
+            typeWriter();
+        });
+    }
+
+    // ========== ÁREA PARA ADICIONAR NOVAS RESPOSTAS ==========
+    // COLE SEUS NOVOS IFS AQUI DENTRO DA FUNÇÃO getBotResponse
+    function getBotResponse(msg) {
+        msg = msg.toLowerCase();
+
+        // Suas respostas existentes aqui...
+        if (msg.includes('oi') || msg.includes('olá') || msg.includes('hello')) return 'Olá! Eu sou o Assistente Fox Ruby, pronto pra te ajudar!';
+        if (msg.includes('tudo bem') || msg.includes('como vai')) return 'Tudo certo! E você, preparado pra aprender?';
+        if (msg.includes('bom dia')) return 'Bom dia! Que seja produtivo e cheio de código!';
+        // ... todas as suas respostas atuais
+
+        // ========== COLE SEUS NOVOS IFS AQUI ==========
+        // EXEMPLO:
+        // if (msg.includes('nova pergunta')) return 'Nova resposta!';
+        // if (msg.includes('outra pergunta')) return 'Outra resposta!';
+
+        // Resposta padrão
+        return 'Por favor seja mais especifico , use palavras chaves para que eu possa te ajudar , caso nao consiga envie um email para juliodasilva0101@gmail.com para tirar sua duvida, obrigado(a)';
+    }
+
+    async function handleUserMessage() {
+        const userMsg = input.value.trim();
+        if (!userMsg || isTyping) return;
+        
+        addUserMessage(userMsg);
+        input.value = '';
+        button.disabled = true;
+        isTyping = true;
+
+        // Mostrar indicador de digitação
+        showTypingIndicator();
+
+        // Pequeno delay para simular processamento
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const botMsg = getBotResponse(userMsg);
+        
+        // Remover indicador e mostrar resposta com efeito de digitação
+        removeTypingIndicator();
+        await addBotMessage(botMsg);
+
+        // Reativar input
+        button.disabled = false;
+        isTyping = false;
+        input.focus();
+    }
+
+    button.addEventListener('click', handleUserMessage);
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !isTyping) {
+            handleUserMessage();
+        }
+    });
+
+    // Focar no input ao carregar a página
+    input.focus();
+
+// ========== ÁREA PARA ADICIONAR NOVAS RESPOSTAS ==========
+function getBotResponse(msg) {
+    msg = msg.toLowerCase();
+
+  
+     // Saudações
+            if (msg.includes('oi') || msg.includes('olá') || msg.includes('hello')) return 'Olá! Eu sou o Assistente Fox Ruby, pronto pra te ajudar!';
+             if (msg.includes('oi') || msg.includes('ola') || msg.includes('hello')) return 'Olá! Eu sou o Assistente Fox Ruby, pronto pra te ajudar!';
+            if (msg.includes('tudo bem') || msg.includes('como vai')) return 'Tudo certo! E você, preparado pra aprender?';
+            if (msg.includes('bom dia')) return 'Bom dia! Que seja produtivo e cheio de código!';
+            if (msg.includes('boa tarde')) return 'Boa tarde! Hora de avançar nos seus projetos!';
+            if (msg.includes('boa noite')) return 'Boa noite! Ainda dá tempo de codar um pouco ;)';
+
+            // Perguntas comuns
+            if (msg.includes('como eu aprendo programação')) return 'Comece pelo básico: HTML, CSS e JavaScript. Pratique todo dia!';
+            if (msg.includes('qual curso devo fazer')) return 'Depende do seu objetivo, mas na Fox Ruby temos cursos do iniciante ao avançado!';
+            if (msg.includes('como ganhar dinheiro com programação')) return 'Praticando, criando projetos e oferecendo seus serviços como freelancer!';
+            if (msg.includes('quanto tempo pra aprender')) return 'Com dedicação diária, você consegue resultados em alguns meses!';
+            if (msg.includes('qual linguagem aprender primeiro')) return 'HTML, CSS e JavaScript são essenciais para começar no web dev!';
+            if (msg.includes('como faço um site')) return 'Comece estruturando com HTML, depois estilize com CSS e interaja com JavaScript!';
+            if (msg.includes('o que é backend')) return 'Backend é a parte que processa dados e lógica por trás dos sites e apps!';
+            if (msg.includes('o que é frontend')) return 'Frontend é o que o usuário vê e interage nos sites e apps!';
+            if (msg.includes('o que é fullstack')) return 'Fullstack é quem domina frontend e backend, criando sistemas completos!';
+            if (msg.includes('como colocar site no ar')) return 'Você precisa de hospedagem, domínio e enviar seus arquivos ou usar plataformas como Vercel ou Netlify!';
+            if (msg.includes('como estudar sozinho')) return 'Pratique projetos, veja tutoriais, leia livros e participe de comunidades!';
+            if (msg.includes('como aprender rápido')) return 'Praticando, revisando, aplicando e não deixando a procrastinação te parar!';
+            if (msg.includes('qual editor usar')) return 'VS Code é leve, gratuito e cheio de extensões pra dev!';
+            if (msg.includes('como versionar código')) return 'Use Git para controlar versões e GitHub para hospedar!';
+            if (msg.includes('como conseguir emprego')) return 'Construa portfólio, participe de projetos reais e aplique nas vagas!';
+            if (msg.includes('como fazer portfólio')) return 'Mostre seus projetos, descreva tecnologias usadas e coloque online!';
+            if (msg.includes('o que estudar primeiro')) return 'Comece por HTML, CSS, depois JavaScript, e aos poucos vá para frameworks!';
+            if (msg.includes('quanto custa aprender')) return 'Existem cursos gratuitos e pagos, o importante é praticar e aprender!';
+            if (msg.includes('vale a pena aprender programação')) return 'Com certeza! É uma habilidade que abre muitas portas!';
+            if (msg.includes('como resolver bugs')) return 'Leia o erro, pesquise, debugue e peça ajuda quando necessário!';
+            if (msg.includes('como melhorar lógica')) return 'Pratique exercícios, resolva problemas e estude algoritmos!';
+            if (msg.includes('como ser freelancer')) return 'Crie perfil em plataformas, faça projetos reais e conquiste clientes!';
+            if (msg.includes('como aprender frameworks')) return 'Depois que dominar o básico, comece com um framework de cada vez!';
+            if (msg.includes('qual banco de dados aprender')) return 'Comece com MySQL ou PostgreSQL, depois explore NoSQL!';
+            if (msg.includes('como ganhar experiência')) return 'Projetos próprios, desafios online, open source e freelas!';
+            if (msg.includes('como fazer API')) return 'Aprenda Node.js, Express ou outro backend, e pratique com dados!';
+            if (msg.includes('como trabalhar remoto')) return 'Procure oportunidades online, organize rotina e use ferramentas de comunicação!';
+            if (msg.includes('como estudar programação')) return 'Pratique, veja vídeos, leia tutoriais e faça projetos!';
+            if (msg.includes('qual projeto fazer')) return 'Comece simples: site pessoal, calculadora, blog ou app pequeno!';
+            if (msg.includes('como criar portfólio online')) return 'Use GitHub Pages, Netlify ou Vercel e publique seus projetos!';
+            if (msg.includes('como aprender react')) return 'Primeiro HTML/CSS/JS, depois aprenda JSX, componentes, hooks e pratique!';
+            if (msg.includes('como aprender node')) return 'Aprenda JavaScript, depois crie APIs e projetos backend com Node.js!';
+            if (msg.includes('como aprender python')) return 'Pratique lógica, faça scripts, crie pequenos projetos e use bibliotecas!';
+            if (msg.includes('como aprender sql')) return 'Comece criando tabelas, inserindo dados e fazendo consultas simples!';
+            if (msg.includes('como aprender github')) return 'Aprenda a criar repositórios, commits, branches e colaboração!';
+            if (msg.includes('como criar app mobile')) return 'Use React Native ou Flutter para apps híbridos ou nativos!';
+            if (msg.includes('como ganhar dinheiro com sites')) return 'Ofereça serviços, crie lojas online ou trabalhe como freelancer!';
+            if (msg.includes('como melhorar velocidade de site')) return 'Otimize imagens, scripts e use cache!';
+            if (msg.includes('como melhorar código')) return 'Refatore, use boas práticas, padrões e aprenda com exemplos!';
+            if (msg.includes('como aprender sozinho')) return 'Praticando, estudando online, fazendo projetos e se conectando com a comunidade!';
+            if (msg.includes('como estudar javascript')) return 'Faça exercícios, tutoriais, vídeos e pratique criando projetos!';
+            if (msg.includes('como estudar html')) return 'Crie páginas, pratique tags, estrutura e estilos com CSS!';
+            if (msg.includes('como estudar css')) return 'Estilize sites, use flexbox, grid e efeitos para praticar!';
+            if (msg.includes('como criar blog')) return 'Use HTML/CSS/JS, ou plataformas prontas e personalize seu blog!';
+            if (msg.includes('como criar ecommerce')) return 'Aprenda frontend/backend, banco de dados e integração de pagamento!';
+            if (msg.includes('como publicar app')) return 'Use Play Store, App Store ou deploy online!';
+            if (msg.includes('como estudar react')) return 'Siga tutoriais, crie projetos e pratique com componentes e hooks!';
+            if (msg.includes('como estudar nodejs')) return 'Crie APIs, use banco de dados e pratique rotas e middlewares!';
+            if (msg.includes('como estudar python')) return 'Resolva problemas, scripts e projetos pequenos para praticar!';
+            if (msg.includes('como estudar sql')) return 'Faça queries, crie bancos e pratique manipulação de dados!';
+            if (msg.includes('como aprender angular')) return 'Comece com HTML/CSS/JS, depois explore componentes, serviços e rotas no Angular!';
+            if (msg.includes('como aprender vue')) return 'Aprenda componentes, diretivas, props e eventos para criar apps com Vue!';
+            if (msg.includes('como aprender nextjs')) return 'Domine React, depois explore Next.js para renderização no servidor e rotas!';
+            if (msg.includes('como aprender nuxt')) return 'Aprenda Vue e depois Nuxt para SSR e apps robustos!';
+            if (msg.includes('como aprender flask')) return 'Aprenda Python, depois crie APIs simples com Flask!';
+            if (msg.includes('como aprender django')) return 'Aprenda Python, depois Django para criar apps web completos!';
+            if (msg.includes('como aprender react native')) return 'Domine React, depois React Native para apps móveis!';
+            if (msg.includes('como usar git')) return 'Git controla versões do seu código, aprendendo commits, branches e merges!';
+            if (msg.includes('como usar github')) return 'GitHub hospeda seus repositórios e permite colaboração!';
+            if (msg.includes('como usar ci/cd')) return 'CI/CD automatiza testes e deploys para projetos consistentes!';
+            if (msg.includes('como aprender sql server')) return 'Pratique criação de tabelas, consultas, joins e procedures!';
+            if (msg.includes('como aprender postgresql')) return 'Crie bancos, faça queries complexas e pratique índices!';
+            if (msg.includes('como aprender mysql')) return 'Crie bancos, tabelas e pratique SELECT, INSERT, UPDATE e DELETE!';
+            if (msg.includes('como aprender mongodb')) return 'Pratique CRUD, consultas com JSON e indexes!';
+            if (msg.includes('o que é api rest')) return 'APIs REST permitem comunicação entre sistemas de forma padronizada!';
+            if (msg.includes('o que é api graphql')) return 'GraphQL permite consultar dados de forma flexível, retornando só o que precisa!';
+            if (msg.includes('como criar api')) return 'Aprenda backend, rotas, controladores e banco de dados para criar APIs!';
+            if (msg.includes('como consumir api')) return 'Use fetch, axios ou outras ferramentas para acessar dados de APIs!';
+            if (msg.includes('como criar site responsivo')) return 'Use media queries, flexbox, grid e teste em diferentes telas!';
+            if (msg.includes('como criar site interativo')) return 'Use JavaScript para eventos, DOM e interações!';
+            if (msg.includes('como criar app web')) return 'Combine frontend, backend e banco de dados para um app completo!';
+            if (msg.includes('como aprender fullstack')) return 'Domine frontend, backend e bancos de dados para ser fullstack!';
+            if (msg.includes('como trabalhar frontend')) return 'Foque em HTML, CSS, JS e frameworks modernos!';
+            if (msg.includes('como trabalhar backend')) return 'Aprenda Node, Python, Java ou outra stack para lógica e APIs!';
+            if (msg.includes('como criar portfólio fullstack')) return 'Mostre frontend, backend, bancos de dados e deploys online!';
+            if (msg.includes('como aumentar produtividade')) return 'Organize tarefas, use pomodoro, priorize o que importa e evite distrações!';
+            if (msg.includes('como ter foco')) return 'Defina objetivos claros, elimine distrações e mantenha disciplina!';
+            if (msg.includes('como melhorar disciplina')) return 'Crie rotina, metas diárias e hábitos consistentes!';
+            if (msg.includes('como manter motivação')) return 'Tenha objetivos claros, veja progresso e celebre pequenas conquistas!';
+            if (msg.includes('como evoluir na carreira')) return 'Aplique conhecimento, busque projetos reais e mantenha aprendizado constante!';
+            if (msg.includes('como conseguir emprego dev')) return 'Construa portfólio, participe de freelas e aplique em vagas!';
+            if (msg.includes('como melhorar lógica de programação')) return 'Resolva problemas, faça exercícios e estude algoritmos e estruturas de dados!';
+
+            // Cursos e aprendizado
+            if (msg.includes('curso')) return 'Na Fox Ruby você encontra cursos práticos e conteúdos afiados para crescer!';
+            if (msg.includes('aprendizado') || msg.includes('estudar')) return 'Aprender é evoluir. Vamos juntos nessa jornada!';
+            if (msg.includes('iniciante')) return 'Tem curso pra iniciantes e também avançados, você vai se encaixar!';
+            if (msg.includes('avançado')) return 'Se você já manja, temos desafios avançados pra você!';
+            if (msg.includes('projeto')) return 'Projetos práticos são a melhor forma de aprender na Fox Ruby!';
+            if (msg.includes('vídeo aula')) return 'Vídeo aulas detalhadas e passo a passo estão disponíveis pra você.';
+            if (msg.includes('dev ruby')) return 'Dev Ruby é o seu hub completo de programação e tecnologia!';
+
+            // Linguagens de programação
+            if (msg.includes('javascript')) return 'JavaScript é essencial! Quer aprender a criar sites interativos?';
+            if (msg.includes('html')) return 'HTML é a base! Aqui você vai aprender a estruturar páginas como um pro.';
+            if (msg.includes('css')) return 'CSS deixa seu site bonito e estilizado, vamos caprichar!';
+            if (msg.includes('python')) return 'Python é super versátil, perfeito pra backend e automações!';
+            if (msg.includes('java')) return 'Java é poderoso para sistemas grandes e corporativos.';
+            if (msg.includes('c#')) return 'C# é ótimo pra desenvolvimento de jogos e aplicações Windows.';
+            if (msg.includes('php')) return 'PHP ainda é usado em muitos sistemas e sites, vale conhecer!';
+            if (msg.includes('sql')) return 'SQL é essencial pra lidar com bancos de dados!';
+            if (msg.includes('node')) return 'Node.js permite rodar JavaScript no servidor e construir APIs!';
+            if (msg.includes('react')) return 'React ajuda a criar interfaces rápidas e modernas para a web!';
+            if (msg.includes('angular')) return 'Angular é completo e robusto para aplicações complexas!';
+            if (msg.includes('vue')) return 'Vue é leve, moderno e fácil de aprender!';
+            if (msg.includes('typescript')) return 'TypeScript deixa seu JavaScript mais seguro e escalável!';
+
+            // Ferramentas e tecnologia
+            if (msg.includes('github')) return 'GitHub é perfeito pra versionar e compartilhar seu código!';
+            if (msg.includes('git')) return 'Git é essencial pra controlar versões e colaborar!';
+            if (msg.includes('vscode')) return 'VS Code é o editor favorito dos devs modernos!';
+            if (msg.includes('terminal')) return 'Saber usar o terminal aumenta muito sua produtividade!';
+            if (msg.includes('api')) return 'APIs permitem conectar sistemas e criar integrações poderosas!';
+            if (msg.includes('backend')) return 'Backend é onde a lógica e os dados acontecem!';
+            if (msg.includes('frontend')) return 'Frontend é o que o usuário vê e interage!';
+            if (msg.includes('fullstack')) return 'Fullstack domina frontend e backend, você se torna completo!';
+            if (msg.includes('framework')) return 'Frameworks aceleram seu desenvolvimento!';
+            if (msg.includes('biblioteca')) return 'Bibliotecas economizam tempo e ajudam a criar soluções melhores!';
+
+            // Termos de tecnologia
+            if (msg.includes('inteligência artificial') || msg.includes('ia')) return 'IA é o futuro! Você pode criar sistemas inteligentes com ela!';
+            if (msg.includes('machine learning')) return 'Machine Learning permite que sistemas aprendam sozinhos!';
+            if (msg.includes('data science')) return 'Data Science transforma dados em decisões poderosas!';
+            if (msg.includes('cloud') || msg.includes('nuvem')) return 'Trabalhar na nuvem deixa seu sistema escalável!';
+            if (msg.includes('servidor')) return 'Servidores são o coração das aplicações online!';
+            if (msg.includes('deploy')) return 'Deploy é colocar seu projeto no ar!';
+            if (msg.includes('teste')) return 'Testes garantem que seu código funciona e não quebra!';
+            if (msg.includes('debug')) return 'Debug é essencial pra encontrar e corrigir erros rapidamente!';
+            if (msg.includes('performance')) return 'Performance é o que faz seu sistema rápido e eficiente!';
+            if (msg.includes('segurança')) return 'Segurança protege seu sistema e usuários contra problemas!';
+
+            // Motivação e mindset
+            if (msg.includes('motivação')) return 'Motivação é combustível, continue evoluindo todo dia!';
+            if (msg.includes('foco')) return 'Foco é tudo! Concentre-se nos seus objetivos e progrida!';
+            if (msg.includes('disciplina')) return 'Disciplina é o que separa quem aprende de verdade!';
+            if (msg.includes('sucesso')) return 'Sucesso vem com prática, estudo e persistência!';
+            if (msg.includes('mentalidade')) return 'Mentalidade de crescimento faz você evoluir mais rápido!';
+            if (msg.includes('resultados')) return 'Resultados são a consequência de esforço constante!';
+            if (msg.includes('prática')) return 'Prática é a chave pra transformar conhecimento em habilidade!';
+            if (msg.includes('desafio')) return 'Desafios te fazem crescer e se tornar melhor!';
+            if (msg.includes('evoluir')) return 'Evoluir todo dia é a missão do Fox Ruby!';
+            if (msg.includes('conhecimento')) return 'Conhecimento é poder, absorva tudo que puder!';
+            if (msg.includes('criatividade')) return 'Criatividade transforma ideias em soluções incríveis!';
+            if (msg.includes('aprendizagem')) return 'Aprender é uma jornada contínua, aproveite cada passo!';
+            if (msg.includes('proatividade')) return 'Proatividade faz você se destacar e conquistar mais!';
+            if (msg.includes('determinação')) return 'Determinação te mantém firme diante dos desafios!';
+            if (msg.includes('paixão')) return 'Paixão pelo que faz faz toda diferença no aprendizado!';
+            if (msg.includes('autonomia')) return 'Autonomia te torna capaz de criar seus próprios projetos!';
+            if (msg.includes('confiança')) return 'Confiança em você mesmo ajuda a superar qualquer dificuldade!';
+            if (msg.includes('curiosidade')) return 'Curiosidade é o motor da evolução na tecnologia!';
+            if (msg.includes('inovação')) return 'Inovação é criar algo que ninguém imaginou antes!';
+            if (msg.includes('crescimento')) return 'Crescimento acontece quando você aplica o que aprendeu!';
+            if (msg.includes('progresso')) return 'Progresso diário te leva a resultados incríveis!';
+            if (msg.includes('resultado')) return 'O resultado é a consequência do esforço bem aplicado!';
+            if (msg.includes('experiência')) return 'Experiência vem praticando e aprendendo com erros!';
+            if (msg.includes('habilidade')) return 'Habilidade é construída passo a passo!';
+            if (msg.includes('mastery')) return 'Mastery é dominar sua área e se tornar referência!';
+            if (msg.includes('foco total')) return 'Foco total garante entregas melhores e mais rápidas!';
+            if (msg.includes('persistência')) return 'Persistência vence obstáculos e leva ao sucesso!';
+            if (msg.includes('superação')) return 'Superação é transformar problemas em aprendizado!';
+            if (msg.includes('impacto')) return 'Crie impacto com o que você sabe e produz!';
+            if (msg.includes('excelência')) return 'Busque excelência em tudo que fizer!';
+            if (msg.includes('profissionalismo')) return 'Profissionalismo abre portas e gera respeito!';
+
+            // Novos termos adicionados
+            if (msg.includes('docker')) return 'Docker ajuda a criar ambientes isolados para seus projetos!';
+            if (msg.includes('kubernetes')) return 'Kubernetes gerencia containers de forma escalável!';
+            if (msg.includes('api rest')) return 'APIs REST permitem comunicação entre sistemas de forma organizada!';
+            if (msg.includes('json')) return 'JSON é o formato de dados mais usado para APIs!';
+            if (msg.includes('xml')) return 'XML ainda é usado em alguns sistemas legados!';
+            if (msg.includes('css grid')) return 'CSS Grid é poderoso pra criar layouts complexos facilmente!';
+            if (msg.includes('flexbox')) return 'Flexbox deixa o alinhamento e layout muito mais simples!';
+            if (msg.includes('responsive')) return 'Sites responsivos se adaptam a qualquer tela!';
+            if (msg.includes('mobile first')) return 'Mobile First é a abordagem certa pra web moderna!';
+            if (msg.includes('sass')) return 'Sass agiliza e organiza seu CSS!';
+            if (msg.includes('webpack')) return 'Webpack ajuda a empacotar e otimizar seu código!';
+            if (msg.includes('babel')) return 'Babel permite usar JavaScript moderno em qualquer navegador!';
+            if (msg.includes('npm')) return 'NPM gerencia pacotes e dependências do seu projeto!';
+            if (msg.includes('yarn')) return 'Yarn é alternativa ao NPM, rápida e confiável!';
+            if (msg.includes('git commit')) return 'Commitar é salvar alterações importantes no Git!';
+            if (msg.includes('git push')) return 'Push envia suas alterações pro repositório remoto!';
+            if (msg.includes('git pull')) return 'Pull atualiza seu projeto com as alterações do repositório!';
+            if (msg.includes('algoritmo')) return 'Algoritmos são passos que resolvem problemas!';
+            if (msg.includes('estrutura de dados')) return 'Estruturas de dados organizam informações de forma eficiente!';
+            if (msg.includes('loop')) return 'Loops ajudam a repetir ações sem escrever código duplicado!';
+            if (msg.includes('função')) return 'Funções tornam seu código modular e reutilizável!';
+            if (msg.includes('objeto')) return 'Objetos armazenam dados e comportamentos de forma organizada!';
+            if (msg.includes('classe')) return 'Classes ajudam a criar objetos de forma estruturada!';
+            if (msg.includes('herança')) return 'Herança permite que uma classe reutilize outra!';
+            if (msg.includes('polimorfismo')) return 'Polimorfismo permite tratar objetos de formas diferentes!';
+            if (msg.includes('encapsulamento')) return 'Encapsulamento protege dados importantes no código!';
+            if (msg.includes('eventos')) return 'Eventos permitem reagir às ações do usuário!';
+            if (msg.includes('callback')) return 'Callbacks executam funções depois que outra termina!';
+            if (msg.includes('promise')) return 'Promises resolvem problemas de código assíncrono!';
+            if (msg.includes('async')) return 'Async/await facilita lidar com operações assíncronas!';
+            if (msg.includes('frontend frameworks')) return 'Existem vários frameworks de frontend, escolha o que faz sentido!';
+            if (msg.includes('backend frameworks')) return 'Frameworks de backend aceleram a criação de APIs!';
+            if (msg.includes('express')) return 'Express facilita criar servidores em Node.js!';
+            if (msg.includes('flask')) return 'Flask é leve e perfeito pra APIs em Python!';
+            if (msg.includes('django')) return 'Django é completo e poderoso para web em Python!';
+            if (msg.includes('sql server')) return 'SQL Server é ótimo pra bancos de dados robustos!';
+            if (msg.includes('mysql')) return 'MySQL é popular e confiável!';
+            if (msg.includes('postgresql')) return 'PostgreSQL é poderoso e muito usado em projetos grandes!';
+            if (msg.includes('mongodb')) return 'MongoDB é um banco de dados NoSQL flexível!';
+            if (msg.includes('firebase')) return 'Firebase é perfeito pra apps com backend rápido e realtime!';
+            if (msg.includes('linux')) return 'Linux é o sistema favorito dos desenvolvedores!';
+            if (msg.includes('ubuntu')) return 'Ubuntu é uma das distros mais usadas por devs!';
+            if (msg.includes('terminal linux')) return 'Aprender terminal Linux aumenta sua produtividade!';
+            if (msg.includes('shell script')) return 'Shell scripts automatizam tarefas no sistema!';
+            if (msg.includes('automação')) return 'Automação economiza tempo e reduz erros!';
+            if (msg.includes('devops')) return 'DevOps conecta desenvolvimento e operações para eficiência!';
+            if (msg.includes('ci/cd')) return 'CI/CD agiliza deploys e testes de forma contínua!';
+            if (msg.includes('teste unitário')) return 'Testes unitários garantem que cada parte funcione isoladamente!';
+            if (msg.includes('teste integrado')) return 'Testes integrados garantem que tudo funciona junto!';
+            if (msg.includes('debugging')) return 'Debugging ajuda a encontrar e corrigir erros rapidamente!';
+            if (msg.includes('produtividade')) return 'Produtividade é usar seu tempo de forma inteligente!';
+            if (msg.includes('ferramentas')) return 'Ferramentas certas aceleram seu aprendizado e trabalho!';
+            if (msg.includes('soft skills')) return 'Soft skills como comunicação e disciplina são fundamentais!';
+            if (msg.includes('hard skills')) return 'Hard skills te tornam especialista na sua área!';
+            if (msg.includes('mentoria')) return 'Mentoria ajuda você a aprender mais rápido com quem já passou pelo caminho!';
+            if (msg.includes('networking')) return 'Networking conecta você com oportunidades e conhecimento!';
+            if (msg.includes('freelance')) return 'Freelance permite ganhar experiência e dinheiro ao mesmo tempo!';
+            if (msg.includes('carreira')) return 'Carreira exige planejamento e aprendizado constante!';
+            if (msg.includes('objetivo')) return 'Objetivos claros ajudam você a focar e evoluir!';
+            if (msg.includes('inspiração')) return 'Inspiração surge estudando, praticando e vendo exemplos de sucesso!';
+            if (msg.includes('como aprender bootstrap')) return 'Pratique criando layouts responsivos com grids, cards e componentes!';
+            if (msg.includes('como aprender tailwind')) return 'Use utilitários do Tailwind para criar interfaces rápidas e responsivas!';
+            if (msg.includes('como criar portfolio')) return 'Mostre seus projetos, descreva tecnologias usadas e publique online!';
+            if (msg.includes('como estudar flexbox')) return 'Crie exemplos práticos de alinhamento, centralização e layouts complexos!';
+            if (msg.includes('como estudar grid')) return 'Pratique criando layouts com colunas, linhas e áreas!';
+            if (msg.includes('como criar blog pessoal')) return 'Use HTML/CSS/JS ou plataformas prontas e personalize seu conteúdo!';
+            if (msg.includes('como criar landing page')) return 'Foque em design limpo, CTA claros e responsividade!';
+            if (msg.includes('como criar ecommerce')) return 'Frontend, backend, banco de dados e integração de pagamento!';
+            if (msg.includes('como criar site responsivo')) return 'Use media queries, flexbox, grid e teste em várias telas!';
+            if (msg.includes('como fazer deploy')) return 'Use Vercel, Netlify ou hospedagem tradicional para colocar online!';
+
+            if (msg.includes('como ganhar experiência')) return 'Projetos próprios, freelas e participando de open source!';
+            if (msg.includes('como conseguir emprego')) return 'Construa portfólio, participe de projetos reais e aplique em vagas!';
+            if (msg.includes('como trabalhar remoto')) return 'Organize rotina, ferramentas de comunicação e disciplina diária!';
+            if (msg.includes('como estudar programação sozinho')) return 'Pratique projetos, tutoriais, vídeos e participe de comunidades!';
+            if (msg.includes('como estudar javascript')) return 'Pratique funções, DOM, eventos e projetos interativos!';
+            if (msg.includes('como estudar html')) return 'Pratique tags, listas, links, imagens e estrutura de páginas!';
+            if (msg.includes('como estudar css')) return 'Estilize páginas, pratique cores, fontes, layouts, flexbox e grid!';
+            if (msg.includes('como estudar react')) return 'Crie componentes, use hooks, state e props!';
+            if (msg.includes('como estudar nodejs')) return 'Crie APIs, rotas, middleware e conecte banco de dados!';
+            if (msg.includes('como estudar python')) return 'Crie scripts, resolva problemas e use bibliotecas populares!';
+
+            if (msg.includes('como estudar sql')) return 'Pratique SELECT, INSERT, UPDATE, DELETE e joins!';
+            if (msg.includes('como aprender typescript')) return 'Adicione tipagem ao JS e pratique com projetos!';
+            if (msg.includes('como criar api')) return 'Aprenda backend, rotas, controladores e banco de dados!';
+            if (msg.includes('como consumir api')) return 'Use fetch ou axios para acessar dados de APIs!';
+            if (msg.includes('como criar app mobile')) return 'Use React Native ou Flutter para apps híbridos ou nativos!';
+            if (msg.includes('como melhorar lógica')) return 'Resolva problemas, exercícios e estude algoritmos!';
+            if (msg.includes('como praticar programação')) return 'Crie pequenos projetos, desafios online e participe de hackathons!';
+            if (msg.includes('como aprender git')) return 'Faça commits, branches e pratique versionamento!';
+            if (msg.includes('como usar github')) return 'Hospede projetos, faça pull requests e colabore com outros!';
+            if (msg.includes('como usar gitlab')) return 'Hospede repositórios e pratique pipelines!';
+
+            if (msg.includes('como usar docker')) return 'Crie containers e rode projetos de forma isolada!';
+            if (msg.includes('como usar kubernetes')) return 'Gerencie containers e aplicações em escala!';
+            if (msg.includes('como aprender devops')) return 'Aprenda CI/CD, automação, monitoramento e cultura DevOps!';
+            if (msg.includes('como monitorar sistema')) return 'Use logs, alertas e ferramentas de observabilidade!';
+            if (msg.includes('como melhorar performance')) return 'Otimize código, imagens, queries e reduza carregamento!';
+            if (msg.includes('como resolver bug')) return 'Leia o erro, debugue e pesquise soluções!';
+            if (msg.includes('como testar código')) return 'Use testes unitários, integração e end-to-end!';
+            if (msg.includes('como aprender api rest')) return 'Crie rotas, controllers e entenda métodos HTTP!';
+            if (msg.includes('como aprender graphql')) return 'Pratique queries, mutations e schemas!';
+            if (msg.includes('como criar banco de dados')) return 'Planeje tabelas, relacionamentos e pratique queries!';
+
+            if (msg.includes('como melhorar soft skills')) return 'Trabalhe comunicação, empatia, liderança e colaboração!';
+            if (msg.includes('como ser mais produtivo')) return 'Organize tarefas, use Pomodoro e elimine distrações!';
+            if (msg.includes('como manter foco')) return 'Defina metas claras e evite multitarefas!';
+            if (msg.includes('como aprender sozinho')) return 'Pratique, busque tutoriais, participe da comunidade e faça projetos!';
+            if (msg.includes('como conseguir clientes')) return 'Freelance, networking e portfólio são essenciais!';
+            if (msg.includes('como melhorar carreira')) return 'Aprenda continuamente, busque experiências reais e networking!';
+            if (msg.includes('como ser fullstack')) return 'Aprenda frontend, backend e banco de dados!';
+            if (msg.includes('como criar portfólio fullstack')) return 'Mostre projetos completos, deploys e tecnologias usadas!';
+            if (msg.includes('como evoluir rápido')) return 'Pratique diariamente, busque feedback e revise seu aprendizado!';
+            if (msg.includes('como se destacar')) return 'Crie projetos únicos, compartilhe conhecimento e participe da comunidade!';
+
+            if (msg.includes('como aprender react hooks')) return 'Pratique useState, useEffect, useContext e crie projetos!';
+            if (msg.includes('como aprender redux')) return 'Gerencie estado global e pratique com projetos reais!';
+            if (msg.includes('como aprender context api')) return 'Compartilhe dados entre componentes sem props drilling!';
+            if (msg.includes('como estudar testes unitários')) return 'Escreva testes pequenos para cada função!';
+            if (msg.includes('como estudar testes integrados')) return 'Teste se diferentes partes do sistema funcionam juntas!';
+            if (msg.includes('como estudar tdd')) return 'Escreva testes antes do código para garantir qualidade!';
+            if (msg.includes('como estudar bdd')) return 'Conecte requisitos com testes de forma clara!';
+            if (msg.includes('como aprender api')) return 'Pratique endpoints, métodos HTTP e consumo de dados!';
+            if (msg.includes('como estudar debugging')) return 'Use breakpoints, logs e console para identificar erros!';
+            if (msg.includes('como aprender observabilidade')) return 'Use métricas, logs e tracing para monitorar sistemas!';
+
+            if (msg.includes('como estudar npm')) return 'Instale pacotes, scripts e gerencie dependências!';
+            if (msg.includes('como estudar yarn')) return 'Gerencie pacotes, scripts e dependências!';
+            if (msg.includes('como estudar pnpm')) return 'Gerencie dependências de forma rápida e eficiente!';
+            if (msg.includes('como estudar eslint')) return 'Mantenha código limpo e padronizado!';
+            if (msg.includes('como estudar prettier')) return 'Formate código automaticamente para padronização!';
+            if (msg.includes('como estudar webpack')) return 'Empacote projetos JS e CSS de forma eficiente!';
+            if (msg.includes('como estudar vite')) return 'Use Vite para dev server rápido e moderno!';
+            if (msg.includes('como estudar rollup')) return 'Crie bundles leves e eficientes!';
+            if (msg.includes('como estudar parcel')) return 'Use Parcel para bundling sem configuração!';
+            if (msg.includes('como melhorar codigo')) return 'Refatore, use boas práticas e padrões!';
+
+            if (msg.includes('como evoluir mindset')) return 'Pratique disciplina, foco e aprendizado contínuo!';
+            if (msg.includes('como manter motivação')) return 'Tenha objetivos claros, veja progresso e comemore conquistas!';
+            if (msg.includes('como desenvolver criatividade')) return 'Resolva problemas de forma diferente e pratique ideias novas!';
+            if (msg.includes('como melhorar networking')) return 'Participe de comunidades, eventos e conecte com pessoas!';
+            if (msg.includes('como aprender soft skills')) return 'Pratique comunicação, empatia, disciplina e liderança!';
+            if (msg.includes('como estudar hard skills')) return 'Pratique ferramentas, linguagens e metodologias diariamente!';
+            if (msg.includes('como aprender rápido')) return 'Pratique todos os dias, aplique conhecimento e revise constantemente!';
+            if (msg.includes('como ganhar dinheiro online')) return 'Freelance, produtos digitais e consultoria são boas opções!';
+            if (msg.includes('como criar infoproduto')) return 'Identifique problema, produza conteúdo de valor e venda online!';
+            if (msg.includes('como criar comunidade')) return 'Compartilhe conhecimento, organize grupo e engaje pessoas!';
+            // Linguagens e frameworks avançados
+            if (msg.includes('como aprender svelte')) return 'Aprenda componentes reativos e pratique projetos!';
+            if (msg.includes('como aprender flutter')) return 'Crie apps móveis com Dart e pratique widgets!';
+            if (msg.includes('como aprender kotlin')) return 'Use Kotlin para apps Android e pratique conceitos OOP!';
+            if (msg.includes('como aprender swift')) return 'Use Swift para apps iOS e pratique programação orientada a objetos!';
+            if (msg.includes('como aprender java')) return 'Pratique lógica, OOP e crie projetos backend!';
+            if (msg.includes('como aprender c#')) return 'Pratique programação orientada a objetos e crie apps desktop ou web!';
+            if (msg.includes('como aprender php')) return 'Crie sites dinâmicos, APIs e aprenda MVC!';
+            if (msg.includes('como aprender ruby')) return 'Crie scripts e projetos web com Ruby on Rails!';
+            if (msg.includes('como aprender rust')) return 'Pratique sistemas seguros, desempenho e concorrência!';
+            if (msg.includes('como aprender go')) return 'Aprenda Go para backend rápido e concorrente!';
+
+            // Desenvolvimento web e mobile
+            if (msg.includes('como criar site dinâmico')) return 'Use backend, banco de dados e integração com frontend!';
+            if (msg.includes('como criar app web progressivo')) return 'Use PWA, service workers e caching!';
+            if (msg.includes('como criar app híbrido')) return 'Use React Native ou Flutter para multiplataforma!';
+            if (msg.includes('como criar site interativo')) return 'Use JavaScript, eventos e manipulação do DOM!';
+            if (msg.includes('como criar SPA')) return 'Use React, Vue ou Angular para criar aplicações single-page!';
+            if (msg.includes('como criar PWA')) return 'Use manifest.json, service workers e cache!';
+            if (msg.includes('como fazer deploy em Vercel')) return 'Envie projeto React, Next ou Node para Vercel!';
+            if (msg.includes('como fazer deploy em Netlify')) return 'Publique sites estáticos ou JAMstack facilmente!';
+            if (msg.includes('como fazer deploy em Firebase')) return 'Use Firebase Hosting e configure seu app!';
+            if (msg.includes('como criar back-end')) return 'Aprenda Node, Python, PHP ou Java e conecte banco de dados!';
+
+            // APIs, bancos de dados e DevOps
+            if (msg.includes('como criar API RESTful')) return 'Use endpoints, métodos HTTP, rotas e banco de dados!';
+            if (msg.includes('como criar API GraphQL')) return 'Defina schema, queries, mutations e pratique!';
+            if (msg.includes('como conectar banco de dados')) return 'Use SQL ou NoSQL, drivers e queries!';
+            if (msg.includes('como usar postman')) return 'Teste suas APIs enviando requests e verificando respostas!';
+            if (msg.includes('como usar insomnia')) return 'Teste endpoints e organize coleções!';
+            if (msg.includes('como usar docker-compose')) return 'Crie serviços, containers e redes para projetos completos!';
+            if (msg.includes('como configurar CI/CD')) return 'Automatize testes e deploys para cada commit!';
+            if (msg.includes('como monitorar apps')) return 'Use métricas, logs e alertas!';
+            if (msg.includes('como usar prometheus')) return 'Colete métricas e monitore aplicações!';
+            if (msg.includes('como usar grafana')) return 'Visualize métricas e crie dashboards!';
+
+            // Soft skills, produtividade e mindset
+            if (msg.includes('como melhorar comunicação')) return 'Pratique clareza, escuta ativa e feedback!';
+            if (msg.includes('como desenvolver liderança')) return 'Aprenda a motivar pessoas, delegar e organizar equipes!';
+            if (msg.includes('como manter disciplina')) return 'Crie rotina, hábitos e siga metas diárias!';
+            if (msg.includes('como ter mindset de crescimento')) return 'Aceite desafios, aprenda com erros e evolua continuamente!';
+            if (msg.includes('como organizar estudos')) return 'Planeje horários, use checklists e revise constantemente!';
+            if (msg.includes('como evitar procrastinação')) return 'Divida tarefas, use técnicas como Pomodoro e mantenha foco!';
+            if (msg.includes('como evoluir na carreira')) return 'Busque experiências reais, aprendizado contínuo e networking!';
+            if (msg.includes('como conseguir freela')) return 'Crie portfólio, cadastre-se em plataformas e pratique projetos reais!';
+            if (msg.includes('como melhorar produtividade')) return 'Priorize tarefas, elimine distrações e defina metas claras!';
+            if (msg.includes('como ter foco total')) return 'Desative notificações, organize ambiente e mantenha disciplina!';
+
+            // Dicas de estudo e aprendizado
+            if (msg.includes('como aprender sozinho')) return 'Pratique, busque tutoriais, participe de comunidades e crie projetos!';
+            if (msg.includes('como estudar rápido')) return 'Pratique todos os dias, aplique conhecimento e revise!';
+            if (msg.includes('como memorizar melhor')) return 'Use resumos, mapas mentais e pratique repetição espaçada!';
+            if (msg.includes('como resolver problemas de código')) return 'Leia o erro, debugue, pesquise e teste soluções!';
+            if (msg.includes('como praticar lógica')) return 'Resolva exercícios, desafios online e pequenos projetos!';
+            if (msg.includes('como aprender algoritmos')) return 'Estude teoria, implemente exemplos e pratique com problemas!';
+            if (msg.includes('como aprender estruturas de dados')) return 'Pratique listas, pilhas, filas, árvores e grafos!';
+            if (msg.includes('como criar portfólio online')) return 'Hospede projetos em GitHub Pages, Vercel ou Netlify!';
+            if (msg.includes('como criar blog pessoal')) return 'Use HTML/CSS/JS ou plataformas prontas e publique conteúdo!';
+            if (msg.includes('como criar landing page')) return 'Foque em design limpo, CTA claros e responsividade!';
+
+            // Mais perguntas comuns de dev
+            if (msg.includes('como criar calculadora')) return 'Pratique HTML, CSS e JS para criar interações!';
+            if (msg.includes('como criar jogo simples')) return 'Use canvas, lógica JS e pratique!';
+            if (msg.includes('como criar chat')) return 'Use backend, WebSocket e frontend interativo!';
+            if (msg.includes('como criar todo list')) return 'Pratique manipulação do DOM e armazenamento local!';
+            if (msg.includes('como criar portfólio moderno')) return 'Use animações, responsividade e deploy online!';
+            if (msg.includes('como criar ecommerce completo')) return 'Frontend, backend, banco de dados e integração de pagamento!';
+            if (msg.includes('como aprender boas práticas')) return 'Siga padrões, refatore código e revise constantemente!';
+            if (msg.includes('como estudar clean code')) return 'Escreva código legível, simples e mantenível!';
+            if (msg.includes('como estudar design patterns')) return 'Aprenda padrões de projeto e aplique em projetos reais!';
+            if (msg.includes('como estudar arquitetura de software')) return 'Planeje sistemas escaláveis, modulares e bem organizados!';
+            if (msg.includes('como criar app de chat')) return 'Use WebSocket ou Firebase para comunicação em tempo real!';
+            if (msg.includes('como criar portfolio responsivo')) return 'Use media queries, flexbox e grid para se adaptar a qualquer tela!';
+            if (msg.includes('como criar site de vendas')) return 'Combine frontend, backend e integração de pagamento!';
+            if (msg.includes('como aprender api rest')) return 'Pratique endpoints, métodos HTTP e consumo de dados!';
+            if (msg.includes('como aprender api graphql')) return 'Defina schema, queries, mutations e pratique!';
+            if (msg.includes('como organizar código')) return 'Separe em arquivos, módulos e use boas práticas de estrutura!';
+            if (msg.includes('como criar sistema login')) return 'Use backend, banco de dados e autenticação segura!';
+            if (msg.includes('como criar sistema cadastro')) return 'Valide dados no frontend e salve no backend!';
+            if (msg.includes('como criar dashboard')) return 'Use gráficos, tabelas e interações visuais!';
+            if (msg.includes('como melhorar UX')) return 'Estude comportamento do usuário, design limpo e interações intuitivas!';
+
+            if (msg.includes('como estudar algoritmos')) return 'Resolva problemas práticos e implemente em diferentes linguagens!';
+            if (msg.includes('como estudar estruturas de dados')) return 'Pratique listas, pilhas, filas, árvores e grafos!';
+            if (msg.includes('como aprender testes')) return 'Crie testes unitários, integrados e end-to-end!';
+            if (msg.includes('como estudar git avançado')) return 'Pratique branches, merges, rebase e pull requests!';
+            if (msg.includes('como criar site moderno')) return 'Use HTML5, CSS3, JS moderno e frameworks como React ou Vue!';
+            if (msg.includes('como criar app moderno')) return 'Combine frontend moderno, backend escalável e banco de dados!';
+            if (msg.includes('como estudar clean code')) return 'Escreva código legível, simples e mantenível!';
+            if (msg.includes('como estudar design patterns')) return 'Aprenda padrões de projeto e aplique em projetos reais!';
+            if (msg.includes('como estudar arquitetura de software')) return 'Planeje sistemas escaláveis, modulares e bem organizados!';
+            if (msg.includes('como evoluir na carreira tech')) return 'Aprenda constantemente, participe de projetos reais e networking!';
+            if (msg.includes('como criar site moderno')) return 'Use HTML5, CSS3, JS moderno e frameworks como React ou Vue!';
+            if (msg.includes('como criar app web')) return 'Combine frontend moderno com backend escalável e banco de dados!';
+            if (msg.includes('como criar landing page')) return 'Foque em design limpo, CTA claros e responsividade!';
+            if (msg.includes('como criar ecommerce')) return 'Combine frontend, backend, banco de dados e integração de pagamento!';
+            if (msg.includes('como criar dashboard')) return 'Use gráficos, tabelas e interações visuais!';
+            if (msg.includes('como criar blog pessoal')) return 'Crie conteúdo, use HTML/CSS/JS e publique online!';
+            if (msg.includes('como criar SPA')) return 'Use frameworks modernos para Single Page Applications!';
+            if (msg.includes('como criar PWA')) return 'Crie Progressive Web Apps com service workers e caching!';
+            if (msg.includes('como criar app mobile')) return 'Use React Native ou Flutter para multiplataforma!';
+            if (msg.includes('como criar site responsivo')) return 'Use media queries, flexbox e grid para layouts adaptáveis!';
+
+            if (msg.includes('como aprender javascript')) return 'Pratique funções, DOM, eventos e projetos interativos!';
+            if (msg.includes('como aprender html')) return 'Pratique tags, listas, links, imagens e estrutura de páginas!';
+            if (msg.includes('como aprender css')) return 'Estilize páginas, pratique cores, fontes, layouts, flexbox e grid!';
+            if (msg.includes('como aprender react')) return 'Crie componentes, use hooks, state e props!';
+            if (msg.includes('como aprender nodejs')) return 'Crie APIs, rotas, middleware e conecte banco de dados!';
+            if (msg.includes('como aprender python')) return 'Crie scripts, resolva problemas e use bibliotecas populares!';
+            if (msg.includes('como aprender typescript')) return 'Adicione tipagem ao JS e pratique com projetos!';
+            if (msg.includes('como aprender vue')) return 'Pratique diretivas, componentes e reatividade!';
+            if (msg.includes('como aprender angular')) return 'Use TypeScript, componentes e serviços para SPAs!';
+            if (msg.includes('como aprender nextjs')) return 'Combine React com SSR e geração de páginas estáticas!';
+
+            if (msg.includes('como criar api rest')) return 'Crie endpoints, rotas, controllers e conecte banco de dados!';
+            if (msg.includes('como consumir api')) return 'Use fetch ou axios para acessar dados de APIs!';
+            if (msg.includes('como criar api graphql')) return 'Pratique queries, mutations e schemas!';
+            if (msg.includes('como conectar banco de dados')) return 'Use SQL ou NoSQL, drivers e queries!';
+            if (msg.includes('como usar postman')) return 'Teste suas APIs enviando requests e verificando respostas!';
+            if (msg.includes('como usar insomnia')) return 'Teste endpoints e organize coleções!';
+            if (msg.includes('como usar docker')) return 'Crie containers e rode projetos de forma isolada!';
+            if (msg.includes('como usar kubernetes')) return 'Gerencie containers e aplicações em escala!';
+            if (msg.includes('como configurar ci/cd')) return 'Automatize testes e deploys para cada commit!';
+            if (msg.includes('como monitorar sistema')) return 'Use logs, métricas e alertas para acompanhar seu sistema!';
+            if (msg.includes('como criar sistema de login')) return 'Use backend, banco de dados e autenticação segura!';
+            if (msg.includes('como criar sistema de cadastro')) return 'Valide dados no frontend e salve no backend!';
+            if (msg.includes('como criar app de chat')) return 'Use WebSocket ou Firebase para comunicação em tempo real!';
+            if (msg.includes('como criar portfolio responsivo')) return 'Use media queries, flexbox e grid para se adaptar a qualquer tela!';
+            if (msg.includes('como criar site de vendas')) return 'Combine frontend, backend e integração de pagamento!';
+            if (msg.includes('como aprender git')) return 'Pratique commits, branches, merges e pull requests!';
+            if (msg.includes('como aprender github')) return 'Hospede repositórios, contribua em projetos e colabore!';
+            if (msg.includes('como estudar algoritmos')) return 'Resolva problemas práticos e implemente em diferentes linguagens!';
+            if (msg.includes('como estudar estruturas de dados')) return 'Pratique listas, pilhas, filas, árvores e grafos!';
+            if (msg.includes('como estudar clean code')) return 'Escreva código legível, simples e mantível!';
+
+            if (msg.includes('como estudar design patterns')) return 'Aprenda padrões de projeto e aplique em projetos reais!';
+            if (msg.includes('como estudar arquitetura de software')) return 'Planeje sistemas escaláveis, modulares e bem organizados!';
+            if (msg.includes('como criar app mobile com flutter')) return 'Pratique widgets, layouts e integração com APIs!';
+            if (msg.includes('como criar app mobile com react native')) return 'Use componentes, state e navigation!';
+            if (msg.includes('como fazer deploy em vercel')) return 'Envie projeto React, Next ou Node para Vercel!';
+            if (msg.includes('como fazer deploy em netlify')) return 'Publique sites estáticos ou JAMstack facilmente!';
+            if (msg.includes('como fazer deploy em firebase')) return 'Use Firebase Hosting e configure seu app!';
+            if (msg.includes('como estudar produtividade')) return 'Use listas de tarefas, Pomodoro e elimine distrações!';
+            if (msg.includes('como manter foco nos estudos')) return 'Defina metas claras, organize ambiente e cronograma!';
+            if (msg.includes('como melhorar comunicação')) return 'Pratique clareza, escuta ativa e feedback!';
+
+            if (msg.includes('como desenvolver liderança')) return 'Aprenda a motivar pessoas, delegar e organizar equipes!';
+            if (msg.includes('como conseguir freela')) return 'Crie portfólio, cadastre-se em plataformas e pratique projetos reais!';
+            if (msg.includes('como criar calculadora com js')) return 'Use funções, eventos e manipulação do DOM!';
+            if (msg.includes('como criar jogo simples com js')) return 'Use canvas, lógica JS e pratique!';
+            if (msg.includes('como criar todo list com js')) return 'Pratique DOM, localStorage e interação!';
+            if (msg.includes('como criar app com node js')) return 'Use Express, rotas, controllers e banco de dados!';
+            if (msg.includes('como criar api com node js')) return 'Crie endpoints RESTful e conecte banco de dados!';
+            if (msg.includes('como criar app com python')) return 'Use Flask ou Django para backend!';
+            if (msg.includes('como criar api com python')) return 'Use Flask/Django, rotas e conecte banco de dados!';
+            if (msg.includes('como criar site com bootstrap')) return 'Use classes, grids, componentes e responsividade!';
+
+            if (msg.includes('como criar site com tailwind')) return 'Use classes utilitárias e responsividade rápida!';
+            if (msg.includes('como aprender sass')) return 'Use variáveis, mixins e organize CSS!';
+            if (msg.includes('como aprender less')) return 'Use pré-processadores para CSS mais organizado!';
+            if (msg.includes('como aprender php')) return 'Crie sites dinâmicos, APIs e aprenda MVC!';
+            if (msg.includes('como aprender laravel')) return 'Use routes, controllers, views e Eloquent!';
+            if (msg.includes('como aprender c#')) return 'Pratique OOP, aplicações desktop e web com .NET!';
+            if (msg.includes('como aprender java')) return 'Pratique OOP, APIs e aplicações robustas!';
+            if (msg.includes('como aprender kotlin')) return 'Use para apps Android e pratique orientação a objetos!';
+            if (msg.includes('como aprender swift')) return 'Use para apps iOS e pratique SwiftUI!';
+            if (msg.includes('como criar dashboard interativo')) return 'Use gráficos, tabelas, filtros e eventos!';
+
+            if (msg.includes('como criar app de notas')) return 'Use frontend interativo e armazenamento local!';
+            if (msg.includes('como criar app de tarefas')) return 'Use backend, frontend e banco de dados!';
+            if (msg.includes('como criar app de finanças')) return 'Registre gastos, receitas e crie gráficos!';
+            if (msg.includes('como criar app de e-commerce')) return 'Frontend, backend, banco de dados e integração de pagamento!';
+            if (msg.includes('como criar app de blog')) return 'Publique posts, imagens e comentários!';
+            if (msg.includes('como criar app de rede social')) return 'Use backend, frontend e banco de dados para interação!';
+            if (msg.includes('como criar app de chat em tempo real')) return 'Use WebSocket ou Firebase Realtime Database!';
+            if (msg.includes('como estudar node avançado')) return 'Pratique middleware, rotas, autenticação e deploy!';
+            if (msg.includes('como estudar react avançado')) return 'Use hooks, context, router e state management!';
+            if (msg.includes('como estudar javascript avançado')) return 'Pratique ES6+, async/await, promises e classes!';
+
+            if (msg.includes('como estudar html avançado')) return 'Use forms, semantic tags, tables e acessibilidade!';
+            if (msg.includes('como estudar css avançado')) return 'Pratique flexbox, grid, animações e responsividade!';
+            if (msg.includes('como estudar python avançado')) return 'Pratique OOP, módulos, pacotes e bibliotecas!';
+            if (msg.includes('como estudar sql avançado')) return 'Pratique joins, triggers, procedures e otimização!';
+            if (msg.includes('como estudar mongodb avançado')) return 'Pratique consultas, agregações e índices!';
+            if (msg.includes('como estudar docker avançado')) return 'Crie imagens, compose, networks e volumes!';
+            if (msg.includes('como estudar kubernetes avançado')) return 'Use pods, deployments, services e ingress!';
+            if (msg.includes('como estudar api rest avançado')) return 'Implemente autenticação, filtros, paginação e cache!';
+            if (msg.includes('como estudar api graphql avançado')) return 'Pratique queries complexas, mutations e subscriptions!';
+            if (msg.includes('como estudar testes avançados')) return 'Use unit, integration e end-to-end tests!';
+
+            if (msg.includes('como criar app de notas avançado')) return 'Use backend, frontend, autenticação e banco de dados!';
+            if (msg.includes('como criar app de tarefas avançado')) return 'Use filtros, notificações, banco de dados e interface!';
+            if (msg.includes('como criar app de finanças avançado')) return 'Crie dashboards, gráficos e relatórios!';
+            if (msg.includes('como criar app de e-commerce avançado')) return 'Integre pagamentos, carrinho, inventário e dashboard!';
+            if (msg.includes('como criar app de blog avançado')) return 'Implemente comentários, categorias e dashboard de administração!';
+            if (msg.includes('como criar app de rede social avançado')) return 'Implemente feed, mensagens, notificações e perfil de usuário!';
+            if (msg.includes('como estudar produtividade avançada')) return 'Use técnicas avançadas de foco, GTD e automação de tarefas!';
+            if (msg.includes('como melhorar aprendizado')) return 'Pratique, revise, faça projetos reais e participe de comunidades!';
+            if (msg.includes('como conseguir estágio em tech')) return 'Construa portfólio, participe de projetos open-source e networking!';
+            if (msg.includes('como se tornar desenvolvedor fullstack')) return 'Aprenda frontend, backend, banco de dados e práticas de deploy!';
+            if (msg.includes('como estudar pela fox ruby')) return 'A melhor forma é seguir os cursos, projetos práticos e aplicar tudo em projetos reais!';
+            if (msg.includes('como estudar pela dev ruby')) return 'Comece pelos fundamentos, depois vá para projetos e pratique todos os exercícios!';
+            if (msg.includes('como aprender programação pela fox ruby')) return 'Assista às aulas, faça os projetos e revise o que aprendeu constantemente!';
+            if (msg.includes('como aprender programação pela dev ruby')) return 'Pratique com os projetos, tire dúvidas na comunidade e aplique no mundo real!';
+            if (msg.includes('como estudar cursos da fox ruby')) return 'Siga a ordem do curso, faça anotações e pratique todos os exemplos!';
+            if (msg.includes('como estudar cursos da dev ruby')) return 'Comece pelos mais básicos, depois vá para os avançados e pratique bastante!';
+            if (msg.includes('como estudar projetos da fox ruby')) return 'Analise o código, refatore, teste e tente criar algo novo inspirado neles!';
+            if (msg.includes('como estudar projetos da dev ruby')) return 'Siga os projetos passo a passo, pratique o código e personalize para aprender mais!';
+            if (msg.includes('como aprender mais rápido na fox ruby')) return 'Pratique todos os exercícios, tire dúvidas na comunidade e revise sempre!';
+            if (msg.includes('como tirar máximo proveito da dev ruby')) return 'Assista vídeos, faça projetos, participe da comunidade e aplique na prática!';
+            if (msg.includes('como estudar melhor pela fox ruby')) return 'Organize seu tempo, siga os cursos e pratique nos projetos da plataforma!';
+if (msg.includes('como estudar melhor pela dev ruby')) return 'Faça anotações, pratique os projetos e revise o conteúdo regularmente!';
+if (msg.includes('como aprender programação mais rápido pela fox ruby')) return 'Pratique todos os exercícios, revise aulas e participe da comunidade!';
+if (msg.includes('como aprender programação mais rápido pela dev ruby')) return 'Siga os projetos passo a passo, pratique bastante e tire dúvidas!';
+if (msg.includes('como estudar front-end pela fox ruby')) return 'Comece pelos fundamentos HTML, CSS e JS, depois vá para projetos!';
+if (msg.includes('como estudar front-end pela dev ruby')) return 'Pratique layout, design responsivo e crie projetos reais!';
+if (msg.includes('como estudar back-end pela fox ruby')) return 'Aprenda Node.js, APIs e banco de dados através dos projetos!';
+if (msg.includes('como estudar back-end pela dev ruby')) return 'Pratique rotas, banco de dados e APIs passo a passo!';
+if (msg.includes('como estudar fullstack pela fox ruby')) return 'Combine front-end e back-end, pratique com projetos e APIs!';
+if (msg.includes('como estudar fullstack pela dev ruby')) return 'Faça os projetos completos, revise cada parte e teste seus conhecimentos!';
+if (msg.includes('como estudar javascript pela fox ruby')) return 'Siga os módulos, faça exercícios práticos e projetos JS!';
+if (msg.includes('como estudar javascript pela dev ruby')) return 'Pratique DOM, eventos, funções e pequenos projetos interativos!';
+if (msg.includes('como estudar html pela fox ruby')) return 'Aprenda estrutura, tags, listas, links e imagens!';
+if (msg.includes('como estudar html pela dev ruby')) return 'Pratique páginas simples, depois complexas com forms e tabelas!';
+if (msg.includes('como estudar css pela fox ruby')) return 'Aprenda cores, fontes, layouts, flexbox e grid!';
+if (msg.includes('como estudar css pela dev ruby')) return 'Pratique animações, responsividade e design de páginas!';
+if (msg.includes('como estudar react pela fox ruby')) return 'Crie componentes, use props e state em pequenos projetos!';
+if (msg.includes('como estudar react pela dev ruby')) return 'Pratique hooks, context e crie aplicações completas!';
+if (msg.includes('como estudar node js pela fox ruby')) return 'Aprenda rotas, controllers e conexão com banco de dados!';
+if (msg.includes('como estudar node js pela dev ruby')) return 'Pratique APIs RESTful e pequenos sistemas backend!';
+if (msg.includes('como estudar python pela fox ruby')) return 'Pratique scripts, automações e projetos simples!';
+if (msg.includes('como estudar python pela dev ruby')) return 'Faça pequenos projetos, analise o código e aprenda boas práticas!';
+if (msg.includes('como estudar projetos pela fox ruby')) return 'Siga passo a passo, analise o código e personalize seus projetos!';
+if (msg.includes('como estudar projetos pela dev ruby')) return 'Refatore, teste e crie algo novo inspirado nos projetos!';
+if (msg.includes('como estudar cursos avançados pela fox ruby')) return 'Revise fundamentos, faça exercícios e siga para conteúdos avançados!';
+if (msg.includes('como estudar cursos avançados pela dev ruby')) return 'Pratique o básico antes, depois mergulhe nos cursos avançados!';
+if (msg.includes('como aproveitar melhor a fox ruby')) return 'Assista todas as aulas, pratique projetos e participe da comunidade!';
+if (msg.includes('como aproveitar melhor a dev ruby')) return 'Faça projetos, tire dúvidas e participe ativamente da comunidade!';
+if (msg.includes('como estudar rápido pela fox ruby')) return 'Pratique todos os projetos, revise aulas e faça resumos!';
+if (msg.includes('como estudar rápido pela dev ruby')) return 'Siga os módulos, pratique bastante e teste seus conhecimentos!';
+if (msg.includes('como tirar dúvidas na fox ruby')) return 'Use a comunidade, comentários das aulas e suporte da plataforma!';
+if (msg.includes('como tirar dúvidas na dev ruby')) return 'Pergunte nos projetos, fórum e interaja com instrutores e alunos!';
+if (msg.includes('como revisar conteúdo na fox ruby')) return 'Refaça exercícios, projetos e releia anotações!';
+if (msg.includes('como revisar conteúdo na dev ruby')) return 'Pratique o código, reveja vídeos e teste suas soluções!';
+if (msg.includes('como praticar mais na fox ruby')) return 'Crie projetos extras, modifique os existentes e pratique todos os dias!';
+if (msg.includes('como praticar mais na dev ruby')) return 'Refatore projetos, teste funcionalidades e crie novos desafios!';
+if (msg.includes('como estudar do zero na fox ruby')) return 'Comece pelos fundamentos, siga os projetos e pratique diariamente!';
+if (msg.includes('como estudar do zero na dev ruby')) return 'Aprenda passo a passo, pratique e avance nos projetos!';
+if (msg.includes('como evoluir rápido na fox ruby')) return 'Pratique projetos, revise conteúdo e tire dúvidas na comunidade!';
+if (msg.includes('como evoluir rápido na dev ruby')) return 'Faça todos os exercícios, participe de projetos e pratique sempre!';
+if (msg.includes('como criar hábitos de estudo na fox ruby')) return 'Defina horários, metas e pratique constantemente!';
+if (msg.includes('como criar hábitos de estudo na dev ruby')) return 'Estabeleça rotina diária e siga os projetos passo a passo!';
+if (msg.includes('como organizar estudos na fox ruby')) return 'Use cronograma, faça resumos e pratique projetos!';
+if (msg.includes('como organizar estudos na dev ruby')) return 'Planeje horários, organize projetos e pratique exercícios!';
+if (msg.includes('como aprender mais rápido na fox ruby')) return 'Pratique projetos, revise aulas e interaja com a comunidade!';
+if (msg.includes('como aprender mais rápido na dev ruby')) return 'Siga módulos, pratique, tire dúvidas e teste seus projetos!';
+if (msg.includes('como revisar projetos da fox ruby')) return 'Analise passo a passo, teste funcionalidades e personalize!';
+if (msg.includes('como revisar projetos da dev ruby')) return 'Refaça o código, teste e modifique para aprender mais!';
+if (msg.includes('como estudar programação de verdade na fox ruby')) return 'Pratique, revise, faça projetos e interaja com alunos!';
+if (msg.includes('como estudar programação de verdade na dev ruby')) return 'Aplique nos projetos, tire dúvidas e revise o conteúdo!';
+if (msg.includes('como aprender skills de tech na fox ruby')) return 'Pratique projetos, faça desafios e participe da comunidade!';
+if (msg.includes('como aprender skills de tech na dev ruby')) return 'Siga os cursos, pratique e teste seu conhecimento na prática!';
+if (msg.includes('como aplicar conhecimentos da fox ruby')) return 'Crie projetos próprios, refatore e teste suas ideias!';
+if (msg.includes('como aplicar conhecimentos da dev ruby')) return 'Use nos seus projetos, pratique e personalize o código!';
+if (msg.includes('como aprender com a fox ruby')) return 'Assista aos cursos, pratique os projetos e participe da comunidade para evoluir!';
+if (msg.includes('como tirar máximo proveito da fox ruby')) return 'Siga todos os módulos, pratique bastante e interaja com os outros alunos!';
+if (msg.includes('como estudar todos os cursos da fox ruby')) return 'Organize um cronograma, faça projetos e revise constantemente!';
+if (msg.includes('como aplicar conhecimentos da fox ruby')) return 'Crie projetos próprios, refatore o que aprendeu e teste suas ideias!';
+if (msg.includes('como crescer na carreira com a fox ruby')) return 'Pratique, faça projetos reais e participe da comunidade de alunos!';
+if (msg.includes('como estudar programação com a fox ruby')) return 'Siga os cursos, pratique os exercícios e aplique em projetos reais!';
+if (msg.includes('como praticar programação na fox ruby')) return 'Faça todos os exercícios, projetos e desafios disponíveis!';
+if (msg.includes('como aprender fullstack na fox ruby')) return 'Combine front-end, back-end e banco de dados com os projetos da plataforma!';
+if (msg.includes('como evoluir rápido na fox ruby')) return 'Pratique todos os projetos, revise conteúdo e tire dúvidas na comunidade!';
+if (msg.includes('como organizar estudos na fox ruby')) return 'Crie rotina, siga módulos e pratique diariamente!';
+if (msg.includes('como tirar dúvidas na fox ruby')) return 'Use a comunidade, comentários das aulas e suporte disponível!';
+if (msg.includes('como revisar projetos na fox ruby')) return 'Analise passo a passo, teste funcionalidades e personalize seus projetos!';
+if (msg.includes('como criar projetos avançados na fox ruby')) return 'Use fundamentos dos cursos, combine tecnologias e pratique bastante!';
+if (msg.includes('como aprender front-end na fox ruby')) return 'Estude HTML, CSS, JS e aplique em projetos práticos!';
+if (msg.includes('como aprender back-end na fox ruby')) return 'Estude Node.js, APIs e banco de dados nos projetos da plataforma!';
+if (msg.includes('como estudar fullstack na fox ruby')) return 'Pratique front-end, back-end e crie projetos completos!';
+if (msg.includes('como melhorar skills com a fox ruby')) return 'Faça projetos, desafios e participe da comunidade!';
+if (msg.includes('como aprender rápido na fox ruby')) return 'Pratique, tire dúvidas e revise aulas constantemente!';
+if (msg.includes('como estudar do zero na fox ruby')) return 'Comece pelos fundamentos, siga os projetos e pratique diariamente!';
+if (msg.includes('como aplicar projetos da fox ruby')) return 'Refaça os códigos, personalize e teste funcionalidades novas!';
+if (msg.includes('como aprender dev skills com a fox ruby')) return 'Faça cursos, pratique projetos e participe de desafios!';
+if (msg.includes('como melhorar meu portfólio com a fox ruby')) return 'Use os projetos da plataforma como base e crie seus próprios!';
+if (msg.includes('como se tornar fullstack com a fox ruby')) return 'Aprenda front-end, back-end e banco de dados praticando os projetos!';
+if (msg.includes('como estudar react na fox ruby')) return 'Crie componentes, use props e state nos projetos da plataforma!';
+if (msg.includes('como estudar node na fox ruby')) return 'Pratique rotas, controllers e banco de dados nos projetos!';
+if (msg.includes('como estudar python na fox ruby')) return 'Faça scripts, automações e projetos práticos!';
+if (msg.includes('como estudar javascript na fox ruby')) return 'Pratique DOM, funções, eventos e crie projetos!';
+if (msg.includes('como estudar css na fox ruby')) return 'Aprenda layouts, responsividade, animações e grids!';
+if (msg.includes('como estudar html na fox ruby')) return 'Pratique estrutura, tags, formulários e tabelas!';
+if (msg.includes('como evoluir profissionalmente com a fox ruby')) return 'Pratique projetos, participe da comunidade e aplique no mundo real!';
+if (msg.includes('como aprender mais rápido com a fox ruby')) return 'Revise aulas, pratique projetos e tire dúvidas na comunidade!';
+if (msg.includes('como organizar estudos avançados na fox ruby')) return 'Use cronogramas, revise projetos e pratique desafios!';
+if (msg.includes('como criar hábitos de estudo na fox ruby')) return 'Defina horários, metas e pratique consistentemente!';
+if (msg.includes('como estudar projetos avançados na fox ruby')) return 'Analise o código, teste funcionalidades e crie melhorias!';
+if (msg.includes('como tirar dúvidas avançadas na fox ruby')) return 'Pergunte na comunidade e participe de discussões!';
+if (msg.includes('como aplicar fullstack na fox ruby')) return 'Crie projetos integrando front-end e back-end!';
+if (msg.includes('como se tornar dev profissional com a fox ruby')) return 'Pratique, aprenda com projetos e participe da comunidade!';
+if (msg.includes('como estudar habilidades práticas na fox ruby')) return 'Faça exercícios, revise projetos e teste novos desafios!';
+if (msg.includes('como estudar do básico ao avançado na fox ruby')) return 'Siga os módulos, pratique projetos e avance gradualmente!';
+if (msg.includes('como revisar cursos da fox ruby')) return 'Refaça exercícios, revise vídeos e teste código!';
+if (msg.includes('como criar portfólio profissional com a fox ruby')) return 'Use os projetos como base e personalize para mostrar habilidades!';
+if (msg.includes('como estudar de forma eficiente na fox ruby')) return 'Organize rotina, pratique todos os projetos e revise conteúdo!';
+if (msg.includes('como aprender lógica com a fox ruby')) return 'Pratique exercícios, algoritmos e projetos reais!';
+if (msg.includes('como estudar projetos completos na fox ruby')) return 'Siga passo a passo, teste funcionalidades e personalize!';
+if (msg.includes('como aprender rápido fullstack na fox ruby')) return 'Pratique front-end e back-end juntos nos projetos!';
+if (msg.includes('como aplicar conhecimentos avançados na fox ruby')) return 'Refaça projetos, adicione funcionalidades e teste novas ideias!';
+if (msg.includes('como estudar programação real na fox ruby')) return 'Pratique todos os exercícios e aplique em projetos práticos!';
+if (msg.includes('como evoluir como dev na fox ruby')) return 'Participe de projetos, desafios e da comunidade!';
+if (msg.includes('como estudar front-end avançado na fox ruby')) return 'Pratique layouts complexos, animações e frameworks!';
+if (msg.includes('como estudar back-end avançado na fox ruby')) return 'Pratique APIs, autenticação e integração com bancos de dados!';
+if (msg.includes('o que é html')) return 'HTML é a linguagem de marcação que estrutura páginas na web, definindo títulos, textos, imagens e links!';
+if (msg.includes('o que é css')) return 'CSS é a linguagem de estilo que deixa seu site bonito, controlando cores, fontes, layouts e animações!';
+if (msg.includes('o que é javascript')) return 'JavaScript é a linguagem que deixa seu site interativo, permitindo clicar em botões, atualizar conteúdos e muito mais!';
+if (msg.includes('o que é node js')) return 'Node.js é uma plataforma que permite rodar JavaScript no servidor, criando APIs e backends!';
+if (msg.includes('o que é react')) return 'React é uma biblioteca JavaScript para criar interfaces interativas e componentes reutilizáveis!';
+if (msg.includes('o que é vue')) return 'Vue.js é um framework JavaScript progressivo para criar interfaces e aplicações reativas!';
+if (msg.includes('o que é angular')) return 'Angular é um framework TypeScript para criar aplicações web robustas e escaláveis!';
+if (msg.includes('o que é bootstrap')) return 'Bootstrap é um framework CSS que facilita criar sites responsivos e bonitos rapidamente!';
+if (msg.includes('o que é tailwind')) return 'Tailwind CSS é um framework utilitário que ajuda a estilizar sites de forma rápida e flexível!';
+if (msg.includes('o que é python')) return 'Python é uma linguagem de programação versátil, usada para web, automação, ciência de dados e muito mais!';
+if (msg.includes('o que é php')) return 'PHP é uma linguagem usada para criar sites dinâmicos e backends!';
+if (msg.includes('o que é laravel')) return 'Laravel é um framework PHP que facilita criar sistemas web com código limpo e organizado!';
+if (msg.includes('o que é typescript')) return 'TypeScript é um superset do JavaScript que adiciona tipagem estática para deixar o código mais seguro!';
+if (msg.includes('o que é sql')) return 'SQL é a linguagem usada para gerenciar bancos de dados relacionais!';
+if (msg.includes('o que é mongodb')) return 'MongoDB é um banco de dados NoSQL, ideal para armazenar dados flexíveis em documentos JSON!';
+if (msg.includes('o que é api')) return 'API é uma interface que permite que diferentes sistemas conversem entre si!';
+if (msg.includes('o que é rest')) return 'REST é um padrão de API que organiza dados e ações de forma simples e escalável!';
+if (msg.includes('o que é graphql')) return 'GraphQL é uma linguagem de consultas para APIs que permite pegar só os dados que você precisa!';
+if (msg.includes('o que é docker')) return 'Docker é uma ferramenta que cria containers para rodar aplicativos isolados de forma consistente!';
+if (msg.includes('o que é kubernetes')) return 'Kubernetes é uma plataforma para gerenciar containers em grande escala!';
+if (msg.includes('o que é git')) return 'Git é um sistema de controle de versão que ajuda a acompanhar mudanças no código!';
+if (msg.includes('o que é github')) return 'GitHub é uma plataforma para hospedar projetos Git, colaborar e compartilhar código!';
+if (msg.includes('o que é json')) return 'JSON é um formato de dados leve usado para trocar informações entre sistemas!';
+if (msg.includes('o que é api restfull')) return 'API RESTful é uma API organizada seguindo princípios REST, facilitando comunicação entre sistemas!';
+if (msg.includes('o que é oauth')) return 'OAuth é um padrão de autenticação que permite acessar dados de forma segura!';
+if (msg.includes('o que é framework')) return 'Framework é uma estrutura pronta que ajuda a desenvolver aplicações mais rápido e organizado!';
+if (msg.includes('o que é biblioteca')) return 'Biblioteca é um conjunto de códigos que você pode usar para facilitar tarefas específicas!';
+if (msg.includes('o que é front-end')) return 'Front-end é a parte do site ou app que o usuário vê e interage!';
+if (msg.includes('o que é back-end')) return 'Back-end é a parte do site ou app que roda no servidor, processando dados e regras!';
+if (msg.includes('o que é fullstack')) return 'Fullstack é quem trabalha tanto com front-end quanto back-end!';
+if (msg.includes('o que é sass')) return 'Sass é um pré-processador CSS que deixa seu código mais organizado e poderoso!';
+if (msg.includes('o que é less')) return 'Less é outro pré-processador CSS que facilita escrever estilos!';
+if (msg.includes('o que é responsive design')) return 'Design responsivo é quando seu site se adapta a diferentes tamanhos de tela!';
+if (msg.includes('o que é semantic html')) return 'HTML semântico usa tags corretas para descrever o conteúdo, ajudando SEO e acessibilidade!';
+if (msg.includes('o que é dom')) return 'DOM é a representação do seu site que o JavaScript pode acessar e manipular!';
+if (msg.includes('o que é event listener')) return 'Event Listener é um jeito de “escutar” ações do usuário, como cliques ou digitação!';
+if (msg.includes('o que é api rest api')) return 'API REST é uma forma de estruturar serviços web para trocar dados de forma simples!';
+if (msg.includes('o que é firebase')) return 'Firebase é uma plataforma que oferece backend pronto, autenticação e banco de dados em tempo real!';
+if (msg.includes('o que é async await')) return 'Async/await é um jeito de escrever código assíncrono em JavaScript de forma mais legível!';
+if (msg.includes('o que é promise')) return 'Promise é um objeto em JavaScript que representa uma operação que vai terminar no futuro!';
+if (msg.includes('o que é closure')) return 'Closure é uma função em JavaScript que lembra variáveis do contexto em que foi criada!';
+if (msg.includes('o que é hoisting')) return 'Hoisting é quando variáveis e funções são “movidas” para o topo do código antes de executar!';
+if (msg.includes('o que é oop')) return 'OOP (Programação Orientada a Objetos) é um jeito de organizar código com classes e objetos!';
+if (msg.includes('o que é mvc')) return 'MVC é um padrão que separa seu código em Model, View e Controller!';
+if (msg.includes('o que é dev ruby')) return 'Dev Ruby é a plataforma e comunidade da Fox Ruby com cursos, projetos e conteúdo de tecnologia!';
+if (msg.includes('o que é fox ruby')) return 'Fox Ruby é sua comunidade de tecnologia, performance e resultado, com cursos práticos e projetos!';
+if (msg.includes('o que é api restfull fox ruby')) return 'API RESTful é um padrão de comunicação entre sistemas, ensinado nos cursos da Fox Ruby!';
+if (msg.includes('o que é rest api fox ruby')) return 'REST API é uma forma de estruturar serviços web que você aprende na Fox Ruby!';
+if (msg.includes('o que é html fox ruby')) return 'HTML é a base da web, usado para estruturar páginas, explicado nos cursos da Fox Ruby!';
+if (msg.includes('o que é css fox ruby')) return 'CSS deixa seu site bonito e responsivo, e a Fox Ruby ensina passo a passo!';
+if (msg.includes('o que é javascript fox ruby')) return 'JavaScript deixa seu site interativo, e a Fox Ruby mostra na prática como usar!';
+if (msg.includes('o que é node js fox ruby')) return 'Node.js permite rodar JavaScript no servidor, ensinado nos projetos Fox Ruby!';
+if (msg.includes('o que é react fox ruby')) return 'React é uma biblioteca para criar interfaces, e você aprende na Fox Ruby!';
+if (msg.includes('o que é vue fox ruby')) return 'Vue.js é um framework para criar apps reativos, ensinado nos cursos da Fox Ruby!';
+if (msg.includes('o que é angular fox ruby')) return 'Angular é um framework para apps complexos, explicado na Fox Ruby!';
+if (msg.includes('o que é bootstrap fox ruby')) return 'Bootstrap facilita criar sites responsivos, você aprende na Fox Ruby!';
+if (msg.includes('o que é tailwind fox ruby')) return 'Tailwind CSS ajuda a estilizar rápido, ensinado na Fox Ruby!';
+if (msg.includes('o que é python fox ruby')) return 'Python é versátil, usado em web e automação, ensinado na Fox Ruby!';
+if (msg.includes('o que é php fox ruby')) return 'PHP é usado para sites dinâmicos, ensinado nos projetos Fox Ruby!';
+if (msg.includes('o que é laravel fox ruby')) return 'Laravel é framework PHP moderno, explicado passo a passo na Fox Ruby!';
+if (msg.includes('o que é typescript fox ruby')) return 'TypeScript adiciona tipagem ao JS, ensinado nos cursos avançados da Fox Ruby!';
+if (msg.includes('o que é sql fox ruby')) return 'SQL gerencia bancos relacionais, e a Fox Ruby mostra como usar!';
+if (msg.includes('o que é mongodb fox ruby')) return 'MongoDB é banco NoSQL, ensinado em projetos práticos da Fox Ruby!';
+if (msg.includes('o que é api fox ruby')) return 'API permite integração entre sistemas, e você aprende na Fox Ruby!';
+if (msg.includes('o que é json fox ruby')) return 'JSON é formato de dados usado em APIs, ensinado nos cursos Fox Ruby!';
+if (msg.includes('o que é oauth fox ruby')) return 'OAuth é autenticação segura, explicado passo a passo na Fox Ruby!';
+if (msg.includes('o que é framework fox ruby')) return 'Frameworks ajudam a organizar código, e a Fox Ruby ensina vários!';
+if (msg.includes('o que é biblioteca fox ruby')) return 'Bibliotecas facilitam tarefas, você aprende a usar na Fox Ruby!';
+if (msg.includes('o que é front-end fox ruby')) return 'Front-end é a parte visível do site, ensinado nos cursos Fox Ruby!';
+if (msg.includes('o que é back-end fox ruby')) return 'Back-end é a parte do servidor, você aprende na Fox Ruby!';
+if (msg.includes('o que é fullstack fox ruby')) return 'Fullstack trabalha com front e back, ensinado nos projetos Fox Ruby!';
+if (msg.includes('o que é sass fox ruby')) return 'Sass é pré-processador CSS, ensinado nos cursos da Fox Ruby!';
+if (msg.includes('o que é less fox ruby')) return 'Less facilita escrever CSS, você aprende na Fox Ruby!';
+if (msg.includes('o que é responsive design fox ruby')) return 'Design responsivo se adapta a telas, ensinado nos cursos da Fox Ruby!';
+if (msg.includes('o que é semantic html fox ruby')) return 'HTML semântico melhora SEO e acessibilidade, ensinado na Fox Ruby!';
+if (msg.includes('o que é dom fox ruby')) return 'DOM é a representação da página que JS manipula, ensinado na Fox Ruby!';
+if (msg.includes('o que é event listener fox ruby')) return 'Event Listener permite escutar ações do usuário, você aprende na Fox Ruby!';
+if (msg.includes('o que é async await fox ruby')) return 'Async/await organiza código assíncrono, ensinado nos cursos Fox Ruby!';
+if (msg.includes('o que é promise fox ruby')) return 'Promise representa operações futuras em JS, você aprende na Fox Ruby!';
+if (msg.includes('o que é closure fox ruby')) return 'Closure lembra variáveis do contexto, ensinado passo a passo na Fox Ruby!';
+if (msg.includes('o que é hoisting fox ruby')) return 'Hoisting é quando funções e variáveis “sobem” no JS, explicado na Fox Ruby!';
+if (msg.includes('o que é oop fox ruby')) return 'OOP organiza código com classes e objetos, ensinado na Fox Ruby!';
+if (msg.includes('o que é mvc fox ruby')) return 'MVC separa Model, View e Controller, ensinado nos cursos Fox Ruby!';
+if (msg.includes('o que é dev ruby fox ruby')) return 'Dev Ruby é a plataforma Fox Ruby com cursos, projetos e comunidade!';
+if (msg.includes('o que é fox ruby dev ruby')) return 'Fox Ruby é sua comunidade tech, Dev Ruby é o conteúdo e projetos da plataforma!';
+if (msg.includes('o que é github fox ruby')) return 'GitHub hospeda seus projetos Fox Ruby e ajuda no controle de versão!';
+if (msg.includes('o que é git fox ruby')) return 'Git ajuda a versionar seus projetos da Fox Ruby!';
+if (msg.includes('o que é firebase fox ruby')) return 'Firebase oferece backend e banco em tempo real, ensinado na Fox Ruby!';
+if (msg.includes('o que é api rest fox ruby')) return 'API REST é forma de comunicação entre sistemas, ensinada na Fox Ruby!';
+if (msg.includes('o que é api graphql fox ruby')) return 'GraphQL é uma API flexível, ensinado nos cursos avançados Fox Ruby!';
+if (msg.includes('o que é devops fox ruby')) return 'DevOps é prática de integração e entrega contínua, ensinado na Fox Ruby!';
+if (msg.includes('o que é docker fox ruby')) return 'Docker cria containers isolados, ensinado passo a passo na Fox Ruby!';
+if (msg.includes('o que é kubernetes fox ruby')) return 'Kubernetes gerencia containers em larga escala, ensinado na Fox Ruby!';
+if (msg.includes('o que é estudo fox ruby')) return 'Estudo Fox Ruby é aprender fazendo projetos, revisando aulas e praticando!';
+if (msg.includes('o que é projeto fox ruby')) return 'Projeto Fox Ruby é prática real de programação ensinada nos cursos!';
+if (msg.includes('o que é curso fox ruby')) return 'Curso Fox Ruby ensina do básico ao avançado com teoria e prática!';
+if (msg.includes('o que é comunidade fox ruby')) return 'Comunidade Fox Ruby é lugar para tirar dúvidas e aprender junto!';
+if (msg.includes('o que é mentor fox ruby')) return 'Mentor Fox Ruby guia alunos, dá dicas e ajuda nos projetos!';
+if (msg.includes('o que é desafio fox ruby')) return 'Desafio Fox Ruby é exercício prático para testar suas habilidades!';
+if (msg.includes('o que é certificado fox ruby')) return 'Certificado Fox Ruby comprova seu aprendizado e prática nos projetos!';
+if (msg.includes('o que é carreira fox ruby')) return 'Carreira Fox Ruby é evoluir profissionalmente com aprendizado e prática!';
+if (msg.includes('o que é skill fox ruby')) return 'Skill Fox Ruby é habilidade que você desenvolve com cursos e projetos!';
+if (msg.includes('o que é aprendizado fox ruby')) return 'Aprendizado Fox Ruby é teoria + prática + participação na comunidade!';
+if (msg.includes('o que é tecnologia fox ruby')) return 'Tecnologia Fox Ruby é tudo que você aprende na plataforma, do front ao back!';
+if (msg.includes('o que é programacao fox ruby')) return 'Programação Fox Ruby é aprender a criar sistemas, apps e sites do zero!';
+if (msg.includes('o que é desenvolvimento fox ruby')) return 'Desenvolvimento Fox Ruby é aplicar técnicas e criar projetos reais!';
+if (msg.includes('o que é api fox ruby')) return 'API Fox Ruby é uma forma de conectar sistemas ensinada nos projetos da plataforma!';
+if (msg.includes('o que é estudo guiado fox ruby')) return 'Estudo guiado Fox Ruby é seguir cursos passo a passo e praticar projetos!';
+if (msg.includes('o que é aprendizado guiado fox ruby')) return 'Aprendizado guiado Fox Ruby combina aulas, projetos e revisão!';
+if (msg.includes('o que é módulo fox ruby')) return 'Módulo Fox Ruby é uma parte do curso que ensina um tema específico!';
+if (msg.includes('o que é bootcamp fox ruby')) return 'Bootcamp Fox Ruby é treinamento intensivo com prática real!';
+if (msg.includes('o que é prática fox ruby')) return 'Prática Fox Ruby é colocar em prática o que aprendeu nos cursos!';
+if (msg.includes('o que é desafio dev fox ruby')) return 'Desafio Dev Fox Ruby testa suas habilidades com projetos reais!';
+if (msg.includes('o que é projeto dev fox ruby')) return 'Projeto Dev Fox Ruby é exercício prático para aplicar conhecimentos!';
+if (msg.includes('o que é front fox ruby')) return 'Front Fox Ruby é aprender tudo de HTML, CSS e JS para interfaces!';
+if (msg.includes('o que é back fox ruby')) return 'Back Fox Ruby é aprender a criar servidores, bancos e APIs!';
+if (msg.includes('o que é fullstack fox ruby')) return 'Fullstack Fox Ruby é unir front-end e back-end em projetos!';
+if (msg.includes('o que é curso de javascript fox ruby')) return 'Curso JS Fox Ruby ensina do básico ao avançado com exercícios!';
+if (msg.includes('o que é curso de html fox ruby')) return 'Curso HTML Fox Ruby ensina estrutura de páginas e boas práticas!';
+if (msg.includes('o que é curso de css fox ruby')) return 'Curso CSS Fox Ruby ensina layout, responsividade e design!';
+if (msg.includes('o que é curso de node fox ruby')) return 'Curso Node Fox Ruby ensina backend e APIs de forma prática!';
+if (msg.includes('o que é curso de react fox ruby')) return 'Curso React Fox Ruby ensina componentes e interfaces modernas!';
+if (msg.includes('o que é curso de python fox ruby')) return 'Curso Python Fox Ruby ensina scripts, automações e projetos!';
+if (msg.includes('o que é curso dev fox ruby')) return 'Curso Dev Fox Ruby combina teoria e prática para desenvolver skills!';
+if (msg.includes('o que é comunidade dev fox ruby')) return 'Comunidade Dev Fox Ruby é onde você tira dúvidas e aprende junto!';
+if (msg.includes('o que é mentor fox ruby')) return 'Mentor Fox Ruby ajuda alunos com dicas e acompanhamento!';
+if (msg.includes('o que é hackathon fox ruby')) return 'Hackathon Fox Ruby é evento para desenvolver projetos em equipe!';
+if (msg.includes('o que é portfolio fox ruby')) return 'Portfólio Fox Ruby é mostrar seus projetos e habilidades na prática!';
+if (msg.includes('o que é certificado dev fox ruby')) return 'Certificado Dev Fox Ruby comprova aprendizado e prática!';
+if (msg.includes('o que é skill dev fox ruby')) return 'Skill Dev Fox Ruby é habilidade prática desenvolvida nos cursos!';
+if (msg.includes('o que é carreira dev fox ruby')) return 'Carreira Dev Fox Ruby é evoluir como profissional em tecnologia!';
+if (msg.includes('o que é framework fox ruby')) return 'Framework Fox Ruby é estrutura que ajuda a criar projetos rapidamente!';
+if (msg.includes('o que é biblioteca fox ruby')) return 'Biblioteca Fox Ruby facilita tarefas e acelera aprendizado!';
+if (msg.includes('o que é responsive fox ruby')) return 'Responsive Fox Ruby é aprender a criar sites que se adaptam a telas!';
+if (msg.includes('o que é css grid fox ruby')) return 'CSS Grid Fox Ruby ensina a organizar layouts de forma moderna!';
+if (msg.includes('o que é flexbox fox ruby')) return 'Flexbox Fox Ruby ajuda a alinhar elementos facilmente!';
+if (msg.includes('o que é api rest fox ruby')) return 'API REST Fox Ruby ensina comunicação entre sistemas de forma prática!';
+if (msg.includes('o que é api graphql fox ruby')) return 'API GraphQL Fox Ruby ensina consultas flexíveis e eficientes!';
+if (msg.includes('o que é database fox ruby')) return 'Database Fox Ruby ensina a criar e gerenciar bancos de dados!';
+if (msg.includes('o que é mysql fox ruby')) return 'MySQL Fox Ruby ensina banco relacional em projetos práticos!';
+if (msg.includes('o que é postgresql fox ruby')) return 'PostgreSQL Fox Ruby ensina banco avançado com projetos reais!';
+if (msg.includes('o que é mongodb fox ruby')) return 'MongoDB Fox Ruby ensina banco NoSQL para dados flexíveis!';
+if (msg.includes('o que é versionamento fox ruby')) return 'Versionamento Fox Ruby ensina Git e GitHub para controlar código!';
+if (msg.includes('o que é git fox ruby')) return 'Git Fox Ruby ensina versionar e gerenciar mudanças no código!';
+if (msg.includes('o que é github fox ruby')) return 'GitHub Fox Ruby ensina hospedar e compartilhar projetos!';
+if (msg.includes('o que é deploy fox ruby')) return 'Deploy Fox Ruby ensina como colocar seu site no ar!';
+if (msg.includes('o que é hosting fox ruby')) return 'Hosting Fox Ruby ensina servidores e hospedagem de projetos!';
+if (msg.includes('o que é docker fox ruby')) return 'Docker Fox Ruby ensina containers para rodar apps isolados!';
+if (msg.includes('o que é kubernetes fox ruby')) return 'Kubernetes Fox Ruby ensina a gerenciar containers e aplicações!';
+if (msg.includes('o que é devops fox ruby')) return 'DevOps Fox Ruby ensina integração contínua e automação!';
+if (msg.includes('o que é api testing fox ruby')) return 'API Testing Fox Ruby ensina como testar seus serviços!';
+if (msg.includes('o que é front testing fox ruby')) return 'Front Testing Fox Ruby ensina testes de interfaces e componentes!';
+if (msg.includes('o que é back testing fox ruby')) return 'Back Testing Fox Ruby ensina testes de APIs e back-end!';
+if (msg.includes('o que é ux fox ruby')) return 'UX Fox Ruby ensina experiência do usuário em seus projetos!';
+if (msg.includes('o que é ui fox ruby')) return 'UI Fox Ruby ensina design visual e interfaces bonitas!';
+if (msg.includes('o que é accessibility fox ruby')) return 'Accessibility Fox Ruby ensina tornar sites acessíveis para todos!';
+if (msg.includes('o que é semantico fox ruby')) return 'HTML semântico Fox Ruby melhora SEO e leitura do site!';
+if (msg.includes('o que é debugging fox ruby')) return 'Debugging Fox Ruby ensina a encontrar e corrigir erros no código!';
+if (msg.includes('o que é algorithm fox ruby')) return 'Algorithm Fox Ruby ensina lógica de programação e resolução de problemas!';
+if (msg.includes('o que é data structure fox ruby')) return 'Data Structure Fox Ruby ensina organizar dados eficientemente!';
+if (msg.includes('o que é oop fox ruby')) return 'OOP Fox Ruby ensina classes, objetos e encapsulamento!';
+if (msg.includes('o que é mvc fox ruby')) return 'MVC Fox Ruby ensina separar Model, View e Controller!';
+if (msg.includes('o que é design pattern fox ruby')) return 'Design Pattern Fox Ruby ensina soluções estruturadas para problemas comuns!';
+if (msg.includes('o que é async fox ruby')) return 'Async Fox Ruby ensina programação assíncrona de forma prática!';
+if (msg.includes('o que é await fox ruby')) return 'Await Fox Ruby ensina esperar resultados de forma organizada!';
+if (msg.includes('o que é promise fox ruby')) return 'Promise Fox Ruby ensina lidar com operações futuras no JS!';
+if (msg.includes('o que é closure fox ruby')) return 'Closure Fox Ruby ensina funções lembrarem variáveis do contexto!';
+if (msg.includes('o que é hoisting fox ruby')) return 'Hoisting Fox Ruby ensina variáveis e funções “subindo” no código!';
+if (msg.includes('o que é event listener fox ruby')) return 'Event Listener Fox Ruby ensina capturar eventos do usuário!';
+if (msg.includes('o que é dom fox ruby')) return 'DOM Fox Ruby ensina manipular elementos da página com JS!';
+if (msg.includes('o que é debugging fox ruby')) return 'Debugging Fox Ruby ensina corrigir bugs nos projetos!';
+if (msg.includes('o que é console fox ruby')) return 'Console Fox Ruby ensina usar o console para testar e depurar!';
+if (msg.includes('o que é terminal fox ruby')) return 'Terminal Fox Ruby ensina comandos essenciais para devs!';
+if (msg.includes('o que é front fox ruby')) return 'Front Fox Ruby é a parte visível do site, que você aprende a criar com HTML, CSS e JS!';
+if (msg.includes('o que é back fox ruby')) return 'Back Fox Ruby é a parte do servidor que processa dados e cria APIs!';
+if (msg.includes('o que é fullstack fox ruby')) return 'Fullstack Fox Ruby combina front-end e back-end em projetos completos!';
+if (msg.includes('o que é github fox ruby')) return 'GitHub Fox Ruby ensina a versionar, compartilhar e colaborar em projetos!';
+if (msg.includes('o que é git fox ruby')) return 'Git Fox Ruby ensina a controlar versões do código de forma eficiente!';
+if (msg.includes('o que é deploy fox ruby')) return 'Deploy Fox Ruby ensina a colocar sites e apps no ar!';
+if (msg.includes('o que é hosting fox ruby')) return 'Hosting Fox Ruby ensina hospedagem e servidores!';
+if (msg.includes('o que é docker fox ruby')) return 'Docker Fox Ruby ensina a criar containers para rodar apps isolados!';
+if (msg.includes('o que é kubernetes fox ruby')) return 'Kubernetes Fox Ruby ensina a gerenciar múltiplos containers!';
+if (msg.includes('o que é devops fox ruby')) return 'DevOps Fox Ruby ensina integração contínua e automação de processos!';
+if (msg.includes('o que é api fox ruby')) return 'API Fox Ruby permite sistemas trocarem dados e informações de forma prática!';
+if (msg.includes('o que é rest api fox ruby')) return 'REST API Fox Ruby ensina comunicação entre sistemas usando padrões simples!';
+if (msg.includes('o que é graphql fox ruby')) return 'GraphQL Fox Ruby permite consultas flexíveis de dados!';
+if (msg.includes('o que é responsive design fox ruby')) return 'Design responsivo Fox Ruby é criar sites que se adaptam a qualquer tela!';
+if (msg.includes('o que é css grid fox ruby')) return 'CSS Grid Fox Ruby ensina a organizar layouts modernos!';
+if (msg.includes('o que é flexbox fox ruby')) return 'Flexbox Fox Ruby ajuda a alinhar elementos de forma fácil!';
+if (msg.includes('o que é sass fox ruby')) return 'Sass Fox Ruby ensina a escrever CSS mais organizado e poderoso!';
+if (msg.includes('o que é less fox ruby')) return 'Less Fox Ruby é outro pré-processador CSS que facilita estilização!';
+if (msg.includes('o que é semantic html fox ruby')) return 'HTML semântico Fox Ruby melhora SEO, acessibilidade e estrutura!';
+if (msg.includes('o que é ux fox ruby')) return 'UX Fox Ruby ensina experiência do usuário em seus projetos!';
+if (msg.includes('o que é ui fox ruby')) return 'UI Fox Ruby ensina design visual e interfaces atraentes!';
+if (msg.includes('o que é accessibility fox ruby')) return 'Accessibility Fox Ruby ensina criar sites acessíveis para todos!';
+if (msg.includes('o que é debugging fox ruby')) return 'Debugging Fox Ruby ensina a encontrar e corrigir erros no código!';
+if (msg.includes('o que é algorithm fox ruby')) return 'Algorithm Fox Ruby ensina lógica de programação e resolução de problemas!';
+if (msg.includes('o que é data structure fox ruby')) return 'Data Structure Fox Ruby ensina organizar e gerenciar dados!';
+if (msg.includes('o que é oop fox ruby')) return 'OOP Fox Ruby ensina programação orientada a objetos!';
+if (msg.includes('o que é mvc fox ruby')) return 'MVC Fox Ruby ensina separar Model, View e Controller!';
+if (msg.includes('o que é design pattern fox ruby')) return 'Design Pattern Fox Ruby ensina soluções estruturadas para problemas comuns!';
+if (msg.includes('o que é async fox ruby')) return 'Async Fox Ruby ensina programação assíncrona em JS!';
+if (msg.includes('o que é await fox ruby')) return 'Await Fox Ruby ensina esperar resultados de forma organizada!';
+if (msg.includes('o que é promise fox ruby')) return 'Promise Fox Ruby ensina lidar com operações futuras no JS!';
+if (msg.includes('o que é closure fox ruby')) return 'Closure Fox Ruby ensina funções lembrarem variáveis do contexto!';
+if (msg.includes('o que é hoisting fox ruby')) return 'Hoisting Fox Ruby ensina que variáveis e funções “sobem” no código!';
+if (msg.includes('o que é event listener fox ruby')) return 'Event Listener Fox Ruby ensina capturar eventos do usuário!';
+if (msg.includes('o que é dom fox ruby')) return 'DOM Fox Ruby ensina manipular elementos da página com JS!';
+if (msg.includes('o que é console fox ruby')) return 'Console Fox Ruby ensina usar o console para testar e depurar código!';
+if (msg.includes('o que é terminal fox ruby')) return 'Terminal Fox Ruby ensina comandos essenciais para desenvolvedores!';
+if (msg.includes('o que é cronograma fox ruby')) return 'Cronograma Fox Ruby ajuda a organizar seus estudos e prática!';
+if (msg.includes('o que é mentor fox ruby')) return 'Mentor Fox Ruby orienta alunos, tira dúvidas e guia projetos!';
+if (msg.includes('o que é bootcamp fox ruby')) return 'Bootcamp Fox Ruby é treinamento intensivo com prática real!';
+if (msg.includes('o que é desafio fox ruby')) return 'Desafio Fox Ruby testa suas habilidades com exercícios práticos!';
+if (msg.includes('o que é projeto fox ruby')) return 'Projeto Fox Ruby é colocar em prática tudo que você aprendeu!';
+if (msg.includes('o que é portfólio fox ruby')) return 'Portfólio Fox Ruby é mostrar seus projetos e habilidades!';
+if (msg.includes('o que é certificado fox ruby')) return 'Certificado Fox Ruby comprova suas habilidades e aprendizado!';
+if (msg.includes('o que é carreira fox ruby')) return 'Carreira Fox Ruby ajuda a evoluir profissionalmente com projetos e cursos!';
+if (msg.includes('o que é skill fox ruby')) return 'Skill Fox Ruby é habilidade prática que você desenvolve nos cursos!';
+if (msg.includes('o que é aprendizado fox ruby')) return 'Aprendizado Fox Ruby é teoria + prática + participação na comunidade!';
+if (msg.includes('o que é tecnologia fox ruby')) return 'Tecnologia Fox Ruby é tudo que você aprende na plataforma, do front ao back!';
+if (msg.includes('o que é programação fox ruby')) return 'Programação Fox Ruby é criar sistemas, apps e sites do zero!';
+if (msg.includes('o que é desenvolvimento fox ruby')) return 'Desenvolvimento Fox Ruby é aplicar técnicas e criar projetos reais!';
+if (msg.includes('o que é comunidade fox ruby')) return 'Comunidade Fox Ruby é lugar para tirar dúvidas, trocar ideias e aprender junto!';
+if (msg.includes('o que é forum fox ruby')) return 'Fórum Fox Ruby é espaço para discussões e suporte entre alunos!';
+if (msg.includes('o que é mentor fox ruby')) return 'Mentor Fox Ruby guia, dá dicas e ajuda nos projetos!';
+if (msg.includes('o que é estudo fox ruby')) return 'Estudo Fox Ruby é aprender fazendo projetos e revisando aulas!';
+if (msg.includes('o que é aprendizado fox ruby')) return 'Aprendizado Fox Ruby é teoria, prática e participação na comunidade!';
+if (msg.includes('o que é projeto dev ruby')) return 'Projeto Dev Ruby é prática real de programação ensinada nos cursos!';
+if (msg.includes('o que é curso dev ruby')) return 'Curso Dev Ruby ensina do básico ao avançado com teoria e prática!';
+if (msg.includes('o que é comunidade dev ruby')) return 'Comunidade Dev Ruby é onde você tira dúvidas e aprende junto!';
+if (msg.includes('o que é mentor dev ruby')) return 'Mentor Dev Ruby ajuda alunos com dicas e acompanhamento!';
+if (msg.includes('o que é desafio dev ruby')) return 'Desafio Dev Ruby é exercício prático para testar suas habilidades!';
+if (msg.includes('o que é portfólio dev ruby')) return 'Portfólio Dev Ruby é mostrar seus projetos e habilidades na prática!';
+if (msg.includes('o que é certificado dev ruby')) return 'Certificado Dev Ruby comprova aprendizado e prática!';
+if (msg.includes('como estudar fox ruby')) return 'Estudar Fox Ruby é seguir as aulas, praticar projetos e participar da comunidade!';
+if (msg.includes('como aprender fox ruby')) return 'Aprender Fox Ruby é combinar teoria, prática e desafios para fixar o conhecimento!';
+if (msg.includes('como usar fox ruby')) return 'Usar Fox Ruby é acessar cursos, desenvolver projetos e interagir com mentores!';
+if (msg.includes('como se tornar dev fox ruby')) return 'Para se tornar Dev Fox Ruby, pratique projetos, siga os cursos e participe da comunidade!';
+if (msg.includes('como praticar fox ruby')) return 'Praticar Fox Ruby é aplicar o que você aprendeu nos cursos em projetos reais!';
+if (msg.includes('como criar projeto fox ruby')) return 'Criar projeto Fox Ruby é usar o que você aprendeu para desenvolver algo prático!';
+if (msg.includes('como fazer curso fox ruby')) return 'Fazer curso Fox Ruby é estudar as aulas, resolver exercícios e participar de desafios!';
+if (msg.includes('como conseguir certificado fox ruby')) return 'Conseguir certificado Fox Ruby é completar o curso e entregar os projetos!';
+if (msg.includes('como participar comunidade fox ruby')) return 'Participar da comunidade Fox Ruby é trocar ideias, tirar dúvidas e colaborar!';
+if (msg.includes('como acessar dev ruby')) return 'Acessar Dev Ruby é entrar na plataforma, escolher cursos e começar a estudar!';
+if (msg.includes('como evoluir na fox ruby')) return 'Evoluir na Fox Ruby é praticar projetos, aprender novas skills e participar da comunidade!';
+if (msg.includes('como aprender javascript fox ruby')) return 'Aprender JS na Fox Ruby é seguir os cursos, praticar e criar projetos interativos!';
+if (msg.includes('como aprender html fox ruby')) return 'Aprender HTML na Fox Ruby é estudar estrutura de páginas e criar sites reais!';
+if (msg.includes('como aprender css fox ruby')) return 'Aprender CSS na Fox Ruby é criar layouts, aplicar estilos e deixar sites bonitos!';
+if (msg.includes('como aprender node fox ruby')) return 'Aprender Node na Fox Ruby é construir backends e APIs em projetos reais!';
+if (msg.includes('como aprender react fox ruby')) return 'Aprender React na Fox Ruby é criar componentes, interfaces e apps modernos!';
+if (msg.includes('como aprender python fox ruby')) return 'Aprender Python na Fox Ruby é programar scripts, automações e apps!';
+if (msg.includes('como aprender php fox ruby')) return 'Aprender PHP na Fox Ruby é criar sites dinâmicos e sistemas web!';
+if (msg.includes('como aprender laravel fox ruby')) return 'Aprender Laravel na Fox Ruby é criar backends estruturados e funcionais!';
+if (msg.includes('como aprender typescript fox ruby')) return 'Aprender TypeScript na Fox Ruby é deixar seu JS mais seguro e organizado!';
+if (msg.includes('como aprender sql fox ruby')) return 'Aprender SQL na Fox Ruby é gerenciar bancos de dados e consultas!';
+if (msg.includes('como aprender mongodb fox ruby')) return 'Aprender MongoDB na Fox Ruby é trabalhar com banco NoSQL em projetos!';
+if (msg.includes('como aprender api fox ruby')) return 'Aprender API na Fox Ruby é criar serviços para comunicação entre sistemas!';
+if (msg.includes('como criar portfólio fox ruby')) return 'Criar portfólio Fox Ruby é mostrar seus projetos e habilidades para o mercado!';
+if (msg.includes('como enviar projeto fox ruby')) return 'Enviar projeto Fox Ruby é entregar seu exercício e receber feedback!';
+if (msg.includes('como acompanhar curso fox ruby')) return 'Acompanhar curso Fox Ruby é assistir aulas, praticar exercícios e desafios!';
+if (msg.includes('como melhorar skill fox ruby')) return 'Melhorar skill Fox Ruby é estudar, praticar e participar de projetos!';
+if (msg.includes('como conseguir mentor fox ruby')) return 'Conseguir mentor Fox Ruby é acessar a comunidade e solicitar orientação!';
+if (msg.includes('como participar bootcamp fox ruby')) return 'Participar bootcamp Fox Ruby é se inscrever e se dedicar aos desafios intensivos!';
+if (msg.includes('como aprender devops fox ruby')) return 'Aprender DevOps na Fox Ruby é praticar integração contínua, automação e deploy!';
+if (msg.includes('como aprender docker fox ruby')) return 'Aprender Docker na Fox Ruby é criar containers e rodar apps isolados!';
+if (msg.includes('como aprender kubernetes fox ruby')) return 'Aprender Kubernetes na Fox Ruby é gerenciar containers em larga escala!';
+if (msg.includes('como fazer deploy fox ruby')) return 'Fazer deploy Fox Ruby é colocar seus sites e apps no ar!';
+if (msg.includes('como fazer responsive design fox ruby')) return 'Fazer responsive design Fox Ruby é criar sites que se adaptam a qualquer tela!';
+if (msg.includes('como estudar html fox ruby')) return 'Estudar HTML Fox Ruby é praticar tags, estruturas e projetos!';
+if (msg.includes('como estudar css fox ruby')) return 'Estudar CSS Fox Ruby é praticar estilos, layouts e design!';
+if (msg.includes('como estudar javascript fox ruby')) return 'Estudar JS Fox Ruby é praticar interatividade e projetos dinâmicos!';
+if (msg.includes('como estudar node fox ruby')) return 'Estudar Node Fox Ruby é criar APIs e backends funcionais!';
+if (msg.includes('como estudar react fox ruby')) return 'Estudar React Fox Ruby é criar componentes e apps modernos!';
+if (msg.includes('como estudar python fox ruby')) return 'Estudar Python Fox Ruby é programar scripts e automações!';
+if (msg.includes('como estudar dev ruby')) return 'Estudar Dev Ruby é seguir cursos, praticar projetos e participar da comunidade!';
+if (msg.includes('como organizar estudo fox ruby')) return 'Organizar estudo Fox Ruby é montar cronograma, revisar aulas e praticar projetos!';
+if (msg.includes('como evoluir skill fox ruby')) return 'Evoluir skill Fox Ruby é praticar projetos, estudar novas tecnologias e participar da comunidade!';
+if (msg.includes('como aprender front fox ruby')) return 'Aprender Front Fox Ruby é estudar HTML, CSS e JS para interfaces!';
+if (msg.includes('como aprender back fox ruby')) return 'Aprender Back Fox Ruby é estudar Node, bancos e APIs!';
+if (msg.includes('como aprender fullstack fox ruby')) return 'Aprender Fullstack Fox Ruby é unir front-end e back-end em projetos!';
+if (msg.includes('como praticar projeto fox ruby')) return 'Praticar projeto Fox Ruby é aplicar conhecimentos em exercícios reais!';
+if (msg.includes('como tirar dúvidas fox ruby')) return 'Tirar dúvidas Fox Ruby é perguntar na comunidade ou ao mentor!';
+if (msg.includes('como ganhar certificado fox ruby')) return 'Ganhar certificado Fox Ruby é concluir cursos e entregar projetos!';
+if (msg.includes('como começar fox ruby')) return 'Começar Fox Ruby é criar conta, escolher curso e iniciar estudos!';
+if (msg.includes('como aprender tecnologia fox ruby')) return 'Aprender tecnologia Fox Ruby é praticar front, back e DevOps!';
+if (msg.includes('como criar skill fox ruby')) return 'Criar skill Fox Ruby é aprender, praticar e aplicar em projetos!';
+if (msg.includes('como criar carreira fox ruby')) return 'Criar carreira Fox Ruby é estudar, praticar projetos e mostrar portfólio!';
+if (msg.includes('como estudar dev ruby')) return 'Estudar Dev Ruby é seguir aulas, aplicar nos projetos e evoluir!';
+if (msg.includes('como acessar cursos fox ruby')) return 'Acessar cursos Fox Ruby é entrar na plataforma e começar!';
+if (msg.includes('como acessar comunidade fox ruby')) return 'Acessar comunidade Fox Ruby é interagir com alunos e mentores!';
+if (msg.includes('como evoluir dev ruby')) return 'Evoluir Dev Ruby é estudar cursos, praticar projetos e melhorar skills!';
+if (msg.includes('como praticar dev ruby')) return 'Praticar Dev Ruby é colocar em prática conhecimentos adquiridos!';
+if (msg.includes('como criar projeto dev ruby')) return 'Criar projeto Dev Ruby é aplicar tudo que aprendeu nos cursos!';
+if (msg.includes('como enviar projeto dev ruby')) return 'Enviar projeto Dev Ruby é submeter exercícios e receber feedback!';
+if (msg.includes('como participar bootcamp dev ruby')) return 'Participar bootcamp Dev Ruby é se dedicar intensivamente aos desafios!';
+if (msg.includes('como conseguir mentor dev ruby')) return 'Conseguir mentor Dev Ruby é solicitar ajuda na comunidade!';
+if (msg.includes('como estudar front dev ruby')) return 'Estudar Front Dev Ruby é aprender HTML, CSS e JS!';
+if (msg.includes('como estudar back dev ruby')) return 'Estudar Back Dev Ruby é aprender Node, bancos e APIs!';
+if (msg.includes('como estudar fullstack dev ruby')) return 'Estudar Fullstack Dev Ruby é unir front e back em projetos reais!';
+if (msg.includes('como fazer portfólio dev ruby')) return 'Fazer portfólio Dev Ruby é mostrar seus projetos e skills!';
+if (msg.includes('como acessar fox ruby')) return 'Acessar Fox Ruby é criar sua conta, entrar na plataforma e escolher o curso!';
+if (msg.includes('como criar conta fox ruby')) return 'Criar conta Fox Ruby é simples: cadastre-se e comece a estudar!';
+if (msg.includes('como baixar materiais fox ruby')) return 'Baixar materiais Fox Ruby é acessar os cursos e fazer download dos arquivos!';
+if (msg.includes('como assistir aulas fox ruby')) return 'Assistir aulas Fox Ruby é acessar vídeos e tutoriais direto na plataforma!';
+if (msg.includes('como aprender dev ruby')) return 'Aprender Dev Ruby é estudar cursos, praticar projetos e participar da comunidade!';
+if (msg.includes('como praticar dev ruby')) return 'Praticar Dev Ruby é aplicar o que aprendeu em projetos reais!';
+if (msg.includes('como criar projeto dev ruby')) return 'Criar projeto Dev Ruby é usar conhecimento adquirido para desenvolver algo!';
+if (msg.includes('como enviar projeto dev ruby')) return 'Enviar projeto Dev Ruby é entregar seu exercício e receber feedback!';
+if (msg.includes('como tirar dúvidas dev ruby')) return 'Tirar dúvidas Dev Ruby é perguntar na comunidade ou aos mentores!';
+if (msg.includes('como conseguir mentor dev ruby')) return 'Conseguir mentor Dev Ruby é acessar a comunidade e solicitar orientação!';
+if (msg.includes('como aprender front dev ruby')) return 'Aprender Front Dev Ruby é estudar HTML, CSS e JS!';
+if (msg.includes('como aprender back dev ruby')) return 'Aprender Back Dev Ruby é estudar Node, bancos e APIs!';
+if (msg.includes('como aprender fullstack dev ruby')) return 'Aprender Fullstack Dev Ruby é unir front-end e back-end em projetos!';
+if (msg.includes('como estudar fox ruby')) return 'Estudar Fox Ruby é assistir aulas, praticar exercícios e participar de desafios!';
+if (msg.includes('como organizar estudo dev ruby')) return 'Organizar estudo Dev Ruby é montar cronograma, revisar aulas e praticar projetos!';
+if (msg.includes('como evoluir skills dev ruby')) return 'Evoluir skills Dev Ruby é estudar, praticar e participar da comunidade!';
+if (msg.includes('como fazer portfólio fox ruby')) return 'Fazer portfólio Fox Ruby é mostrar seus projetos e habilidades!';
+if (msg.includes('como conseguir certificado dev ruby')) return 'Conseguir certificado Dev Ruby é completar cursos e enviar projetos!';
+if (msg.includes('como começar dev ruby')) return 'Começar Dev Ruby é criar conta, escolher curso e iniciar estudos!';
+if (msg.includes('como aprender javascript dev ruby')) return 'Aprender JavaScript Dev Ruby é estudar lógica, interatividade e projetos!';
+if (msg.includes('como aprender html dev ruby')) return 'Aprender HTML Dev Ruby é estruturar páginas e criar sites!';
+if (msg.includes('como aprender css dev ruby')) return 'Aprender CSS Dev Ruby é criar estilos, layouts e designs!';
+if (msg.includes('como aprender node dev ruby')) return 'Aprender Node Dev Ruby é criar backends e APIs funcionais!';
+if (msg.includes('como aprender react dev ruby')) return 'Aprender React Dev Ruby é criar interfaces e componentes!';
+if (msg.includes('como aprender python dev ruby')) return 'Aprender Python Dev Ruby é criar scripts, automações e apps!';
+if (msg.includes('como aprender banco de dados dev ruby')) return 'Aprender banco de dados Dev Ruby é organizar, consultar e manipular dados!';
+if (msg.includes('como praticar projetos fox ruby')) return 'Praticar projetos Fox Ruby é aplicar tudo que aprendeu nas aulas!';
+if (msg.includes('como participar comunidade dev ruby')) return 'Participar comunidade Dev Ruby é interagir, tirar dúvidas e colaborar!';
+if (msg.includes('como melhorar habilidades fox ruby')) return 'Melhorar habilidades Fox Ruby é praticar, estudar e participar de desafios!';
+if (msg.includes('como acessar curso fox ruby')) return 'Acessar curso Fox Ruby é entrar na plataforma e começar os módulos!';
+if (msg.includes('como acessar materiais dev ruby')) return 'Acessar materiais Dev Ruby é baixar exercícios, livros e projetos!';
+if (msg.includes('como evoluir dev ruby')) return 'Evoluir Dev Ruby é estudar, praticar projetos e mostrar portfólio!';
+if (msg.includes('como participar bootcamp fox ruby')) return 'Participar bootcamp Fox Ruby é se inscrever e se dedicar aos desafios intensivos!';
+if (msg.includes('como enviar projeto fox ruby')) return 'Enviar projeto Fox Ruby é entregar exercícios e receber feedback!';
+if (msg.includes('como criar skill dev ruby')) return 'Criar skill Dev Ruby é estudar, praticar e aplicar em projetos!';
+if (msg.includes('como melhorar portfólio fox ruby')) return 'Melhorar portfólio Fox Ruby é adicionar projetos mais avançados e desafiadores!';
+if (msg.includes('como começar carreira dev ruby')) return 'Começar carreira Dev Ruby é estudar cursos, praticar projetos e mostrar resultados!';
+if (msg.includes('como estudar fullstack fox ruby')) return 'Estudar Fullstack Fox Ruby é aprender front, back e integrar projetos!';
+if (msg.includes('como criar projetos fox ruby')) return 'Criar projetos Fox Ruby é aplicar conhecimento e desenvolver soluções reais!';
+if (msg.includes('como ganhar skill fox ruby')) return 'Ganhar skill Fox Ruby é praticar, estudar e participar de desafios!';
+if (msg.includes('como evoluir na comunidade fox ruby')) return 'Evoluir na comunidade Fox Ruby é ajudar outros, tirar dúvidas e aprender junto!';
+if (msg.includes('como organizar projetos fox ruby')) return 'Organizar projetos Fox Ruby é planejar, desenvolver e revisar!';
+if (msg.includes('como aprender tecnologias fox ruby')) return 'Aprender tecnologias Fox Ruby é estudar front, back, bancos e DevOps!';
+if (msg.includes('como criar cronograma fox ruby')) return 'Criar cronograma Fox Ruby é planejar estudos e prática de projetos!';
+if (msg.includes('como melhorar estudo fox ruby')) return 'Melhorar estudo Fox Ruby é revisar aulas, praticar e aplicar projetos!';
+if (msg.includes('como praticar fullstack dev ruby')) return 'Praticar Fullstack Dev Ruby é criar projetos integrando front e back!';
+if (msg.includes('como evoluir projetos dev ruby')) return 'Evoluir projetos Dev Ruby é melhorar, refatorar e aplicar novas técnicas!';
+if (msg.includes('como estudar front fox ruby')) return 'Estudar front Fox Ruby é aprender HTML, CSS e JS para interfaces!';
+if (msg.includes('como estudar back fox ruby')) return 'Estudar back Fox Ruby é aprender Node, bancos e APIs!';
+if (msg.includes('como estudar fullstack fox ruby')) return 'Estudar fullstack Fox Ruby é unir front e back em projetos reais!';
+if (msg.includes('como aprender programação fox ruby')) return 'Aprender programação Fox Ruby é estudar lógica, linguagens e projetos!';
+if (msg.includes('como melhorar dev ruby')) return 'Melhorar Dev Ruby é praticar mais, estudar cursos avançados e interagir na comunidade!';
+if (msg.includes('como aprender html fox ruby')) return 'Aprender HTML Fox Ruby é estudar tags, estruturas e criar páginas!';
+if (msg.includes('como aprender css fox ruby')) return 'Aprender CSS Fox Ruby é estilizar, criar layouts e design responsivo!';
+if (msg.includes('como aprender javascript fox ruby')) return 'Aprender JS Fox Ruby é adicionar interatividade e lógica aos sites!';
+if (msg.includes('como aprender node fox ruby')) return 'Aprender Node Fox Ruby é criar servidores e APIs!';
+if (msg.includes('como aprender react fox ruby')) return 'Aprender React Fox Ruby é criar componentes e interfaces modernas!';
+if (msg.includes('como aprender python fox ruby')) return 'Aprender Python Fox Ruby é programar scripts, automações e apps!';
+if (msg.includes('como aprender sql fox ruby')) return 'Aprender SQL Fox Ruby é gerenciar bancos de dados e consultas!';
+if (msg.includes('como aprender mongodb fox ruby')) return 'Aprender MongoDB Fox Ruby é trabalhar com banco NoSQL!';
+if (msg.includes('como aprender git fox ruby')) return 'Aprender Git Fox Ruby é versionar código e colaborar em projetos!';
+if (msg.includes('como aprender github fox ruby')) return 'Aprender GitHub Fox Ruby é hospedar projetos e colaborar com outros!';
+if (msg.includes('como aprender docker fox ruby')) return 'Aprender Docker Fox Ruby é criar containers e rodar apps isolados!';
+if (msg.includes('como aprender kubernetes fox ruby')) return 'Aprender Kubernetes Fox Ruby é gerenciar containers e aplicações!';
+if (msg.includes('como aprender devops fox ruby')) return 'Aprender DevOps Fox Ruby é automatizar processos e deploys!';
+if (msg.includes('como aprender api fox ruby')) return 'Aprender API Fox Ruby é criar serviços que trocam dados entre sistemas!';
+if (msg.includes('como aprender restful api fox ruby')) return 'Aprender RESTful API Fox Ruby é criar serviços usando padrões web!';
+if (msg.includes('como aprender graphql fox ruby')) return 'Aprender GraphQL Fox Ruby é criar consultas flexíveis e rápidas!';
+if (msg.includes('como aprender ux fox ruby')) return 'Aprender UX Fox Ruby é criar experiências de usuário incríveis!';
+if (msg.includes('como aprender ui fox ruby')) return 'Aprender UI Fox Ruby é criar interfaces bonitas e funcionais!';
+if (msg.includes('como aprender accessibility fox ruby')) return 'Aprender Accessibility Fox Ruby é tornar sites acessíveis para todos!';
+if (msg.includes('como aprender debugging fox ruby')) return 'Aprender Debugging Fox Ruby é encontrar e corrigir erros no código!';
+if (msg.includes('como aprender algorithm fox ruby')) return 'Aprender Algorithm Fox Ruby é resolver problemas com lógica!';
+if (msg.includes('como aprender data structure fox ruby')) return 'Aprender Data Structure Fox Ruby é organizar e manipular dados!';
+if (msg.includes('como aprender oop fox ruby')) return 'Aprender OOP Fox Ruby é trabalhar com objetos, classes e encapsulamento!';
+if (msg.includes('como aprender mvc fox ruby')) return 'Aprender MVC Fox Ruby é separar Model, View e Controller!';
+if (msg.includes('como aprender design pattern fox ruby')) return 'Aprender Design Pattern Fox Ruby é usar soluções padrões para problemas comuns!';
+if (msg.includes('como aprender async fox ruby')) return 'Aprender Async Fox Ruby é lidar com processos assíncronos!';
+if (msg.includes('como aprender await fox ruby')) return 'Aprender Await Fox Ruby é esperar resultados de processos assíncronos!';
+if (msg.includes('como aprender promise fox ruby')) return 'Aprender Promise Fox Ruby é lidar com resultados futuros em JS!';
+if (msg.includes('como aprender closure fox ruby')) return 'Aprender Closure Fox Ruby é entender funções que lembram variáveis!';
+if (msg.includes('como aprender hoisting fox ruby')) return 'Aprender Hoisting Fox Ruby é saber que variáveis e funções “sobem” no código!';
+if (msg.includes('como aprender event listener fox ruby')) return 'Aprender Event Listener Fox Ruby é capturar eventos de usuário!';
+if (msg.includes('como aprender dom fox ruby')) return 'Aprender DOM Fox Ruby é manipular elementos da página com JS!';
+if (msg.includes('como aprender console fox ruby')) return 'Aprender Console Fox Ruby é usar o console para testar e depurar!';
+if (msg.includes('como aprender terminal fox ruby')) return 'Aprender Terminal Fox Ruby é usar comandos essenciais para desenvolvedores!';
+if (msg.includes('como estudar fox ruby')) return 'Estudar Fox Ruby é seguir aulas, praticar projetos e interagir na comunidade!';
+if (msg.includes('como organizar estudos fox ruby')) return 'Organizar estudos Fox Ruby é montar cronograma, revisar aulas e praticar!';
+if (msg.includes('como evoluir fox ruby')) return 'Evoluir Fox Ruby é praticar, estudar novos tópicos e participar da comunidade!';
+if (msg.includes('como praticar fox ruby')) return 'Praticar Fox Ruby é aplicar tudo que aprendeu em exercícios e projetos!';
+if (msg.includes('como criar projeto fox ruby')) return 'Criar projeto Fox Ruby é usar conhecimento para desenvolver soluções reais!';
+if (msg.includes('como enviar projeto fox ruby')) return 'Enviar projeto Fox Ruby é entregar exercícios e receber feedback!';
+if (msg.includes('como participar bootcamp fox ruby')) return 'Participar bootcamp Fox Ruby é se dedicar intensivamente aos desafios!';
+if (msg.includes('como criar skill fox ruby')) return 'Criar skill Fox Ruby é estudar, praticar e aplicar em projetos!';
+if (msg.includes('como criar carreira fox ruby')) return 'Criar carreira Fox Ruby é estudar, praticar projetos e mostrar resultados!';
+if (msg.includes('como criar portfólio fox ruby')) return 'Criar portfólio Fox Ruby é mostrar seus projetos e habilidades!';
+if (msg.includes('como ganhar certificado fox ruby')) return 'Ganhar certificado Fox Ruby é completar cursos e enviar projetos!';
+if (msg.includes('como melhorar portfólio fox ruby')) return 'Melhorar portfólio Fox Ruby é adicionar projetos mais complexos e interessantes!';
+if (msg.includes('como começar fox ruby')) return 'Começar Fox Ruby é criar conta, escolher curso e iniciar estudos!';
+if (msg.includes('como acessar curso fox ruby')) return 'Acessar curso Fox Ruby é entrar na plataforma e começar módulos!';
+if (msg.includes('como acessar materiais fox ruby')) return 'Acessar materiais Fox Ruby é baixar arquivos, exercícios e projetos!';
+if (msg.includes('como melhorar estudo fox ruby')) return 'Melhorar estudo Fox Ruby é revisar aulas, praticar e aplicar nos projetos!';
+if (msg.includes('como estudar dev ruby')) return 'Estudar Dev Ruby é seguir cursos, praticar projetos e evoluir!';
+if (msg.includes('como evoluir dev ruby')) return 'Evoluir Dev Ruby é estudar, praticar projetos e melhorar skills!';
+if (msg.includes('como praticar dev ruby')) return 'Praticar Dev Ruby é aplicar conhecimento em projetos reais!';
+if (msg.includes('como criar projeto dev ruby')) return 'Criar projeto Dev Ruby é desenvolver soluções com o que aprendeu!';
+if (msg.includes('como enviar projeto dev ruby')) return 'Enviar projeto Dev Ruby é entregar exercícios e receber feedback!';
+if (msg.includes('como participar comunidade dev ruby')) return 'Participar comunidade Dev Ruby é interagir, tirar dúvidas e colaborar!';
+if (msg.includes('como conseguir mentor dev ruby')) return 'Conseguir mentor Dev Ruby é solicitar orientação na comunidade!';
+if (msg.includes('como evoluir skills dev ruby')) return 'Evoluir skills Dev Ruby é estudar, praticar e aplicar em projetos!';
+if (msg.includes('como criar portfólio dev ruby')) return 'Criar portfólio Dev Ruby é mostrar seus projetos e habilidades!';
+if (msg.includes('como melhorar projetos dev ruby')) return 'Melhorar projetos Dev Ruby é refatorar, adicionar funcionalidades e revisar!';
+if (msg.includes('como estudar front dev ruby')) return 'Estudar front Dev Ruby é aprender HTML, CSS e JS!';
+if (msg.includes('como estudar back dev ruby')) return 'Estudar back Dev Ruby é aprender Node, bancos e APIs!';
+if (msg.includes('como estudar fullstack dev ruby')) return 'Estudar fullstack Dev Ruby é unir front e back em projetos reais!';
+if (msg.includes('como aprender programação dev ruby')) return 'Aprender programação Dev Ruby é estudar lógica, linguagens e projetos!';
+if (msg.includes('como melhorar dev ruby')) return 'Melhorar Dev Ruby é praticar mais, estudar cursos avançados e interagir na comunidade!';
+if (msg.includes('como acessar fox ruby comunidade')) return 'Acessar Fox Ruby comunidade é criar conta e interagir com alunos e mentores!';
+if (msg.includes('como se inscrever fox ruby')) return 'Se inscrever Fox Ruby é escolher curso ou bootcamp e iniciar estudos!';
+if (msg.includes('como aprender front fox ruby')) return 'Aprender front Fox Ruby é estudar HTML, CSS e JavaScript!';
+if (msg.includes('como aprender back fox ruby')) return 'Aprender back Fox Ruby é estudar Node, banco de dados e APIs!';
+if (msg.includes('como aprender fullstack fox ruby')) return 'Aprender fullstack Fox Ruby é unir front e back em projetos reais!';
+if (msg.includes('como estudar javascript fox ruby')) return 'Estudar JavaScript Fox Ruby é praticar lógica, DOM e eventos!';
+if (msg.includes('como estudar html fox ruby')) return 'Estudar HTML Fox Ruby é aprender tags, atributos e estrutura de páginas!';
+if (msg.includes('como estudar css fox ruby')) return 'Estudar CSS Fox Ruby é criar estilos, layouts e design responsivo!';
+if (msg.includes('como praticar front fox ruby')) return 'Praticar front Fox Ruby é desenvolver interfaces e aplicar estilos!';
+if (msg.includes('como praticar back fox ruby')) return 'Praticar back Fox Ruby é criar APIs, banco de dados e lógica do servidor!';
+if (msg.includes('como praticar fullstack fox ruby')) return 'Praticar fullstack Fox Ruby é unir front e back em projetos completos!';
+if (msg.includes('como criar projeto fox ruby')) return 'Criar projeto Fox Ruby é aplicar conhecimento em exercícios reais!';
+if (msg.includes('como enviar projeto fox ruby')) return 'Enviar projeto Fox Ruby é entregar exercícios para receber feedback!';
+if (msg.includes('como conseguir mentor fox ruby')) return 'Conseguir mentor Fox Ruby é solicitar orientação na comunidade!';
+if (msg.includes('como acessar materiais fox ruby')) return 'Acessar materiais Fox Ruby é baixar livros, projetos e exercícios!';
+if (msg.includes('como evoluir fox ruby')) return 'Evoluir Fox Ruby é estudar, praticar e participar da comunidade!';
+if (msg.includes('como organizar estudos fox ruby')) return 'Organizar estudos Fox Ruby é criar cronograma, revisar aulas e praticar!';
+if (msg.includes('como melhorar skills fox ruby')) return 'Melhorar skills Fox Ruby é estudar, praticar e aplicar em projetos!';
+if (msg.includes('como criar portfólio fox ruby')) return 'Criar portfólio Fox Ruby é mostrar projetos e habilidades!';
+if (msg.includes('como ganhar certificado fox ruby')) return 'Ganhar certificado Fox Ruby é concluir cursos e enviar projetos!';
+if (msg.includes('como iniciar carreira fox ruby')) return 'Iniciar carreira Fox Ruby é estudar, praticar e mostrar resultados!';
+if (msg.includes('como participar bootcamp fox ruby')) return 'Participar bootcamp Fox Ruby é se dedicar intensivamente aos desafios!';
+if (msg.includes('como melhorar portfólio fox ruby')) return 'Melhorar portfólio Fox Ruby é adicionar projetos mais avançados!';
+if (msg.includes('como estudar dev ruby')) return 'Estudar Dev Ruby é seguir cursos, praticar projetos e evoluir!';
+if (msg.includes('como evoluir dev ruby')) return 'Evoluir Dev Ruby é estudar, praticar projetos e melhorar skills!';
+if (msg.includes('como praticar dev ruby')) return 'Praticar Dev Ruby é aplicar conhecimento em exercícios e projetos reais!';
+if (msg.includes('como criar projeto dev ruby')) return 'Criar projeto Dev Ruby é desenvolver soluções com o que aprendeu!';
+if (msg.includes('como enviar projeto dev ruby')) return 'Enviar projeto Dev Ruby é entregar exercícios e receber feedback!';
+if (msg.includes('como acessar comunidade dev ruby')) return 'Acessar comunidade Dev Ruby é interagir, tirar dúvidas e colaborar!';
+if (msg.includes('como conseguir mentor dev ruby')) return 'Conseguir mentor Dev Ruby é solicitar orientação na comunidade!';
+if (msg.includes('como evoluir skills dev ruby')) return 'Evoluir skills Dev Ruby é estudar, praticar e aplicar em projetos!';
+if (msg.includes('como criar portfólio dev ruby')) return 'Criar portfólio Dev Ruby é mostrar projetos e habilidades!';
+if (msg.includes('como melhorar projetos dev ruby')) return 'Melhorar projetos Dev Ruby é refatorar, adicionar funcionalidades e revisar!';
+if (msg.includes('como estudar front dev ruby')) return 'Estudar front Dev Ruby é aprender HTML, CSS e JS!';
+if (msg.includes('como estudar back dev ruby')) return 'Estudar back Dev Ruby é aprender Node, bancos e APIs!';
+if (msg.includes('como estudar fullstack dev ruby')) return 'Estudar fullstack Dev Ruby é unir front e back em projetos reais!';
+if (msg.includes('como praticar front dev ruby')) return 'Praticar front Dev Ruby é desenvolver interfaces e aplicar estilos!';
+if (msg.includes('como praticar back dev ruby')) return 'Praticar back Dev Ruby é criar APIs, banco de dados e lógica do servidor!';
+if (msg.includes('como praticar fullstack dev ruby')) return 'Praticar fullstack Dev Ruby é unir front e back em projetos completos!';
+if (msg.includes('como criar projeto front fox ruby')) return 'Criar projeto front Fox Ruby é desenvolver interface com HTML, CSS e JS!';
+if (msg.includes('como criar projeto back fox ruby')) return 'Criar projeto back Fox Ruby é desenvolver lógica do servidor e APIs!';
+if (msg.includes('como criar projeto fullstack fox ruby')) return 'Criar projeto fullstack Fox Ruby é unir front e back em um projeto completo!';
+if (msg.includes('como evoluir portfólio fox ruby')) return 'Evoluir portfólio Fox Ruby é adicionar projetos avançados e funcionais!';
+if (msg.includes('como melhorar habilidades dev ruby')) return 'Melhorar habilidades Dev Ruby é praticar, estudar e aplicar em projetos!';
+if (msg.includes('como criar skill dev ruby')) return 'Criar skill Dev Ruby é aprender, praticar e aplicar em projetos!';
+if (msg.includes('como iniciar carreira dev ruby')) return 'Iniciar carreira Dev Ruby é estudar, praticar projetos e mostrar resultados!';
+if (msg.includes('como acessar bootcamp fox ruby')) return 'Acessar bootcamp Fox Ruby é se inscrever e iniciar os desafios!';
+if (msg.includes('como estudar bootcamp fox ruby')) return 'Estudar bootcamp Fox Ruby é acompanhar aulas, praticar e aplicar projetos!';
+if (msg.includes('como enviar projeto bootcamp fox ruby')) return 'Enviar projeto bootcamp Fox Ruby é entregar exercícios e receber feedback!';
+if (msg.includes('como evoluir bootcamp fox ruby')) return 'Evoluir bootcamp Fox Ruby é praticar, estudar e aplicar em projetos reais!';
+if (msg.includes('como aprender tecnologia fox ruby')) return 'Aprender tecnologia Fox Ruby é estudar front, back, bancos e DevOps!';
+if (msg.includes('como estudar fullstack fox ruby')) return 'Estudar fullstack Fox Ruby é unir front e back em projetos completos!';
+if (msg.includes('como praticar fullstack fox ruby')) return 'Praticar fullstack Fox Ruby é desenvolver projetos reais integrando front e back!';
+if (msg.includes('como criar portfólio bootcamp fox ruby')) return 'Criar portfólio bootcamp Fox Ruby é mostrar projetos feitos durante o bootcamp!';
+if (msg.includes('como evoluir skills bootcamp fox ruby')) return 'Evoluir skills bootcamp Fox Ruby é praticar, aprender e aplicar em projetos reais!';
+if (msg.includes('como começar bootcamp fox ruby')) return 'Começar bootcamp Fox Ruby é se inscrever, acessar aulas e iniciar prática!';
+if (msg.includes('como acessar materiais bootcamp fox ruby')) return 'Acessar materiais bootcamp Fox Ruby é baixar arquivos, exercícios e projetos!';
+if (msg.includes('como tirar dúvidas bootcamp fox ruby')) return 'Tirar dúvidas bootcamp Fox Ruby é perguntar ao mentor ou na comunidade!';
+if (msg.includes('como evoluir projetos bootcamp fox ruby')) return 'Evoluir projetos bootcamp Fox Ruby é melhorar, refatorar e aplicar novas técnicas!';
+if (msg.includes('como criar skill bootcamp fox ruby')) return 'Criar skill bootcamp Fox Ruby é estudar, praticar e aplicar conhecimento!';
+if (msg.includes('como criar carreira bootcamp fox ruby')) return 'Criar carreira bootcamp Fox Ruby é estudar, praticar e mostrar resultados!';
+if (msg.includes('como criar portfólio dev ruby')) return 'Criar portfólio Dev Ruby é mostrar seus projetos e habilidades!';
+if (msg.includes('como evoluir portfólio dev ruby')) return 'Evoluir portfólio Dev Ruby é adicionar projetos avançados e aplicáveis!';
+if (msg.includes('como estudar tecnologias dev ruby')) return 'Estudar tecnologias Dev Ruby é aprender front, back, bancos e DevOps!';
+if (msg.includes('como praticar tecnologias dev ruby')) return 'Praticar tecnologias Dev Ruby é aplicar front, back e DevOps em projetos reais!';
+if (msg.includes('como criar projetos dev ruby')) return 'Criar projetos Dev Ruby é aplicar conhecimento e desenvolver soluções!';
+if (msg.includes('como estudar dev ruby de casa')) return 'Estudar Dev Ruby de casa é assistir aulas, praticar projetos e interagir online!';
+if (msg.includes('como se organizar para estudar dev ruby')) return 'Se organizar para estudar Dev Ruby é criar cronograma, revisar aulas e praticar!';
+if (msg.includes('como fazer projeto real dev ruby')) return 'Fazer projeto real Dev Ruby é aplicar conhecimento em exercícios que simulam desafios reais!';
+if (msg.includes('como conseguir mentoria dev ruby')) return 'Conseguir mentoria Dev Ruby é solicitar ajuda de mentores na comunidade!';
+if (msg.includes('como participar comunidade fox ruby')) return 'Participar comunidade Fox Ruby é interagir com outros alunos, tirar dúvidas e colaborar!';
+if (msg.includes('como evoluir carreira dev ruby')) return 'Evoluir carreira Dev Ruby é praticar, estudar e mostrar resultados!';
+if (msg.includes('como aprender logica dev ruby')) return 'Aprender lógica Dev Ruby é entender conceitos de programação e resolver problemas!';
+if (msg.includes('como aprender estrutura de dados dev ruby')) return 'Aprender estrutura de dados Dev Ruby é organizar e manipular dados eficientemente!';
+if (msg.includes('como aprender algoritmos dev ruby')) return 'Aprender algoritmos Dev Ruby é resolver problemas usando lógica e matemática!';
+if (msg.includes('como criar site fox ruby')) return 'Criar site Fox Ruby é usar HTML, CSS e JS para desenvolver páginas funcionais!';
+if (msg.includes('como criar app fox ruby')) return 'Criar app Fox Ruby é desenvolver aplicativos usando conhecimento de front e back!';
+if (msg.includes('como aprender front-end fox ruby')) return 'Aprender front-end Fox Ruby é estudar HTML, CSS, JS e frameworks modernos!';
+if (msg.includes('como aprender back-end fox ruby')) return 'Aprender back-end Fox Ruby é estudar Node, banco de dados e APIs!';
+if (msg.includes('como aprender fullstack fox ruby')) return 'Aprender fullstack Fox Ruby é unir front e back em projetos reais!';
+if (msg.includes('como criar portfólio de programação fox ruby')) return 'Criar portfólio de programação Fox Ruby é mostrar seus projetos e habilidades!';
+if (msg.includes('como melhorar portfólio de programação fox ruby')) return 'Melhorar portfólio de programação Fox Ruby é adicionar projetos mais complexos e interessantes!';
+if (msg.includes('como conseguir estágio dev ruby')) return 'Conseguir estágio Dev Ruby é mostrar portfólio e habilidades na comunidade!';
+if (msg.includes('como conseguir emprego dev ruby')) return 'Conseguir emprego Dev Ruby é praticar, estudar e mostrar resultados!';
+if (msg.includes('como estudar javascript fox ruby')) return 'Estudar JavaScript Fox Ruby é aprender lógica, DOM, eventos e funções!';
+if (msg.includes('como estudar html fox ruby')) return 'Estudar HTML Fox Ruby é aprender tags, atributos e estrutura de páginas!';
+if (msg.includes('como estudar css fox ruby')) return 'Estudar CSS Fox Ruby é criar estilos, layouts e design responsivo!';
+if (msg.includes('como praticar javascript fox ruby')) return 'Praticar JavaScript Fox Ruby é criar funções, eventos e manipular o DOM!';
+if (msg.includes('como praticar html fox ruby')) return 'Praticar HTML Fox Ruby é criar páginas com estrutura correta e semântica!';
+if (msg.includes('como praticar css fox ruby')) return 'Praticar CSS Fox Ruby é criar estilos, layouts e designs responsivos!';
+if (msg.includes('como criar projeto fullstack dev ruby')) return 'Criar projeto fullstack Dev Ruby é desenvolver front e back integrados!';
+if (msg.includes('como estudar node fox ruby')) return 'Estudar Node Fox Ruby é aprender criar servidores, APIs e manipular dados!';
+if (msg.includes('como estudar react fox ruby')) return 'Estudar React Fox Ruby é criar componentes e interfaces modernas!';
+if (msg.includes('como estudar python fox ruby')) return 'Estudar Python Fox Ruby é aprender lógica, scripts e automações!';
+if (msg.includes('como estudar sql fox ruby')) return 'Estudar SQL Fox Ruby é criar, consultar e manipular bancos de dados!';
+if (msg.includes('como estudar mongodb fox ruby')) return 'Estudar MongoDB Fox Ruby é trabalhar com banco NoSQL e consultas!';
+if (msg.includes('como aprender git fox ruby')) return 'Aprender Git Fox Ruby é versionar código e colaborar em projetos!';
+if (msg.includes('como aprender github fox ruby')) return 'Aprender GitHub Fox Ruby é hospedar projetos e colaborar com outros!';
+if (msg.includes('como aprender docker fox ruby')) return 'Aprender Docker Fox Ruby é criar containers e rodar aplicativos isolados!';
+if (msg.includes('como aprender kubernetes fox ruby')) return 'Aprender Kubernetes Fox Ruby é gerenciar containers e aplicações!';
+if (msg.includes('como aprender devops fox ruby')) return 'Aprender DevOps Fox Ruby é automatizar deploys e processos!';
+if (msg.includes('como aprender api fox ruby')) return 'Aprender API Fox Ruby é criar serviços que trocam dados entre sistemas!';
+if (msg.includes('como aprender restful api fox ruby')) return 'Aprender RESTful API Fox Ruby é criar serviços seguindo padrões web!';
+if (msg.includes('como aprender graphql fox ruby')) return 'Aprender GraphQL Fox Ruby é criar consultas flexíveis e rápidas!';
+if (msg.includes('como aprender ux fox ruby')) return 'Aprender UX Fox Ruby é criar experiências de usuário incríveis!';
+if (msg.includes('como aprender ui fox ruby')) return 'Aprender UI Fox Ruby é criar interfaces bonitas e funcionais!';
+if (msg.includes('como aprender accessibility fox ruby')) return 'Aprender Accessibility Fox Ruby é tornar sites acessíveis para todos!';
+if (msg.includes('como aprender debugging fox ruby')) return 'Aprender Debugging Fox Ruby é encontrar e corrigir erros no código!';
+if (msg.includes('como aprender algorithm fox ruby')) return 'Aprender Algorithm Fox Ruby é resolver problemas usando lógica!';
+if (msg.includes('como aprender data structure fox ruby')) return 'Aprender Data Structure Fox Ruby é organizar e manipular dados!';
+if (msg.includes('como aprender oop fox ruby')) return 'Aprender OOP Fox Ruby é trabalhar com objetos, classes e encapsulamento!';
+if (msg.includes('como aprender mvc fox ruby')) return 'Aprender MVC Fox Ruby é separar Model, View e Controller!';
+if (msg.includes('como aprender design pattern fox ruby')) return 'Aprender Design Pattern Fox Ruby é usar soluções padrões para problemas!';
+if (msg.includes('como aprender async fox ruby')) return 'Aprender Async Fox Ruby é lidar com processos assíncronos!';
+if (msg.includes('como aprender await fox ruby')) return 'Aprender Await Fox Ruby é esperar resultados de processos assíncronos!';
+if (msg.includes('como aprender promise fox ruby')) return 'Aprender Promise Fox Ruby é lidar com resultados futuros!';
+if (msg.includes('como aprender closure fox ruby')) return 'Aprender Closure Fox Ruby é entender funções que lembram variáveis!';
+if (msg.includes('como aprender hoisting fox ruby')) return 'Aprender Hoisting Fox Ruby é saber que variáveis e funções “sobem” no código!';
+if (msg.includes('como aprender event listener fox ruby')) return 'Aprender Event Listener Fox Ruby é capturar eventos de usuário!';
+if (msg.includes('como aprender dom fox ruby')) return 'Aprender DOM Fox Ruby é manipular elementos da página com JS!';
+if (msg.includes('como aprender console fox ruby')) return 'Aprender Console Fox Ruby é usar o console para testar e depurar!';
+if (msg.includes('como aprender terminal fox ruby')) return 'Aprender Terminal Fox Ruby é usar comandos essenciais para desenvolvedores!';
+if (msg.includes('como organizar cronograma fox ruby')) return 'Organizar cronograma Fox Ruby é planejar estudos e prática de projetos!';
+if (msg.includes('como organizar estudo dev ruby')) return 'Organizar estudo Dev Ruby é definir horários, revisar aulas e praticar!';
+if (msg.includes('como criar rotina dev ruby')) return 'Criar rotina Dev Ruby é seguir cronograma, revisar conteúdos e praticar diariamente!';
+if (msg.includes('como evoluir fullstack fox ruby')) return 'Evoluir fullstack Fox Ruby é estudar front, back e aplicar em projetos reais!';
+if (msg.includes('como evoluir front fox ruby')) return 'Evoluir front Fox Ruby é melhorar layouts, estilos e interatividade!';
+if (msg.includes('como evoluir back fox ruby')) return 'Evoluir back Fox Ruby é criar APIs mais complexas e eficientes!';
+if (msg.includes('como evoluir projeto fox ruby')) return 'Evoluir projeto Fox Ruby é refatorar, adicionar funcionalidades e revisar!';
+if (msg.includes('como ganhar skill fullstack fox ruby')) return 'Ganhar skill fullstack Fox Ruby é praticar projetos integrados!';
+if (msg.includes('como ganhar skill front fox ruby')) return 'Ganhar skill front Fox Ruby é dominar HTML, CSS e JS!';
+if (msg.includes('como ganhar skill back fox ruby')) return 'Ganhar skill back Fox Ruby é dominar Node, banco e APIs!';
+if (msg.includes('como aprender tecnologias fox ruby')) return 'Aprender tecnologias Fox Ruby é estudar front, back, banco de dados e DevOps!';
+if (msg.includes('como aprender ferramentas fox ruby')) return 'Aprender ferramentas Fox Ruby é usar VSCode, Git, GitHub e outras!';
+if (msg.includes('como evoluir carreira fox ruby')) return 'Evoluir carreira Fox Ruby é estudar, praticar projetos e mostrar resultados!';
+
+
+            // Resposta padrão
+            return 'Por favor seja mais especifico , use palavras chaves para que eu possa te ajudar , caso nao consiga envie um email para juliodasilva0101@gmail.com para tirar sua duvida, obrigado :)';
+        }
+
+    
+</script>
+</body>
+</html>

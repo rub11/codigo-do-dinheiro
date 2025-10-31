@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foxy Ruby - Evolução Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #b30000;
+            --primary-dark: #8b0000;
+            --primary-light: #ff3333;
+            --secondary: #1a1a1a;
+            --accent: #ff6666;
+            --text: #ffffff;
+            --text-secondary: #cccccc;
+            --background: #0d0d0d;
+            --card-bg: #1a1a1a;
+            --border: #333333;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--secondary), #0a1a2f);
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--text), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            padding: 60px 0;
+            text-align: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%230d0d0d" width="1200" height="800"/><path fill="%23b30000" d="M0,0 Q600,200 1200,0 L1200,800 Q600,600 0,800 Z" opacity="0.1"/></svg>');
+            background-size: cover;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--text), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: var(--text-secondary);
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(179, 0, 0, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(179, 0, 0, 0.6);
+        }
+
+        /* Courses Section */
+        .courses-section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(179, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+
+        .course-banner {
+            height: 180px;
+            background: linear-gradient(135deg, #030303, #222);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(179, 0, 0, 0.1), rgba(139, 0, 0, 0.2));
+        }
+
+        .course-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .course-content {
+            padding: 20px;
+        }
+
+        .course-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .course-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 1rem;
+        }
+
+        .course-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .course-features {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .feature-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .feature-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .course-extras {
+            margin-bottom: 20px;
+        }
+
+        .extras-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .extras-list {
+            list-style-type: none;
+        }
+
+        .extras-list li {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .extras-list li::before {
+            content: "•";
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        .course-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(179, 0, 0, 0.4);
+        }
+
+        .action-button.locked {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .action-button.locked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--secondary);
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .footer-links {
+            list-style-type: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+
+        /* Chat Assistant */
+        .chat-assistant {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(179, 0, 0, 0.4);
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+
+        .chat-assistant:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-icon {
+            color: white;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">
+                    <div class="logo-text">FOXY RUBY</div>
+                </div>
+                <div class="nav-links">
+                    <a href="#">Início</a>
+                    <a href="#">Meus cursos</a>
+                    <a href="#">Comunidade</a>
+                    <a href="#">Bootcamps</a>
+                </div>
+                <div class="user-area">
+                    <div class="user-info">
+                      
+                        
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+        <div class="container">
+            <h1 class="welcome-title">Bem-vindo à Fox Ruby!</h1>
+            <p class="welcome-subtitle">
+                Aqui não tem promessa vazia nem curso enlatado — tem conteúdo afiado, estratégia testada no campo de
+                batalha
+                e uma comunidade que vive de <span class="highlight">tecnologia, performance e resultado</span>. É tudo
+                o que você precisa
+                pra se tornar o profissional mais valorizado do mercado digital. Se você chegou até aqui, é porque
+                decidiu
+                evoluir: evoluir de nível, de mentalidade, de entrega. Porque quem é <span class="highlight">Foxy
+                    Ruby</span> sabe que não pode parar. Bora avançar?
+            </p>
+            <button class="cta-button">Acessar Agora</button>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section class="courses-section">
+        <div class="container">
+            <h2 class="section-title">Especialização Fox Ruby</h2>
+            <div class="courses-grid"> 
+                <!-- Curso 1 - Liberado -->
+                <div class="course-card">
+
+                    <div class="course-banner">
+                        <img width="100%" src="../imagens/fox.png" alt="">
+                        <div class="course-badge">LIBERADO</div>
+
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">
+                            
+                           Especialização em Desenvolvimento de Sistemas com Inteligência Artificial para você criar projetos poderosos e faturar alto sem sair de casa.
+
+                        </h3>
+                        <p class="course-description">
+                            Domine as tecnologias mais demandadas do mercado e torne-se um desenvolvedor full-stack
+                            completo.
+                        </p>
+                        <div class="course-features">
+                            <div class="feature">
+                                <div class="feature-value">25</div>
+                                <div class="feature-label">módulos</div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-value">165</div>
+                                <div class="feature-label">aulas</div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-value">5</div>
+                                <div class="feature-label">projetos</div>
+                            </div>
+                        </div>
+                        <div class="course-extras">
+                            <div class="extras-title">EXTRAS</div>
+                            <ul class="extras-list">
+                                <li>Rota de estudos personalizada</li>
+                                <li>Certificação Foxy Ruby</li>
+                                <li>Comunidade exclusiva</li>
+                                <li>Suporte individualizado</li>
+                            </ul>
+                        </div>
+                        <div class="course-action">
+                            <div class="price">GRATUITO</div>
+                            <button class="action-button">Acessar Curso</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Curso 2 - Bloqueado -->
+                <div class="course-card">
+                    <div class="course-banner"><img width="100%" src="../imagens/fox.png" alt="">
+                        <div class="course-badge">EM BREVE</div>
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">
+                            
+                            Especialização em Inteligência Artificial
+                        </h3>
+                        <p class="course-description">
+                            Aprenda a criar e implementar soluções de IA que revolucionam negócios e criam vantagem
+                            competitiva.
+                        </p>
+                        <div class="course-features">
+                            <div class="feature">
+                                <div class="feature-value">43</div>
+                                <div class="feature-label">módulos</div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-value">192</div>
+                                <div class="feature-label">aulas</div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-value">64</div>
+                                <div class="feature-label">projetos</div>
+                            </div>
+                        </div>
+                        <div class="course-extras">
+                            <div class="extras-title">EXTRAS</div>
+                            <ul class="extras-list">
+                                <li>Ambiente de laboratório de IA</li>
+                                <li>Dataset exclusivo</li>
+                                <li>Certificação avançada</li>
+                                <li>Mentorias em grupo</li>
+                            </ul>
+                        </div>
+                        <div class="course-action">
+                            <div class="price">R$ 997</div>
+                            <button class="action-button locked">Em Breve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Curso 3 - Bloqueado -->
+                <div class="course-card">
+                    <div class="course-banner">
+                        <div class="course-badge">EM BREVE</div><img width="100%" src="../imagens/fox.png" alt="">
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">
+                           
+                            Especialização em Data Science
+                        </h3>
+                        <p class="course-description">
+                            Transforme dados em insights valiosos e tome decisões baseadas em análise de dados avançada.
+                        </p>
+                        <div class="course-features">
+                            <div class="feature">
+                                <div class="feature-value">89</div>
+                                <div class="feature-label">módulos</div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-value">420</div>
+                                <div class="feature-label">aulas</div>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-value">201</div>
+                                <div class="feature-label">projetos</div>
+                            </div>
+                        </div>
+                        <div class="course-extras">
+                            <div class="extras-title">EXTRAS</div>
+                            <ul class="extras-list">
+                                <li>Biblioteca de datasets</li>
+                                <li>Ferramentas premium</li>
+                                <li>Certificação internacional</li>
+                                <li>Case studies reais</li>
+                            </ul>
+                        </div>
+                        <div class="course-action">
+                            <div class="price">R$ 1.297</div>
+                            <button class="action-button locked">Em Breve</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">FOXY RUBY</h3>
+                    <p>Evolução digital através de educação de alta qualidade e comunidade engajada.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">CURSOS</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Desenvolvimento Web</a></li>
+                        <li><a href="#">Inteligência Artificial</a></li>
+                        <li><a href="#">Data Science</a></li>
+                        <li><a href="#">Cyber Security</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">COMUNIDADE</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Fórum</a></li>
+                        <li><a href="#">Eventos</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Parcerias</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">SUPORTE</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Central de Ajuda</a></li>
+                        <li><a href="#">Contato</a></li>
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Termos de Uso</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Foxy Ruby. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Assistant -->
+    <a href="../teste robo/index.html"><div class="chat-assistant">
+        <div class="chat-icon">
+            <i class="fas fa-comment-alt"></i>
+        </div>
+    </div></a>
+
+    <script>
+        // Simulação de interação com os botões
+        document.addEventListener('DOMContentLoaded', function () {
+            const accessButton = document.querySelector('.action-button:not(.locked)');
+            const ctaButton = document.querySelector('.cta-button');
+            const chatAssistant = document.querySelector('.chat-assistant');
+
+            // Botão de acesso ao curso
+            accessButton.addEventListener('click', function () {
+                alert('Redirecionando para o curso de Desenvolvimento Web...');
+            });
+
+            // Botão CTA principal
+            ctaButton.addEventListener('click', function () {
+                alert('Bem-vindo à comunidade Foxy Ruby!');
+            });
+
+            // Assistente de chat
+            chatAssistant.addEventListener('click', function () {
+                alert('Olá! Sou o Foxy Assistant. você sera redirecionado para minha pagina , te vejo lá :)');
+            });
+
+            // Efeito de digitação no título de boas-vindas
+            const welcomeTitle = document.querySelector('.welcome-title');
+            const originalText = welcomeTitle.textContent;
+            welcomeTitle.textContent = '';
+
+            let i = 0;
+            const typeWriter = () => {
+                if (i < originalText.length) {
+                    welcomeTitle.textContent += originalText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50);
+                }
+            };
+
+            // Iniciar efeito de digitação após um breve delay
+            setTimeout(typeWriter, 500);
+        });
+    </script>
+</body>
+
+</html>
