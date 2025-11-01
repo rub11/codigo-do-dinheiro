@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fox Ruby - Rota de Estudos Personalizada</title>
+    <style>
+        :root {
+            --primary: #8B0000;
+            --secondary: #DAA520;
+            --light: #F5F5F5;
+            --dark: #333333;
+            --success: #28a745;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(135deg, var(--primary), #a52a2a);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .step-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+        
+        .step-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .step-number {
+            background-color: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .step-title {
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        @media (min-width: 600px) {
+            .options-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .option-btn {
+            padding: 15px;
+            background-color: var(--light);
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .option-btn:hover {
+            border-color: var(--primary);
+            background-color: #fff5f5;
+            transform: translateY(-2px);
+        }
+        
+        .option-btn.selected {
+            border-color: var(--primary);
+            background-color: #fff5f5;
+            box-shadow: 0 4px 8px rgba(139, 0, 0, 0.1);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #a52a2a;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+        
+        .route-list {
+            list-style-type: none;
+            margin-bottom: 30px;
+        }
+        
+        .route-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .route-number {
+            background-color: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .route-tip {
+            background-color: #e8f4fd;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .restart-btn {
+            display: block;
+            margin: 20px auto 0;
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .restart-btn:hover {
+            background-color: #b8860b;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .export-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .export-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-btn:hover {
+            background-color: #a52a2a;
+            transform: translateY(-2px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Fox Ruby</h1>
+            <p>Rota de Estudos Personalizada</p>
+        </header>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        
+        <!-- Step 1: Objetivo -->
+        <div class="step-container active" id="step1">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h2 class="step-title">Qual é o seu principal objetivo?</h2>
+            </div>
+            <div class="options-container">
+                <button class="option-btn" data-value="programming">Aprender programação</button>
+                <button class="option-btn" data-value="money">Ganhar dinheiro online</button>
+                <button class="option-btn" data-value="traffic">Trabalhar com tráfego pago</button>
+                <button class="option-btn" data-value="products">Criar produtos digitais</button>
+                <button class="option-btn" data-value="ai">Aprender IA (Inteligência Artificial)</button>
+                <button class="option-btn" data-value="marketing">Melhorar o marketing do seu negócio</button>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" disabled>Anterior</button>
+                <button class="btn btn-primary" id="next1">Próximo</button>
+            </div>
+        </div>
+        
+        <!-- Step 2: Tempo -->
+        <div class="step-container" id="step2">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h2 class="step-title">Quanto tempo por dia você consegue estudar?</h2>
+            </div>
+            <div class="options-container">
+                <button class="option-btn" data-value="low">Menos de 1 hora</button>
+                <button class="option-btn" data-value="medium">1 a 2 horas</button>
+                <button class="option-btn" data-value="high">3 a 4 horas</button>
+                <button class="option-btn" data-value="full">Tempo livre total (quero mergulhar de cabeça)</button>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" id="prev2">Anterior</button>
+                <button class="btn btn-primary" id="next2">Próximo</button>
+            </div>
+        </div>
+        
+        <!-- Step 3: Nível -->
+        <div class="step-container" id="step3">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h2 class="step-title">Qual é o seu nível atual?</h2>
+            </div>
+            <div class="options-container">
+                <button class="option-btn" data-value="beginner">Iniciante (nunca estudei antes)</button>
+                <button class="option-btn" data-value="intermediate">Intermediário (já sei o básico)</button>
+                <button class="option-btn" data-value="advanced">Avançado (quero me aperfeiçoar)</button>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" id="prev3">Anterior</button>
+                <button class="btn btn-primary" id="next3">Próximo</button>
+            </div>
+        </div>
+        
+        <!-- Step 4: Área -->
+        <div class="step-container" id="step4">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <h2 class="step-title">Com qual área você mais se identifica?</h2>
+            </div>
+            <div class="options-container">
+                <button class="option-btn" data-value="development">Criação de sites e sistemas</button>
+                <button class="option-btn" data-value="digital-marketing">Marketing digital e redes sociais</button>
+                <button class="option-btn" data-value="sales">Vendas e lançamentos de produtos</button>
+                <button class="option-btn" data-value="ai">Inteligência artificial</button>
+                <button class="option-btn" data-value="all">Todos um pouco (quero aprender tudo que dá dinheiro)</button>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" id="prev4">Anterior</button>
+                <button class="btn btn-primary" id="next4">Próximo</button>
+            </div>
+        </div>
+        
+        <!-- Step 5: Aplicação -->
+        <div class="step-container" id="step5">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <h2 class="step-title">Você pretende aplicar o que aprender para:</h2>
+            </div>
+            <div class="options-container">
+                <button class="option-btn" data-value="job">Conseguir um emprego</button>
+                <button class="option-btn" data-value="business">Criar um negócio próprio</button>
+                <button class="option-btn" data-value="project">Melhorar um projeto atual</button>
+                <button class="option-btn" data-value="curiosity">Apenas estudar por curiosidade</button>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" id="prev5">Anterior</button>
+                <button class="btn btn-primary" id="next5">Gerar Rota</button>
+            </div>
+        </div>
+        
+        <!-- Resultado -->
+        <div class="result-container" id="result">
+            <div class="result-header">
+                <h2>Sua Rota Fox Ruby Personalizada ⚡</h2>
+            </div>
+            <div id="route-description"></div>
+            <ul class="route-list" id="route-list"></ul>
+            <div class="route-tip" id="route-tip"></div>
+            
+            <div class="export-actions">
+                <button class="export-btn" id="export-pdf">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M14 2V8H20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 13H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 17H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10 9H9H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Exportar PDF
+                </button>
+                <button class="export-btn" id="copy-clipboard">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 4H18C18.5304 4 19.0391 4.21071 19.4142 4.58579C19.7893 4.96086 20 5.46957 20 6V20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H6C5.46957 22 4.96086 21.7893 4.58579 21.4142C4.21071 21.0391 4 20.5304 4 20V6C4 5.46957 4.21071 4.96086 4.58579 4.58579C4.96086 4.21071 5.46957 4 6 4H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M15 2H9C8.44772 2 8 2.44772 8 3V5C8 5.55228 8.44772 6 9 6H15C15.5523 6 16 5.55228 16 5V3C16 2.44772 15.5523 2 15 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Copiar Rota
+                </button>
+            </div>
+            
+            <button class="btn restart-btn" id="restart">Criar Nova Rota</button>
+        </div>
+        
+        <footer>
+            <p>Fox Ruby - Sistema de Estudos Personalizados © 2023</p>
+        </footer>
+    </div>
+
+    <!-- Toast de notificação -->
+    <div class="toast" id="toast">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 4L12 14.01L9 11.01" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span id="toast-message">Operação realizada com sucesso!</span>
+    </div>
+
+    <script>
+        // Dados das rotas
+        const routes = {
+            programming: {
+                title: "Programação (HTML, CSS, JS)",
+                description: "Essa trilha é ideal pra quem quer aprender do zero e construir projetos reais — desde sites simples até sistemas completos que geram renda.",
+                modules: [
+                    "Fundamentos de Lógica e Algoritmos",
+                    "Programação HTML",
+                    "Programação CSS",
+                    "Programação JavaScript",
+                    "Desenvolvimento de Sistemas",
+                    "GitHub e Controle de Versão",
+                    "Ideias Criativas de Sistemas",
+                    "Dados, Relatórios e Dashboards",
+                    "SEO e Otimização de Sites",
+                    "Crescimento e Escalabilidade de Sistemas"
+                ]
+            },
+            money: {
+                title: "Ganhar dinheiro e lançar produtos digitais",
+                description: "Aqui você vai aprender a lançar e vender produtos digitais de forma estratégica, dominando o tráfego pago e o funil de vendas.",
+                modules: [
+                    "Kiwify: Configuração de Produtos",
+                    "Preparação e Lançamento de Produtos",
+                    "Funil de Vendas",
+                    "Tráfego Pago: Introdução",
+                    "Tráfego Pago: Estratégias Avançadas",
+                    "Tráfego Pago: Escala e Lançamentos",
+                    "Análise de Resultados e Métricas",
+                    "Crescimento e Escalabilidade de Sistemas"
+                ]
+            },
+            traffic: {
+                title: "Tráfego Pago e Marketing Digital",
+                description: "Ideal pra quem quer dominar o jogo das redes sociais e tráfego, aprendendo a gerar resultados e escalar campanhas.",
+                modules: [
+                    "Branding",
+                    "Marketing Digital",
+                    "Marketing de Conteúdo",
+                    "Redes Sociais",
+                    "Tráfego Pago: Introdução",
+                    "Tráfego Pago: Estratégias Avançadas",
+                    "Tráfego Pago: Escala e Lançamentos",
+                    "Estratégias Avançadas de Marketing Digital",
+                    "Análise de Resultados e Métricas"
+                ]
+            },
+            ai: {
+                title: "Inteligência Artificial e automação",
+                description: "Essa trilha é pra quem quer usar IA pra automatizar processos e criar sistemas inteligentes lucrativos.",
+                modules: [
+                    "Inteligência Artificial: Visão Geral",
+                    "Inteligência Artificial: 50 Tipos Diferentes",
+                    "Ideias Criativas de Sistemas",
+                    "Dados, Relatórios e Dashboards",
+                    "Desenvolvimento de Sistemas",
+                    "Otimização de Sites",
+                    "Crescimento e Escalabilidade de Sistemas"
+                ]
+            },
+            fullGrowth: {
+                title: "Marketing + Programação (Full Growth)",
+                description: "Essa é a rota de crescimento completa — une marketing, programação e automação pra gerar resultados reais.",
+                modules: [
+                    "Fundamentos de Lógica",
+                    "HTML, CSS e JavaScript",
+                    "GitHub",
+                    "Branding e Marketing Digital",
+                    "Tráfego Pago",
+                    "Funil de Vendas",
+                    "SEO",
+                    "Dados e Métricas",
+                    "IA aplicada a negócios"
+                ]
+            }
+        };
+
+        // Dicas baseadas no tempo disponível
+        const timeTips = {
+            low: "Com pouco tempo disponível, foque em 1 módulo por semana e pratique com pequenos projetos diários.",
+            medium: "Com 1-2 horas por dia, você pode completar 1-2 módulos por semana. Mantenha consistência!",
+            high: "Com 3-4 horas por dia, você pode avançar rapidamente. Considere fazer 2-3 módulos por semana.",
+            full: "Com tempo livre total, você pode fazer uma imersão completa. Faça 3-4 módulos por semana e projetos paralelos."
+        };
+
+        // Variáveis para armazenar as respostas
+        let userAnswers = {
+            objective: null,
+            time: null,
+            level: null,
+            area: null,
+            application: null
+        };
+
+        // Elementos DOM
+        const stepContainers = document.querySelectorAll('.step-container');
+        const optionButtons = document.querySelectorAll('.option-btn');
+        const progressBar = document.getElementById('progress');
+        const resultContainer = document.getElementById('result');
+        const routeDescription = document.getElementById('route-description');
+        const routeList = document.getElementById('route-list');
+        const routeTip = document.getElementById('route-tip');
+        const restartButton = document.getElementById('restart');
+        const exportPdfButton = document.getElementById('export-pdf');
+        const copyClipboardButton = document.getElementById('copy-clipboard');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+
+        // Botões de navegação
+        const nextButtons = {
+            next1: document.getElementById('next1'),
+            next2: document.getElementById('next2'),
+            next3: document.getElementById('next3'),
+            next4: document.getElementById('next4'),
+            next5: document.getElementById('next5')
+        };
+
+        const prevButtons = {
+            prev2: document.getElementById('prev2'),
+            prev3: document.getElementById('prev3'),
+            prev4: document.getElementById('prev4'),
+            prev5: document.getElementById('prev5')
+        };
+
+        // Inicialização
+        let currentStep = 1;
+        updateProgress();
+
+        // Event Listeners para os botões de opção
+        optionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove a seleção de todos os botões no mesmo container
+                const siblings = this.parentElement.querySelectorAll('.option-btn');
+                siblings.forEach(btn => btn.classList.remove('selected'));
+                
+                // Seleciona o botão clicado
+                this.classList.add('selected');
+                
+                // Salva a resposta
+                const stepId = this.closest('.step-container').id;
+                const answerKey = getAnswerKeyFromStep(stepId);
+                userAnswers[answerKey] = this.getAttribute('data-value');
+            });
+        });
+
+        // Event Listeners para os botões de navegação
+        Object.keys(nextButtons).forEach(key => {
+            nextButtons[key].addEventListener('click', function() {
+                if (canProceed()) {
+                    currentStep++;
+                    showStep(currentStep);
+                    updateProgress();
+                } else {
+                    alert('Por favor, selecione uma opção antes de continuar.');
+                }
+            });
+        });
+
+        Object.keys(prevButtons).forEach(key => {
+            prevButtons[key].addEventListener('click', function() {
+                currentStep--;
+                showStep(currentStep);
+                updateProgress();
+            });
+        });
+
+        // Event Listener para o botão de reiniciar
+        restartButton.addEventListener('click', function() {
+            currentStep = 1;
+            userAnswers = {
+                objective: null,
+                time: null,
+                level: null,
+                area: null,
+                application: null
+            };
+            
+            // Limpar seleções
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            showStep(currentStep);
+            updateProgress();
+            resultContainer.style.display = 'none';
+        });
+
+        // Event Listener para exportar PDF
+        exportPdfButton.addEventListener('click', function() {
+            exportToPDF();
+        });
+
+        // Event Listener para copiar para área de transferência
+        copyClipboardButton.addEventListener('click', function() {
+            copyToClipboard();
+        });
+
+        // Funções auxiliares
+        function getAnswerKeyFromStep(stepId) {
+            const stepMap = {
+                'step1': 'objective',
+                'step2': 'time',
+                'step3': 'level',
+                'step4': 'area',
+                'step5': 'application'
+            };
+            return stepMap[stepId];
+        }
+
+        function canProceed() {
+            const answerKey = getAnswerKeyFromStep(`step${currentStep}`);
+            return userAnswers[answerKey] !== null;
+        }
+
+        function showStep(stepNumber) {
+            stepContainers.forEach(container => {
+                container.classList.remove('active');
+            });
+            
+            if (stepNumber <= 5) {
+                document.getElementById(`step${stepNumber}`).classList.add('active');
+            } else {
+                generateRoute();
+                resultContainer.style.display = 'block';
+            }
+        }
+
+        function updateProgress() {
+            const progressPercentage = ((currentStep - 1) / 5) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        function generateRoute() {
+            // Determina a rota com base nas respostas
+            let selectedRoute;
+            
+            if (userAnswers.objective === 'programming' || userAnswers.area === 'development') {
+                selectedRoute = routes.programming;
+            } else if (userAnswers.objective === 'money' || userAnswers.area === 'sales') {
+                selectedRoute = routes.money;
+            } else if (userAnswers.objective === 'traffic' || userAnswers.area === 'digital-marketing') {
+                selectedRoute = routes.traffic;
+            } else if (userAnswers.objective === 'ai' || userAnswers.area === 'ai') {
+                selectedRoute = routes.ai;
+            } else if (userAnswers.area === 'all') {
+                selectedRoute = routes.fullGrowth;
+            } else {
+                // Fallback para a rota mais adequada
+                if (userAnswers.application === 'business' || userAnswers.application === 'project') {
+                    selectedRoute = routes.fullGrowth;
+                } else {
+                    selectedRoute = routes.programming;
+                }
+            }
+            
+            // Ajusta os módulos com base no tempo disponível
+            let adjustedModules = [...selectedRoute.modules];
+            
+            if (userAnswers.time === 'low') {
+                // Reduz a quantidade de módulos para quem tem pouco tempo
+                if (adjustedModules.length > 6) {
+                    adjustedModules = adjustedModules.slice(0, 6);
+                }
+            } else if (userAnswers.time === 'full') {
+                // Adiciona módulos extras para quem tem tempo total
+                if (adjustedModules.length < 10) {
+                    // Adiciona alguns módulos complementares
+                    const extraModules = [
+                        "Projetos Práticos Avançados",
+                        "Networking e Comunidade",
+                        "Preparação para o Mercado"
+                    ];
+                    adjustedModules = [...adjustedModules, ...extraModules.slice(0, 10 - adjustedModules.length)];
+                }
+            }
+            
+            // Monta a descrição da rota
+            let description = `<p>Beleza! Com base no que você me contou, criei sua rota Fox Ruby personalizada ⚡</p>`;
+            description += `<p>Seu foco é <strong>${selectedRoute.title}</strong>, com ${getTimeText(userAnswers.time)} disponíveis.</p>`;
+            description += `<p>${selectedRoute.description}</p>`;
+            
+            routeDescription.innerHTML = description;
+            
+            // Monta a lista de módulos
+            routeList.innerHTML = '';
+            adjustedModules.forEach((module, index) => {
+                const li = document.createElement('li');
+                li.className = 'route-item';
+                li.innerHTML = `
+                    <div class="route-number">${index + 1}</div>
+                    <div>${module}</div>
+                `;
+                routeList.appendChild(li);
+            });
+            
+            // Adiciona a dica baseada no tempo
+            routeTip.innerHTML = `<strong>💡 Dica:</strong> ${timeTips[userAnswers.time]}`;
+        }
+
+        function getTimeText(timeValue) {
+            const timeMap = {
+                'low': 'menos de 1 hora por dia',
+                'medium': '1 a 2 horas por dia',
+                'high': '3 a 4 horas por dia',
+                'full': 'tempo livre total'
+            };
+            return timeMap[timeValue] || 'algum tempo';
+        }
+
+        // Função para exportar para PDF
+        function exportToPDF() {
+            // Aqui você pode implementar a lógica para gerar um PDF
+            // Por enquanto, vou simular a funcionalidade
+            showToast('Função de exportação PDF em desenvolvimento!');
+            
+            // Em uma implementação real, você poderia usar bibliotecas como:
+            // jsPDF (https://parall.ax/products/jspdf) ou pdfmake (http://pdfmake.org/)
+            // Exemplo básico com jsPDF:
+            /*
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(20);
+            doc.text('Fox Ruby - Rota de Estudos', 20, 20);
+            
+            const description = document.getElementById('route-description').innerText;
+            doc.setFontSize(12);
+            const splitDescription = doc.splitTextToSize(description, 170);
+            doc.text(splitDescription, 20, 40);
+            
+            const routeItems = document.querySelectorAll('.route-item');
+            let yPosition = 80;
+            routeItems.forEach((item, index) => {
+                const moduleText = `${index + 1}. ${item.querySelector('.route-item div:last-child').innerText}`;
+                doc.text(moduleText, 20, yPosition);
+                yPosition += 10;
+            });
+            
+            doc.save('rota-fox-ruby.pdf');
+            */
+        }
+
+        // Função para copiar para área de transferência
+        function copyToClipboard() {
+            const routeDescriptionText = document.getElementById('route-description').innerText;
+            const routeItems = document.querySelectorAll('.route-item');
+            const routeTipText = document.getElementById('route-tip').innerText;
+            
+            let textToCopy = `${routeDescriptionText}\n\n`;
+            
+            routeItems.forEach((item, index) => {
+                textToCopy += `${index + 1}. ${item.querySelector('.route-item div:last-child').innerText}\n`;
+            });
+            
+            textToCopy += `\n${routeTipText}`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast('Rota copiada para a área de transferência!');
+            }).catch(err => {
+                console.error('Erro ao copiar: ', err);
+                showToast('Erro ao copiar. Tente novamente.', true);
+            });
+        }
+
+        // Função para mostrar toast de notificação
+        function showToast(message, isError = false) {
+            toastMessage.textContent = message;
+            
+            if (isError) {
+                toast.style.backgroundColor = '#dc3545';
+            } else {
+                toast.style.backgroundColor = '#28a745';
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
