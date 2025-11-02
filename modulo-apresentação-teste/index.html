@@ -112,6 +112,23 @@
             font-weight: bold;
         }
 
+        /* Menu Hamburguer */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text);
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
         /* Welcome Section */
         .welcome-section {
             padding: 60px 0;
@@ -399,31 +416,6 @@
             font-size: 0.9rem;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav {
-                flex-direction: column;
-                gap: 20px;
-            }
-
-            .nav-links {
-                gap: 20px;
-            }
-
-            .welcome-title {
-                font-size: 2rem;
-            }
-
-            .courses-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-content {
-                flex-direction: column;
-                gap: 30px;
-            }
-        }
-
         /* Chat Assistant */
         .chat-assistant {
             position: fixed;
@@ -450,8 +442,113 @@
             color: white;
             font-size: 1.5rem;
         }
-        a{
-        text-decoration: none;}
+        
+        a {
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: row;
+                gap: 20px;
+            }
+
+            .menu-toggle {
+                display: flex;
+                margin-left: 30%;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - 80px);
+                background: var(--secondary);
+                flex-direction: column;
+                align-items: center;
+                padding-top: 40px;
+                gap: 30px;
+                transition: left 0.3s ease;
+                z-index: 99;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.1rem;
+                padding: 10px 0;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1rem;
+                padding: 0 10px;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .course-card {
+                margin: 0 10px;
+            }
+
+            .course-title {
+                font-size: 1.2rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+                padding: 0 20px;
+            }
+
+            .footer-section {
+                min-width: 100%;
+            }
+
+            .copyright {
+                padding: 0 20px;
+            }
+
+            .container {
+                padding: 0 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-title {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+            }
+
+            .course-features {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .course-action {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .action-button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -462,9 +559,13 @@
             <nav class="nav">
                 <div class="logo">
                     <a href="../modulo-apresentação-teste/index.html"><div class="logo-text">FOXY RUBY</div></a>
-                    
                 </div>
-                <div class="nav-links">
+                <div class="menu-toggle" id="mobile-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="nav-links" id="nav-links">
                     <a href="../modulo-apresentação-teste/index.html">Início</a>
                     <a href="../modulos/index.html">Meus cursos</a>
                     <a href="../rota de estudos/index.html">Rota de estudos personalizada</a>
@@ -473,8 +574,7 @@
                 </div>
                 <div class="user-area">
                     <div class="user-info">
-                      
-                        
+                        <!-- Conteúdo do usuário -->
                     </div>
                 </div>
             </nav>
@@ -489,15 +589,13 @@
             Aqui, o foco é construir de verdade: <span class="highlight">projetos, conhecimento e resultados</span>. 
             Nada de atalhos ou promessas vazias — na Fox Ruby, a evolução vem do código, da prática e da mentalidade. 
             Cada passo que você dá aqui te aproxima de ser um criador completo, capaz de desenvolver, inovar e transformar. 
-            Se você chegou até aqui, é porque quer mais — e aqui a gente constrói esse “mais” juntos. 
+            Se você chegou até aqui, é porque quer mais — e aqui a gente constrói esse "mais" juntos. 
             <span class="highlight">Fox Ruby</span> é movimento, é crescimento, é criação constante. 
             Bora construir o futuro?
         </p>
         <a href="https://www.facebook.com/share/g/17aFLo5fVz/"><button class="cta-button">Acessar Agora</button></a>
-        
     </div>
 </section>
-
 
     <!-- Courses Section -->
     <section class="courses-section">
@@ -506,17 +604,13 @@
             <div class="courses-grid"> 
                 <!-- Curso 1 - Liberado -->
                 <div class="course-card">
-
                     <div class="course-banner">
                         <img width="100%" src="../imagens/fox.png" alt="">
                         <div class="course-badge">LIBERADO</div>
-
                     </div>
                     <div class="course-content">
                         <h3 class="course-title">
-                            
-                           Especialização em Desenvolvimento de Sistemas com IA,  e trafego pago.
-
+                            Especialização em Desenvolvimento de Sistemas com IA, e trafego pago.
                         </h3>
                         <p class="course-description">
                             Domine as tecnologias mais demandadas do mercado e torne-se um desenvolvedor full-stack
@@ -546,26 +640,23 @@
                             </ul>
                         </div>
                         <div class="course-action">
-                            
                             <a href="../modulos/index.html"><button class="action-button">Acessar Curso</button></a>
-                            
                         </div>
                     </div>
                 </div>
 
                 <!-- Curso 2 - Bloqueado -->
                 <div class="course-card">
-                    <div class="course-banner"><img width="100%" src="../imagens/fox.png" alt="">
+                    <div class="course-banner">
+                        <img width="100%" src="../imagens/fox.png" alt="">
                         <div class="course-badge">EM BREVE</div>
                     </div>
                     <div class="course-content">
                         <h3 class="course-title">
-                            
                             Especialização em Inteligência Artificial
                         </h3>
                         <p class="course-description">
                             curso completo de implementação de integração de IA e sistemas automatizados que trabalham pra você.
-                           
                         </p>
                         <div class="course-features">
                             <div class="feature">
@@ -600,11 +691,11 @@
                 <!-- Curso 3 - Bloqueado -->
                 <div class="course-card">
                     <div class="course-banner">
-                        <div class="course-badge">EM BREVE</div><img width="100%" src="../imagens/fox.png" alt="">
+                        <div class="course-badge">EM BREVE</div>
+                        <img width="100%" src="../imagens/fox.png" alt="">
                     </div>
                     <div class="course-content">
                         <h3 class="course-title">
-                           
                             Curso completo de social media e trafego organico.
                         </h3>
                         <p class="course-description">
@@ -693,6 +784,22 @@
     </div></a>
 
     <script>
+        // Menu mobile toggle
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.getElementById('nav-links');
+
+        mobileMenu.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+
+        // Fechar menu ao clicar em um link
+        const links = document.querySelectorAll('.nav-links a');
+        links.forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.classList.remove('active');
+            });
+        });
+
         // Simulação de interação com os botões
         document.addEventListener('DOMContentLoaded', function () {
             const accessButton = document.querySelector('.action-button:not(.locked)');
