@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área de Membros - Curso Completo de HTML</title>
+    <title>Módulos - GitHub e Deploy: Do Básico ao Avançado</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
@@ -67,8 +67,6 @@
             opacity: 0.9;
             position: relative;
         }
-
-       
 
         /* Search and Filters */
         .search-container {
@@ -176,7 +174,6 @@
 
         .module-icon img {
             width: 100%;
-            
             object-fit: contain;
         }
 
@@ -317,21 +314,52 @@
             border-radius: 12px;
             font-size: 0.75rem;
         }
+        
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px 20px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        
+        .progress-info {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            width: 25%;
+            border-radius: 4px;
+        }
     </style>
 </head>
 
 <body>
     <div class="header">
         <div class="container">
-            <h1>JAVA SCRIPT</h1>
-            <p>Domine a engrenagem funcional da web.</p>
+            <h1>GitHub e Deploy</h1>
+            <p>Do controle de versão ao deploy: coloque seu site no ar como um profissional</p>
         </div>
     </div>
 
     <div class="container">
         <div class="progress-container">
             <div class="progress-info">
-                
+                Seu progresso: <strong>25% concluído</strong>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill"></div>
@@ -339,42 +367,132 @@
         </div>
 
         <div class="search-container">
-            <input type="text" class="search-input" placeholder="Pesquisar módulos de HTML...">
+            <input type="text" class="search-input" placeholder="Pesquisar módulos sobre GitHub e Deploy...">
         </div>
 
-       
+        <div class="filter-buttons">
+            <button class="filter-button active" data-filter="all">Todos</button>
+            <button class="filter-button" data-filter="basico">Básico</button>
+            <button class="filter-button" data-filter="intermediario">Intermediário</button>
+            <button class="filter-button" data-filter="avancado">Avançado</button>
+        </div>
+
         <div class="modules-grid" id="modules-grid">
-        <!-- Módulo 1 -->
-        <a href="../modulo-java script/o que e e como funciona/index.html">
-            <div class="module-card fade-in" data-category="fundamentos">
-                <div class="module-banner">
-                    <div class="module-icon"><img width="100%" src="../imagens/js-js.png" alt=""></div>
-                </div>
-                <div class="module-content">
-                    <h3>
-                        <span class="module-number">1</span>
-                        O que é e pra que serve?
-
-                    </h3>
-                    <p>A Linguagem Que Faz Suas Páginas Web Ganhar Vida
-
-</p>
-                    <div class="module-tags">
-                        <span class="module-tag">Básico</span>
-                        <span class="module-tag">Estrutura</span>
+            <!-- Módulo 1 -->
+            <a href="o quee github/index.html">
+                <div class="module-card fade-in" data-category="basico">
+                    <div class="module-banner">
+                      <img width="100%" src="../imagens/o que e github.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            
+                            O que é Git e GitHub?
+                        </h3>
+                        <p>Entendendo controle de versão: como funciona e por que é essencial para desenvolvimento.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Fundamentos</span>
+                            <span class="module-tag">Controle de Versão</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </a>
+            </a>
+
+            <!-- Módulo 2 -->
+            <a href="configurações iniciais/index.html">
+                <div class="module-card fade-in" data-category="basico">
+                    <div class="module-banner">
+                      <img width="100%" src="../imagens/o que e github.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                   
+                            Configuração Inicial
+                        </h3>
+                        <p>Instalação, configuração do Git e criação da sua conta no GitHub.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Setup</span>
+                            <span class="module-tag">Configuração</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 3 -->
+            <a href="primeiro repositorio/index.html">
+                <div class="module-card fade-in" data-category="basico">
+                    <div class="module-banner">
+                  <img width="100%" src="../imagens/o que e github.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            
+                            Primeiro Repositório
+                        </h3>
+                        <p>Criando seu primeiro repositório, entendendo commit, push e pull.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Repositório</span>
+                            <span class="module-tag">Comandos Básicos</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
 
         
+            
+            <!-- Módulo 6 -->
+            <a href="github pages/index.html">
+                <div class="module-card fade-in" data-category="intermediario">
+                    <div class="module-banner">
+                         <img width="100%" src="../imagens/o que e github.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            
+                            GitHub Pages
+                        </h3>
+                        <p>Colocando seu site estático no ar de forma gratuita com GitHub Pages.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Deploy</span>
+                            <span class="module-tag">Hospedagem</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
 
-        <!-- Mensagem de nenhum resultado -->
-        <div class="no-results" id="no-results">
-            Nenhum módulo encontrado com os critérios de busca.
+
+
+            
+            
+            <!-- Módulo 6 -->
+            <a href="extençoes/index.html">
+                <div class="module-card fade-in" data-category="intermediario">
+                    <div class="module-banner">
+                         <img width="100%" src="../imagens/o que e github.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            
+                       Extenções
+                        </h3>
+                        <p>Colocando seu site estático no ar de forma gratuita com GitHub Pages.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Deploy</span>
+                            <span class="module-tag">Hospedagem</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+          
+          
+            <!-- Mensagem de nenhum resultado -->
+            <div class="no-results" id="no-results">
+                Nenhum módulo encontrado com os critérios de busca.
+            </div>
         </div>
     </div>
-    </div>
+
     <script>
         // Filtros de categoria
         document.querySelectorAll('.filter-button').forEach(button => {
