@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área de Membros - Curso de Tráfego Pago Avançado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0D0D0D;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background-image: linear-gradient(135deg, #232526, #0A1A2F);
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(179, 0, 0, 0.1), transparent 70%);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            background: linear-gradient(45deg, #fff, #ff6666);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        /* Search and Filters */
+        .search-container {
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #b30000;
+            box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.2);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-button {
+            background: #1a1a1a;
+            color: #ccc;
+            border: 1px solid #333;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-button.active,
+        .filter-button:hover {
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            color: white;
+            border-color: #b30000;
+        }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .module-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(179, 0, 0, 0.2);
+            border-color: #b30000;
+        }
+
+        .module-banner {
+            height: 180px;
+            background: linear-gradient(135deg, #030303, #222);
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+           
+        }
+
+        .module-icon {
+            font-size: 3rem;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .module-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .module-content {
+            padding: 20px;
+        }
+
+        .module-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+        }
+
+        .module-card p {
+            color: #aaa;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .module-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .module-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: auto;
+        }
+
+        .status-completed {
+            background: rgba(0, 200, 0, 0.2);
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+
+        .status-in-progress {
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+            border: 1px solid #FFC107;
+        }
+
+        .status-not-started {
+            background: rgba(158, 158, 158, 0.2);
+            color: #9E9E9E;
+            border: 1px solid #9E9E9E;
+        }
+
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-buttons {
+                justify-content: center;
+            }
+
+            .progress-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .progress-bar {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .module-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .module-tag {
+            background: rgba(179, 0, 0, 0.2);
+            color: #ff6666;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>Tráfego Pago Avançado</h1>
+            <p>Domine as estratégias avançadas de tráfego pago para escalar suas vendas</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Pesquisar módulos de tráfego pago...">
+        </div>
+
+        <div class="filter-buttons">
+            <button class="filter-button active" data-filter="all">Todos</button>
+            <button class="filter-button" data-filter="segmentacao">Segmentação</button>
+            <button class="filter-button" data-filter="anuncios">Anúncios</button>
+            <button class="filter-button" data-filter="metricas">Métricas</button>
+            <button class="filter-button" data-filter="estrategia">Estratégia</button>
+            <button class="filter-button" data-filter="testes">Testes</button>
+        </div>
+
+        <div class="modules-grid" id="modules-grid">
+            <!-- Módulo 1 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="segmentacao">
+                    <div class="module-banner">
+                        <img width="100%" src="../imagens/segmentação de publicos.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">1</span>
+                            Segmentação de Público
+                        </h3>
+                        <p>Aprenda a segmentar seu público-alvo de forma precisa para maximizar a conversão e reduzir custos por aquisição.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Segmentação</span>
+                            <span class="module-tag">Avançado</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 2 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="anuncios">
+                    <div class="module-banner">
+                         <img width="100%" src="../imagens/roteiro de anuncios.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">2</span>
+                            Criando seus Roteiros de Anúncios
+                        </h3>
+                        <p>Desenvolva roteiros persuasivos para seus anúncios que convertem e engajam seu público-alvo.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Anúncios</span>
+                            <span class="module-tag">Copywriting</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 3 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="segmentacao">
+                    <div class="module-banner">
+                       <img width="100%" src="../imagens/icp.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">3</span>
+                            Criando seu ICP
+                        </h3>
+                        <p>Defina seu Ideal Customer Profile (ICP) para direcionar seus anúncios para as pessoas certas.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Segmentação</span>
+                            <span class="module-tag">Público</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 4 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="segmentacao">
+                    <div class="module-banner">
+                       <img width="100%" src="../imagens/segmentação de publicos em varios estados.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">4</span>
+                            Montando Públicos e Segmentações em Todo o Brasil
+                        </h3>
+                        <p>Aprenda a criar e gerenciar públicos segmentados em diferentes regiões do Brasil.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Segmentação</span>
+                            <span class="module-tag">Geografia</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 5 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="segmentacao">
+                    <div class="module-banner">
+                         <img width="100%" src="../imagens/golocalização.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">5</span>
+                            Como Anunciar para Somente um Lugar
+                        </h3>
+                        <p>Estratégias avançadas de geolocalização para segmentação hiperlocal e maximização de resultados.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Segmentação</span>
+                            <span class="module-tag">Local</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 6 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="estrategia">
+                    <div class="module-banner">
+                       <img width="100%" src="../imagens/anunciando para fora do brasil.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">6</span>
+                            Como Anunciar em Outros Países
+                        </h3>
+                        <p>Expanda seu negócio internacionalmente com estratégias de anúncios para mercados globais.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Estratégia</span>
+                            <span class="module-tag">Internacional</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 7 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="testes">
+                    <div class="module-banner">
+                        <img width="100%" src="../imagens/testes criativos.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">7</span>
+                            Como Fazer Testes
+                        </h3>
+                        <p>Metodologias avançadas de testes A/B para otimizar campanhas e aumentar a taxa de conversão.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Testes</span>
+                            <span class="module-tag">Otimização</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 8 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="metricas">
+                    <div class="module-banner">
+                        <img width="100%" src="../imagens/traqueamento de dados.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">8</span>
+                            Métricas e Tracking de Dados
+                        </h3>
+                        <p>Domine as métricas essenciais e implemente sistemas de tracking para medir o desempenho das campanhas.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Métricas</span>
+                            <span class="module-tag">Análise</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 9 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="estrategia">
+                    <div class="module-banner">
+                         <img width="100%" src="../imagens/escalando campanhas.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">9</span>
+                            Escala de Campanhas
+                        </h3>
+                        <p>Estratégias para escalar campanhas bem-sucedidas sem comprometer o ROI.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Estratégia</span>
+                            <span class="module-tag">Escala</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 10 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="metricas">
+                    <div class="module-banner">
+                        <img width="100%" src="../imagens/cadastro pixel.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">10</span>
+                            Implementação de Pixel
+                        </h3>
+                        <p>Aprenda a instalar e configurar pixels de conversão para rastrear e otimizar suas campanhas.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Métricas</span>
+                            <span class="module-tag">Tracking</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 11 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="estrategia">
+                    <div class="module-banner">
+                        <img width="100%" src="../imagens/objetivos meta ads.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">11</span>
+                            Seleção de Objetivos e Metas
+                        </h3>
+                        <p>Defina objetivos claros e metas realistas para suas campanhas de tráfego pago.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Estratégia</span>
+                            <span class="module-tag">Planejamento</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 12 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="estrategia">
+                    <div class="module-banner">
+                        <img width="100%" src="../imagens/tipos de orçamento meta ads.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">12</span>
+                            Tipos de Orçamento
+                        </h3>
+                        <p>Conheça os diferentes tipos de orçamento e como alocar recursos de forma eficiente.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Estratégia</span>
+                            <span class="module-tag">Orçamento</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 13 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="testes">
+                    <div class="module-banner">
+                         <img width="100%" src="../imagens/teste de criativos e escala.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">13</span>
+                            Testes de Criativos
+                        </h3>
+                        <p>Metodologias para testar e otimizar criativos de anúncios para melhor performance.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Testes</span>
+                            <span class="module-tag">Criativos</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Módulo 14 -->
+            <a href="#">
+                <div class="module-card fade-in" data-category="segmentacao">
+                    <div class="module-banner">
+                    <img width="100%" src="../imagens/ttipo de publicos.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>
+                            <span class="module-number">14</span>
+                            Tipos de Públicos
+                        </h3>
+                        <p>Explore os diferentes tipos de públicos e como utilizá-los em suas estratégias de anúncios.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Segmentação</span>
+                            <span class="module-tag">Público</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Mensagem de nenhum resultado -->
+            <div class="no-results" id="no-results">
+                Nenhum módulo encontrado com os critérios de busca.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Filtros de categoria
+        document.querySelectorAll('.filter-button').forEach(button => {
+            button.addEventListener('click', function () {
+                document.querySelectorAll('.filter-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                this.classList.add('active');
+
+                const filter = this.getAttribute('data-filter');
+                filterModules();
+            });
+        });
+
+        // Busca de módulos
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', filterModules);
+
+        // Função para filtrar módulos
+        function filterModules() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-button.active').getAttribute('data-filter');
+            const modules = document.querySelectorAll('.module-card');
+            const noResults = document.getElementById('no-results');
+
+            let visibleCount = 0;
+
+            modules.forEach(module => {
+                const title = module.querySelector('h3').textContent.toLowerCase();
+                const description = module.querySelector('p').textContent.toLowerCase();
+                const category = module.getAttribute('data-category');
+
+                const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+                const matchesFilter = activeFilter === 'all' || category === activeFilter;
+
+                if (matchesSearch && matchesFilter) {
+                    module.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    module.style.display = 'none';
+                }
+            });
+
+            // Mostra ou esconde a mensagem de nenhum resultado
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+        
+        // Inicializar filtros
+        filterModules();
+    </script>
+</body>
+</html>

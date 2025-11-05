@@ -3,31 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso KIWIFY - Configuração de Produtos Digitais</title>
+    <title>Área de Membros - Curso KiwiFy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #1a0a0a;
-            --secondary-color: #2a0f0f;
-            --accent-color: #e53935;
-            --light-accent: #ff5252;
-            --light-color: #f5f5f5;
-            --dark-color: #0f0505;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            --transition: all 0.3s ease;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            background-color: var(--primary-color);
-            color: var(--light-color);
+            background-color: #0D0D0D;
+            color: #fff;
             line-height: 1.6;
+            min-height: 100vh;
+            width: 100%;
         }
 
         .container {
@@ -36,512 +27,489 @@
             padding: 0 20px;
         }
 
-        /* Header Styles */
-        .header-container {
-            background: linear-gradient(to right, var(--secondary-color), var(--dark-color));
-            padding: 60px 0;
+        /* Header */
+        .header {
+            background-image: linear-gradient(135deg, #232526, #0A1A2F);
+            padding: 40px 0;
             text-align: center;
             margin-bottom: 40px;
-        }
-
-        .header-title {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: var(--light-color);
-        }
-
-        .header-description {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto;
-            color: #e0e0e0;
-        }
-
-        /* Filters Section */
-        .filters-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            gap: 15px;
-        }
-
-        .search-container {
-            flex: 1;
-            min-width: 250px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(179, 0, 0, 0.1), transparent 70%);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            background: linear-gradient(45deg, #fff, #ff6666);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        /* Search and Filters */
+        .search-container {
+            margin-bottom: 30px;
         }
 
         .search-input {
             width: 100%;
-            padding: 12px 15px 12px 45px;
-            border: none;
-            border-radius: var(--border-radius);
-            background-color: var(--secondary-color);
-            color: var(--light-color);
+            padding: 14px 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
             font-size: 1rem;
-            transition: var(--transition);
+            transition: all 0.3s ease;
         }
 
         .search-input:focus {
-            outline: 2px solid var(--accent-color);
-            background-color: #3a1515;
+            outline: none;
+            border-color: #b30000;
+            box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.2);
         }
 
-        .search-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #aaa;
-            font-size: 1.2rem;
-        }
-
-        .filter-buttons-container {
+        .filter-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
         }
 
-        .filter-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: var(--border-radius);
-            background-color: var(--secondary-color);
-            color: var(--light-color);
+        .filter-button {
+            background: #1a1a1a;
+            color: #ccc;
+            border: 1px solid #333;
+            padding: 10px 18px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             font-weight: 500;
         }
 
-        .filter-btn:hover {
-            background-color: #3a1515;
-        }
-
-        .filter-btn.active {
-            background-color: var(--accent-color);
+        .filter-button.active,
+        .filter-button:hover {
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            color: white;
+            border-color: #b30000;
         }
 
         /* Modules Grid */
-        .modules-grid-container {
+        .modules-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 25px;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
 
         .module-card {
-            background-color: var(--secondary-color);
-            border-radius: var(--border-radius);
+            background: #1a1a1a;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            opacity: 1;
-            transform: translateY(0);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
+            position: relative;
         }
 
         .module-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 25px rgba(179, 0, 0, 0.2);
+            border-color: #b30000;
         }
 
-        .module-icon-container {
+        .module-banner {
             height: 180px;
-            background-color: var(--dark-color);
+            background: linear-gradient(135deg, #030303, #222);
+            border-radius: 12px 12px 0 0;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #555;
+            font-weight: 500;
+            position: relative;
             overflow: hidden;
         }
 
-        .module-icon-container img {
+        .module-banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(179, 0, 0, 0.1), rgba(139, 0, 0, 0.2));
+        }
+
+        .module-icon {
+            font-size: 3rem;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .module-icon img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
         }
 
-        .module-card:hover .module-icon-container img {
-            transform: scale(1.05);
-        }
-
-        .module-content-container {
+        .module-content {
             padding: 20px;
         }
 
-        .module-number {
-            display: inline-block;
-            background-color: var(--accent-color);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 30px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .module-title {
+        .module-card h3 {
             font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: var(--light-color);
-        }
-
-        .module-description {
-            color: #d0d0d0;
-            margin-bottom: 15px;
-            font-size: 0.95rem;
-        }
-
-        .module-tags-container {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+            line-height: 1.4;
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+            align-items: center;
         }
 
-        .tag {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
+        .module-card p {
+            color: #aaa;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
         }
 
-        .tag.basico {
-            background-color: #4caf50;
-        }
-
-        .tag.intermediario {
-            background-color: #ff9800;
-            color: #333;
-        }
-
-        .tag.avancado {
-            background-color: #f44336;
-        }
-
-        /* No Results Message */
-        .no-results-container {
+        /* No results message */
+        .no-results {
             text-align: center;
             padding: 40px;
+            color: #777;
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
             display: none;
         }
 
-        .no-results-container.show {
-            display: block;
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .no-results-title {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: var(--light-color);
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
         }
 
-        .no-results-description {
-            color: #d0d0d0;
-        }
-
-        /* Footer */
-        .footer-container {
-            background-color: var(--dark-color);
-            padding: 30px 0;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .footer-text {
-            color: #aaa;
-        }
-
-        /* Responsive Styles */
+        /* Responsive */
         @media (max-width: 768px) {
-            .header-title {
-                font-size: 2rem;
+            .header h1 {
+                font-size: 2.2rem;
             }
-            
-            .filters-container {
-                flex-direction: column;
-                align-items: stretch;
+
+            .header p {
+                font-size: 1rem;
             }
-            
-            .search-container {
-                margin-bottom: 15px;
-            }
-            
-            .modules-grid-container {
+
+            .modules-grid {
                 grid-template-columns: 1fr;
             }
+
+            .filter-buttons {
+                justify-content: center;
+            }
+
+            .progress-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .progress-bar {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .module-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .module-tag {
+            background: rgba(179, 0, 0, 0.2);
+            color: #ff6666;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
         }
     </style>
 </head>
+
 <body>
-    <div class="header-container">
+    <div class="header">
         <div class="container">
-            <div class="header-title">Configuração de Produtos Digitais na KIWIFY</div>
-            <div class="header-description">Aprenda passo a passo a criar, configurar e publicar produtos digitais na plataforma KIWIFY</div>
+            <h1>Curso KiwiFy</h1>
+            <p>Domine a configuração completa da plataforma KiwiFy</p>
         </div>
     </div>
 
-    <div class="main-container">
-        <div class="container">
-          
-<div class="modules-grid-container">
-
-    <!-- Módulo 1 -->
-    <a href="criação de conta/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/criando conta na kiwify.png" alt="Criando conta na KIWIFY">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">1</div>
-                <div class="module-title">Criando conta na KIWIFY</div>
-                <div class="module-description">Aprenda como criar sua conta na plataforma KIWIFY e configurar suas informações básicas.</div>
-                <div class="module-tags-container">
-                    <span class="tag basico">Básico</span>
-                </div>
-            </div>
+    <div class="container">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Pesquisar módulos...">
         </div>
-    </a>
 
-    <!-- Módulo 2 -->
-    <a href="tour pela plataforma/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/tour pela plataforma.png" alt="Tour pela plataforma">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">2</div>
-                <div class="module-title">Tour pela plataforma</div>
-                <div class="module-description">Conheça todas as funcionalidades e áreas da plataforma KIWIFY para aproveitar ao máximo.</div>
-                <div class="module-tags-container">
-                    <span class="tag basico">Básico</span>
-                </div>
-            </div>
+        <div class="filter-buttons">
+            <button class="filter-button active" data-filter="all">Todos</button>
+            <button class="filter-button" data-filter="introducao">Introdução</button>
+            <button class="filter-button" data-filter="preparacao">Preparação</button>
+            <button class="filter-button" data-filter="configuracao">Configuração</button>
+            <button class="filter-button" data-filter="lancamento">Lançamento</button>
         </div>
-    </a>
 
-    <!-- Módulo 3 -->
-    <a href="lançand seu primeiro produto digital/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/primeiro produto diital.png" alt="Primeiro produto digital">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">3</div>
-                <div class="module-title">Primeiro produto digital</div>
-                <div class="module-description">Crie seu primeiro produto digital na KIWIFY seguindo um passo a passo simples.</div>
-                <div class="module-tags-container">
-                    <span class="tag basico">Básico</span>
+        <div class="modules-grid" id="modules-grid">
+            <!-- Módulo 1 -->
+            <a href="market place categorias/index.html">
+                <div class="module-card fade-in" data-category="introducao">
+                    <div class="module-banner">
+                        <img width="100%" src="../imagens/conhecendo sua platafrma de vendas.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>Introdução à KiwiFy</h3>
+                        <p>O que é a KiwiFy e por que usar ela. Diferença entre criador, afiliado e coprodutor. Visão geral do painel.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Introdução</span>
+                            <span class="module-tag">Visão Geral</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </a>
+            </a>
 
-    <!-- Módulo 4 -->
-    <a href="nome descrição e banner/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/apresentação de produto.png" alt="Nome, descrição e banner">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">4</div>
-                <div class="module-title">Nome, descrição e banner</div>
-                <div class="module-description">Aprenda a criar nomes atrativos, descrições persuasivas e banners profissionais.</div>
-                <div class="module-tags-container">
-                    <span class="tag basico">Básico</span>
+            <!-- Módulo 2 -->
+            <a href="preparando produto/index.html">
+                <div class="module-card fade-in" data-category="preparacao">
+                    <div class="module-banner">
+                          <img width="100%" src="../imagens/preparando o produto.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>Preparando o Produto</h3>
+                        <p>Organizando o conteúdo do produto (aulas, PDFs, vídeos, imagens). Estrutura de pastas e boas práticas antes de compactar.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Preparação</span>
+                            <span class="module-tag">Organização</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </a>
+            </a>
 
-    <!-- Módulo 5 -->
-    <a href="subindo conteudo do jeito certo/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/subindo projetos.png" alt="Subindo conteúdo">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">5</div>
-                <div class="module-title">Subindo conteúdo</div>
-                <div class="module-description">Domine o processo de upload e organização de arquivos na plataforma.</div>
-                <div class="module-tags-container">
-                    <span class="tag intermediario">Intermediário</span>
+            <!-- Módulo 3 -->
+            <a href="subindo conteudo do jeito certo/index.html">
+                <div class="module-card fade-in" data-category="preparacao">
+                    <div class="module-banner">
+                 <img width="100%" src="../imagens/o jeito correto de subir seu sistema.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>Compactando e Organizando Tudo</h3>
+                        <p>Como usar o WinRAR ou 7-Zip para criar o arquivo .zip. Dicas pra reduzir o tamanho sem perder qualidade.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Preparação</span>
+                            <span class="module-tag">Compactação</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </a>
+            </a>
 
-    <!-- Módulo 6 -->
-    <a href="area de membros/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/personalizando area de membros.png" alt="Área de membros">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">6</div>
-                <div class="module-title">Área de membros</div>
-                <div class="module-description">Configure e personalize a área de membros para seus alunos e clientes.</div>
-                <div class="module-tags-container">
-                    <span class="tag intermediario">Intermediário</span>
+            <!-- Módulo 4 -->
+            <a href="criação de conta/index.html">
+                <div class="module-card fade-in" data-category="configuracao">
+                    <div class="module-banner">
+                          <img width="100%" src="../imagens/criando sua onta de fato.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>Criando a Conta na KiwiFy</h3>
+                        <p>Passo a passo do cadastro. Ativação de conta e primeiros ajustes. Segurança: senha, autenticação, e-mail de suporte.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Configuração</span>
+                            <span class="module-tag">Conta</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </a>
+            </a>
 
-    <!-- Módulo 7 -->
-    <a href="organização de conteudo e aulas/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/organizando seus produtos na plataforma.png" alt="Organização de aulas">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">7</div>
-                <div class="module-title">Organização de aulas</div>
-                <div class="module-description">Aprenda a estruturar e organizar suas aulas de forma lógica e atrativa.</div>
-                <div class="module-tags-container">
-                    <span class="tag intermediario">Intermediário</span>
+            <!-- Módulo 5 -->
+            <a href="crindo produtos para escalar/index.html">
+                <div class="module-card fade-in" data-category="configuracao">
+                    <div class="module-banner">
+                          <img width="100%" src="../imagens/escala de produtos.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>Criando o Produto Digital</h3>
+                        <p>Nome e descrição do produto. Inserindo imagens e banners. Definindo tipo de produto (curso, e-book, combo etc.).</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Configuração</span>
+                            <span class="module-tag">Produto</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </a>
+            </a>
 
-    <!-- Módulo 8 -->
-    <a href="market place categorias/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/mkt place.png" alt="Marketplace e categorias">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">8</div>
-                <div class="module-title">Marketplace e categorias</div>
-                <div class="module-description">Explore o marketplace da KIWIFY e saiba como categorizar seus produtos.</div>
-                <div class="module-tags-container">
-                    <span class="tag intermediario">Intermediário</span>
+            <!-- Módulo 6 -->
+            <a href="area de membros/index.html">
+                <div class="module-card fade-in" data-category="configuracao">
+                    <div class="module-banner">
+                    <img width="100%" src="../imagens/area de membros.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>Área de Membros</h3>
+                        <p>Criando módulos e aulas. Subindo vídeos, PDFs e materiais extras. Organizando a experiência do aluno.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Configuração</span>
+                            <span class="module-tag">Membros</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </a>
+            </a>
 
-    <!-- Módulo 9 -->
-    <a href="configurações de pagamento/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/formas de pagamentos.png" alt="Configurações de pagamento">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">9</div>
-                <div class="module-title">Configurações de pagamento</div>
-                <div class="module-description">Configure diferentes formas de pagamento e políticas de reembolso.</div>
-                <div class="module-tags-container">
-                    <span class="tag avancado">Avançado</span>
+            <!-- Módulo 7 -->
+            <a href="configurações de pagamento/index.html">
+                <div class="module-card fade-in" data-category="configuracao">
+                    <div class="module-banner">
+                          <img width="100%" src="../imagens/configurando os meios de paamentos.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>Configurações de Pagamento</h3>
+                        <p>Adicionando meio de pagamento (Pix, cartão, boleto). Definindo preço, parcelamento e taxas. Políticas de reembolso.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Configuração</span>
+                            <span class="module-tag">Pagamento</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </a>
+            </a>
 
-    <!-- Módulo 10 -->
-    <a href="automaçoes e notificações/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/automaçoes com outros sistemas.png" alt="Automação e notificações">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">10</div>
-                <div class="module-title">Automação e notificações</div>
-                <div class="module-description">Implemente automações e configure notificações para melhorar a experiência do usuário.</div>
-                <div class="module-tags-container">
-                    <span class="tag avancado">Avançado</span>
+            <!-- Módulo 8 -->
+            <a href="publicando/index.html">
+                <div class="module-card fade-in" data-category="lancamento">
+                    <div class="module-banner">
+                         <img width="100%" src="../imagens/publicando e testando seus produtos.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>Publicação e Testes</h3>
+                        <p>Testando o checkout antes do lançamento. Verificando o acesso do aluno. Publicando oficialmente.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Lançamento</span>
+                            <span class="module-tag">Testes</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </a>
+            </a>
 
-    <!-- Módulo 11 -->
-    <a href="upsell/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/upsell.png" alt="Upsell">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">11</div>
-                <div class="module-title">Upsell</div>
-                <div class="module-description">Aprenda a criar upsells para complementar suas vendas.</div>
-                <div class="module-tags-container">
-                    <span class="tag avancado">Avançado</span>
+            <!-- Módulo 9 -->
+            <a href="upsell/index.html">
+                <div class="module-card fade-in" data-category="lancamento">
+                    <div class="module-banner">
+                      <img width="100%" src="../imagens/upsell-dowsell.png" alt="">
+                    </div>
+                    <div class="module-content">
+                        <h3>Pós-lançamento</h3>
+                        <p>Monitorando vendas e acessos. Estratégias de upsell e downsell. Como gerar relatórios e analisar resultados.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Lançamento</span>
+                            <span class="module-tag">Análise</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </a>
+            </a>
 
-    <!-- Módulo 12 -->
-    <a href="dowsell/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/dowsell.png" alt="Downsell">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">12</div>
-                <div class="module-title">Downsell</div>
-                <div class="module-description">Conheça as melhores maneiras de criar um bom downsell.</div>
-                <div class="module-tags-container">
-                    <span class="tag avancado">Avançado</span>
-                </div>
-            </div>
-        </div>
-    </a>
-
-    <!-- Módulo 13 -->
-    <a href="publicando/index.html" class="module-link">
-        <div class="module-card">
-            <div class="module-icon-container">
-                <img src="../imagens/gerir.png" alt="Publicação e monitoramento">
-            </div>
-            <div class="module-content-container">
-                <div class="module-number">13</div>
-                <div class="module-title">Publicação e monitoramento</div>
-                <div class="module-description">Aprenda o processo de publicação e como monitorar o desempenho do seu produto.</div>
-                <div class="module-tags-container">
-                    <span class="tag avancado">Avançado</span>
-                </div>
-            </div>
-        </div>
-    </a>
-</div>
-
-<style>
-.module-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.module-link:hover .module-card {
-    transform: scale(1.03);
-    box-shadow: 0 0 20px rgba(255,255,255,0.1);
-}
-.modules-grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 30px;
-}
-</style>
-
-           
-
-            <div class="no-results-container">
-                <div class="no-results-title">Nenhum módulo encontrado</div>
-                <div class="no-results-description">Tente ajustar sua busca ou filtro para ver mais resultados.</div>
+            <!-- Mensagem de nenhum resultado -->
+            <div class="no-results" id="no-results">
+                Nenhum módulo encontrado com os critérios de busca.
             </div>
         </div>
     </div>
 
-    <div class="footer-container">
-        <div class="container">
-            <div class="footer-text">Curso KIWIFY - Configuração de Produtos Digitais</div>
-        </div>
-    </div>
+    <script>
+        // Filtros de categoria
+        document.querySelectorAll('.filter-button').forEach(button => {
+            button.addEventListener('click', function () {
+                document.querySelectorAll('.filter-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                this.classList.add('active');
+
+                const filter = this.getAttribute('data-filter');
+                filterModules();
+            });
+        });
+
+        // Busca de módulos
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', filterModules);
+
+        // Função para filtrar módulos
+        function filterModules() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-button.active').getAttribute('data-filter');
+            const modules = document.querySelectorAll('.module-card');
+            const noResults = document.getElementById('no-results');
+
+            let visibleCount = 0;
+
+            modules.forEach(module => {
+                const title = module.querySelector('h3').textContent.toLowerCase();
+                const description = module.querySelector('p').textContent.toLowerCase();
+                const category = module.getAttribute('data-category');
+
+                const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+                const matchesFilter = activeFilter === 'all' || category === activeFilter;
+
+                if (matchesSearch && matchesFilter) {
+                    module.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    module.style.display = 'none';
+                }
+            });
+
+            // Mostra ou esconde a mensagem de nenhum resultado
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+        
+        // Inicializar filtros
+        filterModules();
+    </script>
 </body>
 </html>
