@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área de Membros - Curso de Tráfego Pago Avançado</title>
+    <title>Área de Membros - Curso Tráfego Pago</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -157,7 +157,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-           
+            background: linear-gradient(135deg, rgba(179, 0, 0, 0.1), rgba(139, 0, 0, 0.2));
         }
 
         .module-icon {
@@ -195,47 +195,6 @@
             font-size: 0.95rem;
             line-height: 1.5;
             margin-bottom: 15px;
-        }
-
-        .module-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #b30000, #8b0000);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .module-status {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            margin-left: auto;
-        }
-
-        .status-completed {
-            background: rgba(0, 200, 0, 0.2);
-            color: #4CAF50;
-            border: 1px solid #4CAF50;
-        }
-
-        .status-in-progress {
-            background: rgba(255, 193, 7, 0.2);
-            color: #FFC107;
-            border: 1px solid #FFC107;
-        }
-
-        .status-not-started {
-            background: rgba(158, 158, 158, 0.2);
-            color: #9E9E9E;
-            border: 1px solid #9E9E9E;
         }
 
         /* No results message */
@@ -318,301 +277,172 @@
 <body>
     <div class="header">
         <div class="container">
-            <h1>Tráfego Pago Avançado</h1>
-            <p>Domine as estratégias avançadas de tráfego pago para escalar suas vendas</p>
+            <h1>Introdução ao Tráfego Pago</h1>
+            <p>Domine os fundamentos do tráfego pago e prepare-se para impulsionar suas vendas</p>
         </div>
     </div>
 
     <div class="container">
         <div class="search-container">
-            <input type="text" class="search-input" placeholder="Pesquisar módulos de tráfego pago...">
+            <input type="text" class="search-input" placeholder="Pesquisar aulas...">
         </div>
 
         <div class="filter-buttons">
-            <button class="filter-button active" data-filter="all">Todos</button>
-            <button class="filter-button" data-filter="segmentacao">Segmentação</button>
-            <button class="filter-button" data-filter="anuncios">Anúncios</button>
-            <button class="filter-button" data-filter="metricas">Métricas</button>
-            <button class="filter-button" data-filter="estrategia">Estratégia</button>
-            <button class="filter-button" data-filter="testes">Testes</button>
+            <button class="filter-button active" data-filter="all">Todas</button>
+            <button class="filter-button" data-filter="fundamentos">Fundamentos</button>
+            <button class="filter-button" data-filter="configuracao">Configuração</button>
+            <button class="filter-button" data-filter="pratica">Prática</button>
         </div>
 
         <div class="modules-grid" id="modules-grid">
-            <!-- Módulo 1 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="segmentacao">
+            <!-- Aula 1 -->
+            <a href="o-que-e-trafego-pago/index.html">
+                <div class="module-card fade-in" data-category="fundamentos">
                     <div class="module-banner">
-                        <img width="100%" src="../imagens/segmentação de publicos.png" alt="">
+                        <div class="module-icon">🎯</div>
                     </div>
                     <div class="module-content">
-                        <h3>
-                            <span class="module-number">1</span>
-                            Segmentação de Público
-                        </h3>
-                        <p>Aprenda a segmentar seu público-alvo de forma precisa para maximizar a conversão e reduzir custos por aquisição.</p>
+                        <h3>O que é tráfego pago e por que ele é o motor das vendas</h3>
+                        <p>Diferença entre tráfego orgânico e pago. Por que as empresas e criadores dependem de anúncios. A lógica do investimento: pagar pra gerar atenção e conversão.</p>
                         <div class="module-tags">
-                            <span class="module-tag">Segmentação</span>
-                            <span class="module-tag">Avançado</span>
+                            <span class="module-tag">Fundamentos</span>
+                            <span class="module-tag">Introdução</span>
                         </div>
                     </div>
                 </div>
             </a>
 
-            <!-- Módulo 2 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="anuncios">
+            <!-- Aula 2 -->
+            <a href="como-funciona-trafego-pago/index.html">
+                <div class="module-card fade-in" data-category="fundamentos">
                     <div class="module-banner">
-                         <img width="100%" src="../imagens/roteiro de anuncios.png" alt="">
+                        <div class="module-icon">💡</div>
                     </div>
                     <div class="module-content">
-                        <h3>
-                            <span class="module-number">2</span>
-                            Criando seus Roteiros de Anúncios
-                        </h3>
-                        <p>Desenvolva roteiros persuasivos para seus anúncios que convertem e engajam seu público-alvo.</p>
+                        <h3>Como funciona o tráfego pago na prática</h3>
+                        <p>O que é um anúncio (campanha, conjunto e criativo). Entendendo plataformas: Meta Ads, Google Ads, YouTube, TikTok. O caminho do usuário: do clique até a conversão.</p>
                         <div class="module-tags">
-                            <span class="module-tag">Anúncios</span>
+                            <span class="module-tag">Fundamentos</span>
+                            <span class="module-tag">Funcionamento</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Aula 3 -->
+            <a href="conceitos-fundamentais/index.html">
+                <div class="module-card fade-in" data-category="fundamentos">
+                    <div class="module-banner">
+                        <div class="module-icon">🧠</div>
+                    </div>
+                    <div class="module-content">
+                        <h3>Conceitos fundamentais</h3>
+                        <p>CPC, CPM, CTR, ROI, ROAS (explicando de forma simples). Como o algoritmo decide quem ver seu anúncio. A importância do pixel e do rastreamento.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Fundamentos</span>
+                            <span class="module-tag">Métricas</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Aula 4 -->
+            <a href="estruturando-conta-anuncios/index.html">
+                <div class="module-card fade-in" data-category="configuracao">
+                    <div class="module-banner">
+                        <div class="module-icon">⚙️</div>
+                    </div>
+                    <div class="module-content">
+                        <h3>Estruturando sua conta de anúncios</h3>
+                        <p>Criando conta no Meta Business (Facebook e Instagram). Configurando o Gerenciador de Anúncios. Instalação do Pixel e configuração básica.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Configuração</span>
+                            <span class="module-tag">Conta</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Aula 5 -->
+            <a href="entendendo-publico-criativo/index.html">
+                <div class="module-card fade-in" data-category="configuracao">
+                    <div class="module-banner">
+                        <div class="module-icon">🪄</div>
+                    </div>
+                    <div class="module-content">
+                        <h3>Entendendo público e criativo</h3>
+                        <p>O que é público frio, morno e quente. Tipos de criativo (vídeo, imagem, carrossel). Como chamar atenção nos primeiros 3 segundos.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Configuração</span>
+                            <span class="module-tag">Público</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Aula 6 -->
+            <a href="copy-simples-converte/index.html">
+                <div class="module-card fade-in" data-category="configuracao">
+                    <div class="module-banner">
+                        <div class="module-icon">💬</div>
+                    </div>
+                    <div class="module-content">
+                        <h3>Copy simples que converte</h3>
+                        <p>Estrutura de copy pra anúncios (dor → solução → prova → ação). Exemplos práticos. Erros que fazem anúncios travarem.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Configuração</span>
                             <span class="module-tag">Copywriting</span>
                         </div>
                     </div>
                 </div>
             </a>
 
-            <!-- Módulo 3 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="segmentacao">
+            <!-- Aula 7 -->
+            <a href="analisar-resultados/index.html">
+                <div class="module-card fade-in" data-category="pratica">
                     <div class="module-banner">
-                       <img width="100%" src="../imagens/icp.png" alt="">
+                        <div class="module-icon">🧩</div>
                     </div>
                     <div class="module-content">
-                        <h3>
-                            <span class="module-number">3</span>
-                            Criando seu ICP
-                        </h3>
-                        <p>Defina seu Ideal Customer Profile (ICP) para direcionar seus anúncios para as pessoas certas.</p>
+                        <h3>Como analisar os resultados</h3>
+                        <p>O que olhar no painel do Gerenciador. Entendendo métricas iniciais (CTR, alcance, cliques). Quando pausar, editar ou escalar.</p>
                         <div class="module-tags">
-                            <span class="module-tag">Segmentação</span>
-                            <span class="module-tag">Público</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Módulo 4 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="segmentacao">
-                    <div class="module-banner">
-                       <img width="100%" src="../imagens/segmentação de publicos em varios estados.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>
-                            <span class="module-number">4</span>
-                            Montando Públicos e Segmentações em Todo o Brasil
-                        </h3>
-                        <p>Aprenda a criar e gerenciar públicos segmentados em diferentes regiões do Brasil.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Segmentação</span>
-                            <span class="module-tag">Geografia</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Módulo 5 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="segmentacao">
-                    <div class="module-banner">
-                         <img width="100%" src="../imagens/golocalização.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>
-                            <span class="module-number">5</span>
-                            Como Anunciar para Somente um Lugar
-                        </h3>
-                        <p>Estratégias avançadas de geolocalização para segmentação hiperlocal e maximização de resultados.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Segmentação</span>
-                            <span class="module-tag">Local</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Módulo 6 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="estrategia">
-                    <div class="module-banner">
-                       <img width="100%" src="../imagens/anunciando para fora do brasil.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>
-                            <span class="module-number">6</span>
-                            Como Anunciar em Outros Países
-                        </h3>
-                        <p>Expanda seu negócio internacionalmente com estratégias de anúncios para mercados globais.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Estratégia</span>
-                            <span class="module-tag">Internacional</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Módulo 7 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="testes">
-                    <div class="module-banner">
-                        <img width="100%" src="../imagens/testes criativos.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>
-                            <span class="module-number">7</span>
-                            Como Fazer Testes
-                        </h3>
-                        <p>Metodologias avançadas de testes A/B para otimizar campanhas e aumentar a taxa de conversão.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Testes</span>
-                            <span class="module-tag">Otimização</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Módulo 8 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="metricas">
-                    <div class="module-banner">
-                        <img width="100%" src="../imagens/traqueamento de dados.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>
-                            <span class="module-number">8</span>
-                            Métricas e Tracking de Dados
-                        </h3>
-                        <p>Domine as métricas essenciais e implemente sistemas de tracking para medir o desempenho das campanhas.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Métricas</span>
+                            <span class="module-tag">Prática</span>
                             <span class="module-tag">Análise</span>
                         </div>
                     </div>
                 </div>
             </a>
 
-            <!-- Módulo 9 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="estrategia">
+            <!-- Aula 8 -->
+            <a href="primeira-campanha-zero/index.html">
+                <div class="module-card fade-in" data-category="pratica">
                     <div class="module-banner">
-                         <img width="100%" src="../imagens/escalando campanhas.png" alt="">
+                        <div class="module-icon">🧭</div>
                     </div>
                     <div class="module-content">
-                        <h3>
-                            <span class="module-number">9</span>
-                            Escala de Campanhas
-                        </h3>
-                        <p>Estratégias para escalar campanhas bem-sucedidas sem comprometer o ROI.</p>
+                        <h3>Montando sua primeira campanha do zero</h3>
+                        <p>Criando uma campanha de conversão. Configurando público, criativo e orçamento. Publicando e acompanhando o desempenho.</p>
                         <div class="module-tags">
-                            <span class="module-tag">Estratégia</span>
-                            <span class="module-tag">Escala</span>
+                            <span class="module-tag">Prática</span>
+                            <span class="module-tag">Campanha</span>
                         </div>
                     </div>
                 </div>
             </a>
 
-            <!-- Módulo 10 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="metricas">
+            <!-- Aula 9 -->
+            <a href="otimizacao-basica/index.html">
+                <div class="module-card fade-in" data-category="pratica">
                     <div class="module-banner">
-                        <img width="100%" src="../imagens/cadastro pixel.png" alt="">
+                        <div class="module-icon">⚡</div>
                     </div>
                     <div class="module-content">
-                        <h3>
-                            <span class="module-number">10</span>
-                            Implementação de Pixel
-                        </h3>
-                        <p>Aprenda a instalar e configurar pixels de conversão para rastrear e otimizar suas campanhas.</p>
+                        <h3>Otimização básica e próximos passos</h3>
+                        <p>Como melhorar anúncios que não estão performando. Testes A/B (criativos e públicos). Direcionando pro módulo Avançado.</p>
                         <div class="module-tags">
-                            <span class="module-tag">Métricas</span>
-                            <span class="module-tag">Tracking</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Módulo 11 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="estrategia">
-                    <div class="module-banner">
-                        <img width="100%" src="../imagens/objetivos meta ads.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>
-                            <span class="module-number">11</span>
-                            Seleção de Objetivos e Metas
-                        </h3>
-                        <p>Defina objetivos claros e metas realistas para suas campanhas de tráfego pago.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Estratégia</span>
-                            <span class="module-tag">Planejamento</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Módulo 12 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="estrategia">
-                    <div class="module-banner">
-                        <img width="100%" src="../imagens/tipos de orçamento meta ads.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>
-                            <span class="module-number">12</span>
-                            Tipos de Orçamento
-                        </h3>
-                        <p>Conheça os diferentes tipos de orçamento e como alocar recursos de forma eficiente.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Estratégia</span>
-                            <span class="module-tag">Orçamento</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Módulo 13 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="testes">
-                    <div class="module-banner">
-                         <img width="100%" src="../imagens/teste de criativos e escala.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>
-                            <span class="module-number">13</span>
-                            Testes de Criativos
-                        </h3>
-                        <p>Metodologias para testar e otimizar criativos de anúncios para melhor performance.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Testes</span>
-                            <span class="module-tag">Criativos</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Módulo 14 -->
-            <a href="#">
-                <div class="module-card fade-in" data-category="segmentacao">
-                    <div class="module-banner">
-                    <img width="100%" src="../imagens/ttipo de publicos.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>
-                            <span class="module-number">14</span>
-                            Tipos de Públicos
-                        </h3>
-                        <p>Explore os diferentes tipos de públicos e como utilizá-los em suas estratégias de anúncios.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Segmentação</span>
-                            <span class="module-tag">Público</span>
+                            <span class="module-tag">Prática</span>
+                            <span class="module-tag">Otimização</span>
                         </div>
                     </div>
                 </div>
@@ -620,7 +450,7 @@
 
             <!-- Mensagem de nenhum resultado -->
             <div class="no-results" id="no-results">
-                Nenhum módulo encontrado com os critérios de busca.
+                Nenhuma aula encontrada com os critérios de busca.
             </div>
         </div>
     </div>
