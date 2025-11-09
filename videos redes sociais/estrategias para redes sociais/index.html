@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player de Aula - DevRuby</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+
+            background: url(../../imagens/Banner\ do\ YouTube\ Gamer\ Pixels\ Preto\ Roxo\ Neon\ \(1\).png) no-repeat center center fixed;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+
+
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .logo {
+            box-shadow: 0px 5px 1px rgba(0, 0, 0, 0.329);
+            border-radius: 10%;
+            border: 1px solid rgb(0, 0, 0);
+            width: 400px;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .lesson-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background-color: transparent;
+            border: none;
+            color: white;
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .lesson-title:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .player-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            margin-bottom: 30px;
+            transition: transform 0.3s;
+        }
+
+        .player-container:hover {
+            transform: translateY(-5px);
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+        }
+
+        .unsupported-message {
+            display: none;
+            padding: 20px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 20px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .lesson-title {
+                font-size: 2rem;
+            }
+
+            .logo {
+                width: 160px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .lesson-title {
+                font-size: 1.5rem;
+            }
+
+            .logo {
+                width: 140px;
+            }
+
+            .header {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+ <div class="player-container">
+  <video 
+    controls 
+    poster="../../imagens/js-js.png">
+    <source src="../../videos/" type="video/mp4">
+    Seu navegador não suporta a reprodução de vídeos HTML5.
+  </video>
+</div>
+
+
+    <script>
+        // Verificar suporte para vídeo HTML5
+        document.addEventListener('DOMContentLoaded', function () {
+            const video = document.querySelector('video');
+            const unsupportedMessage = document.querySelector('.unsupported-message');
+
+            // Verificar se o navegador suporta o tipo de vídeo
+            if (video && video.canPlayType) {
+                if (!video.canPlayType('video/mp4')) {
+                    unsupportedMessage.style.display = 'block';
+                }
+            }
+
+            // Adicionar animação de entrada suave
+            document.body.style.opacity = 0;
+            let opacity = 0;
+            const fadeIn = setInterval(() => {
+                if (opacity >= 1) {
+                    clearInterval(fadeIn);
+                } else {
+                    opacity += 0.05;
+                    document.body.style.opacity = opacity;
+                }
+            }, 30);
+
+            // Configurar título editável
+            const lessonTitle = document.querySelector('.lesson-title');
+            lessonTitle.addEventListener('blur', function () {
+                // Salvar o título no localStorage para persistência
+                localStorage.setItem('lessonTitle', this.textContent);
+            });
+
+            // Carregar título salvo, se existir
+            const savedTitle = localStorage.getItem('lessonTitle');
+            if (savedTitle) {
+                lessonTitle.textContent = savedTitle;
+            }
+        });
+    </script>
+</body>
+
+</html>

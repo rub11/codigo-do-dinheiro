@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área de Membros - Redes Sociais</title>
+    <title>Área de Membros - Funil de Vendas</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -45,7 +45,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(45deg, rgba(29, 161, 242, 0.1), transparent 70%);
+            background: linear-gradient(45deg, rgba(255, 105, 180, 0.1), transparent 70%);
         }
 
         .header h1 {
@@ -54,7 +54,7 @@
             margin-bottom: 10px;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             position: relative;
-            background: linear-gradient(45deg, #fff, #1DA1F2);
+            background: linear-gradient(45deg, #fff, #FF69B4);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -84,8 +84,8 @@
 
         .search-input:focus {
             outline: none;
-            border-color: #1DA1F2;
-            box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.2);
+            border-color: #FF69B4;
+            box-shadow: 0 0 0 2px rgba(255, 105, 180, 0.2);
         }
 
         .filter-buttons {
@@ -93,6 +93,7 @@
             gap: 12px;
             margin-bottom: 30px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .filter-button {
@@ -108,17 +109,18 @@
 
         .filter-button.active,
         .filter-button:hover {
-            background: linear-gradient(135deg, #1DA1F2, #1A91DA);
+            background: linear-gradient(135deg, #FF69B4, #E0529C);
             color: white;
-            border-color: #1DA1F2;
+            border-color: #FF69B4;
         }
 
         /* Modules Grid */
         .modules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 25px;
             margin-bottom: 50px;
+            justify-items: center;
         }
 
         .module-card {
@@ -129,16 +131,18 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             border: 1px solid #333;
             position: relative;
+            max-width: 400px;
+            width: 100%;
         }
 
         .module-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(29, 161, 242, 0.2);
-            border-color: #1DA1F2;
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.2);
+            border-color: #FF69B4;
         }
 
         .module-banner {
-            height: 180px;
+            height: 200px;
             background: linear-gradient(135deg, #030303, #222);
             border-radius: 12px 12px 0 0;
             display: flex;
@@ -157,11 +161,11 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(29, 161, 242, 0.1), rgba(26, 145, 218, 0.2));
+            background: linear-gradient(135deg, rgba(255, 105, 180, 0.1), rgba(224, 82, 156, 0.2));
         }
 
         .module-icon {
-            font-size: 3rem;
+            font-size: 4rem;
             z-index: 1;
             display: flex;
             align-items: center;
@@ -177,24 +181,27 @@
         }
 
         .module-content {
-            padding: 20px;
+            padding: 25px;
         }
 
         .module-card h3 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 600;
             color: #fff;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             line-height: 1.4;
             display: flex;
             align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
         .module-card p {
             color: #aaa;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 15px;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         /* No results message */
@@ -261,15 +268,39 @@
             display: flex;
             flex-wrap: wrap;
             gap: 5px;
-            margin-top: 10px;
+            margin-top: 15px;
+            justify-content: center;
         }
 
         .module-tag {
-            background: rgba(29, 161, 242, 0.2);
-            color: #4dc0ff;
-            padding: 3px 8px;
+            background: rgba(255, 105, 180, 0.2);
+            color: #ff99cc;
+            padding: 5px 12px;
             border-radius: 12px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .module-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #FF69B4;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #aaa;
         }
     </style>
 </head>
@@ -277,8 +308,8 @@
 <body>
     <div class="header">
         <div class="container">
-            <h1>Redes Sociais: Preparando a Base</h1>
-            <p>Estratégias fundamentais para construir presença sólida e engajada nas redes sociais</p>
+            <h1>Funil de Vendas Completo</h1>
+            <p>Domine todas as etapas do funil: da atração à conversão e fidelização de clientes</p>
         </div>
     </div>
 
@@ -289,102 +320,45 @@
 
         <div class="filter-buttons">
             <button class="filter-button active" data-filter="all">Todas</button>
+            <button class="filter-button" data-filter="topo">Topo do Funil</button>
+            <button class="filter-button" data-filter="meio">Meio do Funil</button>
+            <button class="filter-button" data-filter="fundo">Fundo do Funil</button>
             <button class="filter-button" data-filter="estrategia">Estratégia</button>
-            <button class="filter-button" data-filter="perfil">Perfil</button>
-            <button class="filter-button" data-filter="conteudo">Conteúdo</button>
-            <button class="filter-button" data-filter="planejamento">Planejamento</button>
-            <button class="filter-button" data-filter="ferramentas">Ferramentas</button>
         </div>
 
         <div class="modules-grid" id="modules-grid">
-            <!-- Aula 1 -->
-            <a href="../videos redes sociais/estrategias para redes sociais/index.html">
+            <!-- Aula Única -->
+            <a href="../video funil de vendas/index.html">
                 <div class="module-card fade-in" data-category="estrategia">
                     <div class="module-banner">
-                     <img width="100%" src="../imagens/estrategias iniciais.png" alt="">
+                       <img width="100%" src="../imagens/funil de vendas completo.png" alt="">
                     </div>
                     <div class="module-content">
-                        <h3>Estratégia para Redes Sociais</h3>
-                        <p>Defina objetivos claros, público-alvo e posicionamento para cada plataforma.</p>
+                        <h3>Funil de Vendas: Estratégia Completa</h3>
+                        <p>Aprenda a estruturar um funil de vendas eficiente que converte leads em clientes fiéis. Domine todas as etapas: conscientização, consideração, conversão e fidelização.</p>
                         <div class="module-tags">
                             <span class="module-tag">Estratégia</span>
-                            <span class="module-tag">Objetivos</span>
+                            <span class="module-tag">Conversão</span>
+                            <span class="module-tag">Vendas</span>
+                            <span class="module-tag">Marketing</span>
+                        </div>
+                        <div class="module-stats">
+                            <div class="stat">
+                                <div class="stat-value">4</div>
+                                <div class="stat-label">Etapas</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">100%</div>
+                                <div class="stat-label">Prático</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value">∞</div>
+                                <div class="stat-label">Aplicações</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </a>
-
-            <!-- Aula 2 -->
-              <a href="../videos redes sociais/organizando a casa/index.html">
-                <div class="module-card fade-in" data-category="perfil">
-                    <div class="module-banner">
-                   <img width="100%" src="../imagens/organizando a casa.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>Perfil Otimizado e Conversor</h3>
-                        <p>Bio persuasiva, foto profissional, link na bio e call-to-action eficaz.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Perfil</span>
-                            <span class="module-tag">Otimização</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-           
-
-            <!-- Aula 4 -->
-            <a href="../videos redes sociais/conteudo de valor/index.html">
-                <div class="module-card fade-in" data-category="conteudo">
-                    <div class="module-banner">
-                     <img width="100%" src="../imagens/conteudos de valorr.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>Conteúdo que Gera Valor</h3>
-                        <p>Tipos de conteúdo que educam, entretêm e engajam seu público-alvo.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Conteúdo</span>
-                            <span class="module-tag">Valor</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Aula 5 -->
-            <a href="../videos redes sociais/planejamento de conteudo/index.html">
-                <div class="module-card fade-in" data-category="planejamento">
-                    <div class="module-banner">
-                        <img width="100%" src="../imagens/planejamento de conteudo.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>Planejamento de Conteúdo</h3>
-                        <p>Cronograma editorial, mix de conteúdos e frequência ideal de postagem.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Planejamento</span>
-                            <span class="module-tag">Cronograma</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-           
-            <!-- Aula 7 -->
-             <a href="../videos redes sociais/estrategias e engajamento/index.html">
-                <div class="module-card fade-in" data-category="estrategia">
-                    <div class="module-banner">
-                         <img width="100%" src="../imagens/comunidade fidelizada.png" alt="">
-                    </div>
-                    <div class="module-content">
-                        <h3>Estratégias de Engajamento</h3>
-                        <p>Como construir comunidade, responder comentários e criar conexões reais.</p>
-                        <div class="module-tags">
-                            <span class="module-tag">Estratégia</span>
-                            <span class="module-tag">Engajamento</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
 
             <!-- Mensagem de nenhum resultado -->
             <div class="no-results" id="no-results">
