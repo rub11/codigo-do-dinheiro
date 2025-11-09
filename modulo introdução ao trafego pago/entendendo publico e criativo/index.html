@@ -1,194 +1,498 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player de Aula - DevRuby</title>
+    <title>Área de Membros - Públicos e Criativos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-
-            background: url(../../imagens/Banner\ do\ YouTube\ Gamer\ Pixels\ Preto\ Roxo\ Neon\ \(1\).png) no-repeat center center fixed;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            margin: 0;
-            padding: 0;
-
-
-            color: white;
+            background-color: #0D0D0D;
+            color: #fff;
+            line-height: 1.6;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            animation: fadeIn 1s ease-in-out;
+            width: 100%;
         }
 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background-image: linear-gradient(135deg, #232526, #0A1A2F);
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(179, 0, 0, 0.1), transparent 70%);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            background: linear-gradient(45deg, #fff, #ff6666);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        /* Search and Filters */
+        .search-container {
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #b30000;
+            box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.2);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-button {
+            background: #1a1a1a;
+            color: #ccc;
+            border: 1px solid #333;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-button.active,
+        .filter-button:hover {
+            background: linear-gradient(135deg, #b30000, #8b0000);
+            color: white;
+            border-color: #b30000;
+        }
+
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .module-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(179, 0, 0, 0.2);
+            border-color: #b30000;
+        }
+
+        .module-banner {
+            height: 180px;
+            background: linear-gradient(135deg, #030303, #222);
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-banner::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(179, 0, 0, 0.1), rgba(139, 0, 0, 0.2));
+        }
+
+        .module-icon {
+            font-size: 3rem;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .module-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .module-content {
+            padding: 20px;
+        }
+
+        .module-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+        }
+
+        .module-card p {
+            color: #aaa;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+            display: none;
+        }
+
+        /* Animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
+                transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            width: 100%;
-            max-width: 800px;
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
         }
 
-        .logo {
-            box-shadow: 0px 5px 1px rgba(0, 0, 0, 0.329);
-            border-radius: 10%;
-            border: 1px solid rgb(0, 0, 0);
-            width: 400px;
-            height: auto;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-        }
-
-        .lesson-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            background-color: transparent;
-            border: none;
-            color: white;
-            text-align: center;
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-        }
-
-        .lesson-title:focus {
-            outline: none;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .player-container {
-            width: 100%;
-            max-width: 800px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            margin-bottom: 30px;
-            transition: transform 0.3s;
-        }
-
-        .player-container:hover {
-            transform: translateY(-5px);
-        }
-
-        video {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 15px;
-        }
-
-        .unsupported-message {
-            display: none;
-            padding: 20px;
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            margin: 20px;
-        }
-
-        /* Responsividade */
+        /* Responsive */
         @media (max-width: 768px) {
-            .lesson-title {
-                font-size: 2rem;
+            .header h1 {
+                font-size: 2.2rem;
             }
 
-            .logo {
-                width: 160px;
+            .header p {
+                font-size: 1rem;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-buttons {
+                justify-content: center;
+            }
+
+            .progress-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .progress-bar {
+                width: 100%;
+                margin-top: 10px;
             }
         }
 
-        @media (max-width: 480px) {
-            .lesson-title {
-                font-size: 1.5rem;
-            }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-            .logo {
-                width: 140px;
-            }
+        .module-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
 
-            .header {
-                margin-bottom: 20px;
-            }
+        .module-tag {
+            background: rgba(179, 0, 0, 0.2);
+            color: #ff6666;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
         }
     </style>
 </head>
 
 <body>
+    <div class="header">
+        <div class="container">
+            <h1>Públicos e Criativos</h1>
+            <p>Aprenda sobre públicos frio, morno e quente, tipos de criativos e como prender a atenção</p>
+        </div>
+    </div>
 
+    <div class="container">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Pesquisar aulas...">
+        </div>
 
- <div class="player-container">
-  <video 
-    controls 
-    poster="../../imagens/js-js.png">
-    <source src="../../videos/" type="video/mp4">
-    Seu navegador não suporta a reprodução de vídeos HTML5.
-  </video>
-</div>
+        <div class="filter-buttons">
+            <button class="filter-button active" data-filter="all">Todas</button>
+            <button class="filter-button" data-filter="publicos">Públicos</button>
+            <button class="filter-button" data-filter="criativos">Criativos</button>
+            <button class="filter-button" data-filter="atencao">Atenção</button>
+        </div>
 
+        <div class="modules-grid" id="modules-grid">
+            <!-- Aula 1 -->
+            <a href="../../videos introdução ao trafego pago publicos e criativos/publico frio/index.html">
+                <div class="module-card fade-in" data-category="publicos">
+                    <div class="module-banner">
+                       <img width="100%" src="../../imagens/publico frio.png" alt="Público Frio">
+                    </div>
+                    <div class="module-content">
+                        <h3>O que é Público Frio</h3>
+                        <p>Definição completa do público frio, características, como identificá-lo e estratégias específicas para engajar esse tipo de audiência.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Públicos</span>
+                            <span class="module-tag">Audiência</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Aula 2 -->
+           <a href="../../videos introdução ao trafego pago publicos e criativos/publicos mornos/index.html">
+                <div class="module-card fade-in" data-category="publicos">
+                    <div class="module-banner">
+                       <img width="100%" src="../../imagens/publico morno.png" alt="Público Morno">
+                    </div>
+                    <div class="module-content">
+                        <h3>O que é Público Morno</h3>
+                        <p>Entenda o público morno, como ele se forma, características principais e estratégias de conversão para esse estágio do funil.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Públicos</span>
+                            <span class="module-tag">Conversão</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Aula 3 -->
+           <a href="../../videos introdução ao trafego pago publicos e criativos/publicos quentes/index.html">
+                <div class="module-card fade-in" data-category="publicos">
+                    <div class="module-banner">
+                         <img width="100%" src="../../imagens/publico-quente.png" alt="Público Quente">
+                    </div>
+                    <div class="module-content">
+                        <h3>O que é Público Quente</h3>
+                        <p>Definição do público quente, sinais de identificação, comportamento de compra e estratégias para fechamento e retenção.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Públicos</span>
+                            <span class="module-tag">Vendas</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Aula 4 -->
+           <a href="../../videos introdução ao trafego pago publicos e criativos/criativos em video/index.html">
+                <div class="module-card fade-in" data-category="criativos">
+                    <div class="module-banner">
+                    <img width="100%" src="../../imagens/criativos-video.png" alt="Criativos em Vídeo">
+                    </div>
+                    <div class="module-content">
+                        <h3>Criativos em Vídeo</h3>
+                        <p>Tipos de vídeos que convertem, formatos recomendados, duração ideal e melhores práticas para criar vídeos engajadores.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Criativos</span>
+                            <span class="module-tag">Vídeo</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Aula 5 -->
+            <a href="../../videos introdução ao trafego pago publicos e criativos/criativos em imagem/index.html">
+                <div class="module-card fade-in" data-category="criativos">
+                    <div class="module-banner">
+                        <img width="100%" src="../../imagens/criativos-imagem.png" alt="Criativos em Imagem">
+                    </div>
+                    <div class="module-content">
+                        <h3>Criativos em Imagem</h3>
+                        <p>Formatos de imagem, tamanhos recomendados, elementos visuais que convertem e como criar imagens que chamam atenção.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Criativos</span>
+                            <span class="module-tag">Imagem</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Aula 6 -->
+            <a href="../../videos introdução ao trafego pago publicos e criativos/criativos em carrocel/index.html">
+                <div class="module-card fade-in" data-category="criativos">
+                    <div class="module-banner">
+                         <img width="100%" src="../../imagens/criativos-carrocel.png" alt="Criativos em Carrossel">
+                    </div>
+                    <div class="module-content">
+                        <h3>Criativos em Carrossel</h3>
+                        <p>Estratégias para carrosséis, sequência ideal de cards, storytelling visual e como maximizar o engajamento com esse formato.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Criativos</span>
+                            <span class="module-tag">Carrossel</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Aula 7 -->
+           <a href="../../videos introdução ao trafego pago publicos e criativos/como puder chamar ateção nos primeiros 3 segundos/index.html">
+                <div class="module-card fade-in" data-category="atencao">
+                    <div class="module-banner">
+                         <img width="100%" src="../../imagens/primeiros-3-segundos.png" alt="Primeiros 3 Segundos">
+                    </div>
+                    <div class="module-content">
+                        <h3>Como Chamar Atenção nos Primeiros 3 Segundos</h3>
+                        <p>Técnicas comprovadas para prender a atenção imediatamente, elementos visuais e sonoros que funcionam e exemplos práticos.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Atenção</span>
+                            <span class="module-tag">Engajamento</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+          
+            <!-- Aula 9 -->
+            <a href="../../videos introdução ao trafego pago publicos e criativos/analisando anuncios ja prontos/index.html">
+                <div class="module-card fade-in" data-category="atencao">
+                    <div class="module-banner">
+                         <img width="100%" src="../../imagens/casos-reais-3-segundos.png" alt="Casos Reais">
+                    </div>
+                    <div class="module-content">
+                        <h3>Casos Reais: Análise de Anúncios que Funcionam</h3>
+                        <p>Análise detalhada de anúncios bem-sucedidos, breakdown das estratégias usadas nos primeiros segundos e lições aplicáveis.</p>
+                        <div class="module-tags">
+                            <span class="module-tag">Atenção</span>
+                            <span class="module-tag">Casos Reais</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Mensagem de nenhum resultado -->
+            <div class="no-results" id="no-results">
+                Nenhuma aula encontrada com os critérios de busca.
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Verificar suporte para vídeo HTML5
-        document.addEventListener('DOMContentLoaded', function () {
-            const video = document.querySelector('video');
-            const unsupportedMessage = document.querySelector('.unsupported-message');
+        // Filtros de categoria
+        document.querySelectorAll('.filter-button').forEach(button => {
+            button.addEventListener('click', function () {
+                document.querySelectorAll('.filter-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
 
-            // Verificar se o navegador suporta o tipo de vídeo
-            if (video && video.canPlayType) {
-                if (!video.canPlayType('video/mp4')) {
-                    unsupportedMessage.style.display = 'block';
-                }
-            }
+                this.classList.add('active');
 
-            // Adicionar animação de entrada suave
-            document.body.style.opacity = 0;
-            let opacity = 0;
-            const fadeIn = setInterval(() => {
-                if (opacity >= 1) {
-                    clearInterval(fadeIn);
+                const filter = this.getAttribute('data-filter');
+                filterModules();
+            });
+        });
+
+        // Busca de módulos
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', filterModules);
+
+        // Função para filtrar módulos
+        function filterModules() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeFilter = document.querySelector('.filter-button.active').getAttribute('data-filter');
+            const modules = document.querySelectorAll('.module-card');
+            const noResults = document.getElementById('no-results');
+
+            let visibleCount = 0;
+
+            modules.forEach(module => {
+                const title = module.querySelector('h3').textContent.toLowerCase();
+                const description = module.querySelector('p').textContent.toLowerCase();
+                const category = module.getAttribute('data-category');
+
+                const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+                const matchesFilter = activeFilter === 'all' || category === activeFilter;
+
+                if (matchesSearch && matchesFilter) {
+                    module.style.display = 'block';
+                    visibleCount++;
                 } else {
-                    opacity += 0.05;
-                    document.body.style.opacity = opacity;
+                    module.style.display = 'none';
                 }
-            }, 30);
-
-            // Configurar título editável
-            const lessonTitle = document.querySelector('.lesson-title');
-            lessonTitle.addEventListener('blur', function () {
-                // Salvar o título no localStorage para persistência
-                localStorage.setItem('lessonTitle', this.textContent);
             });
 
-            // Carregar título salvo, se existir
-            const savedTitle = localStorage.getItem('lessonTitle');
-            if (savedTitle) {
-                lessonTitle.textContent = savedTitle;
+            // Mostra ou esconde a mensagem de nenhum resultado
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
             }
-        });
+        }
+        
+        // Inicializar filtros
+        filterModules();
     </script>
 </body>
-
 </html>
